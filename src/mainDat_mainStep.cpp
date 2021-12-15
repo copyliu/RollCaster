@@ -526,7 +526,7 @@ int mainDatClass::mainStep(){
 					if( deSyncShowFlg ){
 						deSyncShowFlg = 0;
 
-						cout << "ERROR : deSync" << endl;
+						cout << "错误 : 检测到不同步" << endl;
 						if( deSyncSoundFlg ){
 							if( lstrcmpW( nowDir, L"fail" ) && lstrlenW( nowDir ) < 280 ){
 								WCHAR path[300];
@@ -819,7 +819,7 @@ int mainDatClass::mainStep(){
 						file.read((char *)srcpal, 1024);
 						if (!memcmp(srcpal, palette, 1024)) {
 							n = 0;
-							cout << "Already have remote palette for player " << dec << (i+1) << ": " << palfilename << endl;
+							cout << "调色板已存在: player " << dec << (i+1) << ": " << palfilename << endl;
 							break;
 						}
 					}
@@ -832,7 +832,7 @@ int mainDatClass::mainStep(){
 
 					file.write((const char *)palette, 1024);
 
-					cout << "Saved palette " << palfilename << endl;
+					cout << "调色板已保存为 " << palfilename << endl;
 				}
 			}
 
@@ -922,15 +922,15 @@ int mainDatClass::mainStep(){
 					}
 					
 					if (delayTime != delayTimeOld) {
-						cout << "setting:  Local buffer : " << delayTime / 2 << endl;
+						cout << "设置:  本地延迟量 : " << delayTime / 2 << endl;
 					}
 					
 					localDelayTime = tempLocalDelayTime;
 					rewindAmount = tempRewindAmount;
 					
 					if (rollbackOk) {
-						cout << "           Input delay : " << localDelayTime/2 << endl;
-						cout << "         Rewind frames : " << rewindAmount/2 << endl;
+						cout << "     指令输入延迟 : " << localDelayTime/2 << endl;
+						cout << "     预读回滚帧数 : " << rewindAmount/2 << endl;
 					}
 				}
 			}

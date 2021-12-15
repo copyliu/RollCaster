@@ -1450,11 +1450,11 @@ void mainDatClass::runKeybind(int key) {
 	switch(key) {
 	case KEY_AUTOSAVE_ON:
 		SetAutoSave();
-		cout << "setting : AutoSave on" << endl;
+		cout << "设置 : 保存录像 开" << endl;
 		break;
 	case KEY_AUTOSAVE_OFF:
 		RemoveAutoSave();
-		cout << "setting : AutoSave off" << endl;
+		cout << "设置 : 保存录像 关" << endl;
 		break;
 	case KEY_AUTOSAVE_TOGGLE:
 		if (autoSaveFlg) {
@@ -1465,11 +1465,11 @@ void mainDatClass::runKeybind(int key) {
 		break;
 	case KEY_AUTONEXT_ON:
 		autoNextFlg = 1;
-		cout << "setting : AutoNext on" << endl;
+		cout << "设置 : 自动跳过菜单 开" << endl;
 		break;
 	case KEY_AUTONEXT_OFF:
 		autoNextFlg = 0;
-		cout << "setting : AutoNext off" << endl;
+		cout << "设置 : 自动跳过菜单 关" << endl;
 		break;
 	case KEY_AUTONEXT_TOGGLE:
 		if (autoNextFlg) {
@@ -1480,7 +1480,7 @@ void mainDatClass::runKeybind(int key) {
 		break;
 	case KEY_ROUNDCOUNT_CYCLE:
 		roundShowFlg = (roundShowFlg+1)%3;
-		cout << "setting : RoundShow " << roundShowFlg << " : ";
+		cout << "设置 : 对战信息输出 " << roundShowFlg << " : ";
 		if (roundShowFlg == 1) {
 			cout << "对战结果统计已开启." << endl;
 		} else if (roundShowFlg == 2) {
