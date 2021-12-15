@@ -6,7 +6,7 @@ int inputDataSubClass::init(){
 	if( !data ) return 1;
 	memset( &dataInfo, 0, sizeof( gameInfoStruct ) );
 	
-	//擮偺偨傔
+	//念のため
 	Sleep(100);
 	
 	memset( data, 0xFF, inputBuf_size );
@@ -27,14 +27,14 @@ inputDataSubClass::~inputDataSubClass(){
 
 //void *memcpy(void *dest, void *src, size_t size);
 int inputDataSubClass::SetInputDataArea( DWORD Time, BYTE* Address, WORD Size ){
-	//梫専摙
+	//要検討
 	if( Time >= inputBuf_size ) return 1;
 	if( (ULONGLONG)Time + (ULONGLONG)Size >= inputBuf_size ) return 1;
 	memcpy( &data[ Time ], Address, Size );
 	return 0;
 }
 BYTE* inputDataSubClass::GetInputDataAddress( DWORD Time, WORD Size ){
-	//梫専摙
+	//要検討
 	if( Time >= inputBuf_size ) return 0;
 	if( (ULONGLONG)Time + (ULONGLONG)Size >= inputBuf_size ) return 0;
 	if( data[ Time + Size ] == 0xFF ) return 0;
@@ -44,7 +44,7 @@ BYTE* inputDataSubClass::GetInputDataAddress( DWORD Time, WORD Size ){
 
 
 //SetInput
-//巄掕
+//暫定
 void inputDataSubClass::SetInputDataSub( DWORD Time, BYTE Input ){
 	if( Time < inputBuf_size ){
 		if( data[ Time ] == 0xFF ){
@@ -62,7 +62,7 @@ void inputDataSubClass::SetInputDataB( DWORD Time, BYTE Input ){
 }
 
 //GetInput
-//巄掕
+//暫定
 int inputDataSubClass::GetInputDataSub( DWORD Time, BYTE* Input ){
 	if( Time >= inputBuf_size ) return 1;
 	if( data[ Time ] == 0xFF ) return 1;

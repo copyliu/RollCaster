@@ -2,20 +2,20 @@
 #include "boosterDatClass.h"
 
 void boosterDatClass::ManageAI(){
-	//楢嵔峌寕偺忣曬偑偳偆側傞偐暘偐傞傑偱曻抲
-	//傕偆堦憌AI傪捛壛丠
+	//連鎖攻撃の情報がどうなるか分かるまで放置
+	//もう一層AIを追加？
 	
 	
 	if(commandInput[0] == __5){
 		commandInput[0] = 0;
 	}
 	
-	//揋峴摦仺帺暘峴摦仺揋峴摦傊偺僈乕僪擖椡仺揋怘傜偄仺屻戅丂傪杊偖
+	//敵行動→自分行動→敵行動へのガード入力→敵食らい→後退　を防ぐ
 	if(commandInput[0]==0 && gameInfoPara[15][1]==5 && (*enGameInfo[ _status ][0][0]==2 || *enGameInfo[ _status ][0][0]==9 || *enGameInfo[ _status ][9][0]==0x22)){
 		commandInput[0] = __5;
 	}
 	
-	//僽儗僀僋拞偼僕儍儞僾偟側偄
+	//ブレイク中はジャンプしない
 	if(commandInput[0]==__7 || commandInput[0]==__8 || commandInput[0]==__9
 	|| commandInput[0]==__D7 || commandInput[0]==__D8 || commandInput[0]==__D9){
 		if(myGameInfo[ _info ][2][0]==2 && *enGameInfo[ _status ][0][0]!=2 && *enGameInfo[ _status ][0][0]!=9){
@@ -23,12 +23,12 @@ void boosterDatClass::ManageAI(){
 		}
 	}
 	
-	//傂傞傒忬懺偺偲偒
+	//ひるみ状態のとき
 	if(statusID==0x22 && !(commandInput[0]==__1 || commandInput[0]==__4)){
 		commandInput[0] = __4;
 	}
 	
-	//抧忋慜僟僢僔儏拞
+	//地上前ダッシュ中
 	if(statusID ==0x10 && commandInput[0]){
 		if(!(commandInput[0] == __1 || commandInput[0] == __4
 		|| commandInput[0] == __3A || commandInput[0] == __3B
@@ -44,21 +44,21 @@ void boosterDatClass::ManageAI(){
 		}
 	}
 	
-	//僟僢僔儏偱偒側偄偲偒
+	//ダッシュできないとき
 	if(myGameInfo[ _info ][6][1]==0){
 		if(commandInput[0] == __D4 || commandInput[0] == __D6){
 			commandInput[0] = __4;
 		}
 	}
 	
-	//楈寕傪惂尷偡傞
+	//霊撃を制限する
 	if(commandInput[0]==__22C){
 		if(*enGameInfo[ _status ][0][0]==0 || *enGameInfo[ _status ][0][0]==0xA || myGameInfo[ _para ][1][0] > 3){
 			commandInput[0] = 0;
 		}
 	}
 	
-	//僀儞僞乕僶儖
+	//インターバル
 	if(commandInput[0]){
 		if( gameTime < intervalFlg || gameTime < enDat->intervalFlg ){
 			if(!(commandInput[0] == __4 || commandInput[0] == __6

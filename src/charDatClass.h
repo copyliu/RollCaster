@@ -3,7 +3,7 @@
 
 #if _MSC_VER >= 1300
 #	include <windows.h>
-#	define DIRECTINPUT_VERSION 0x0700//DirectX7 ‚Ì DirectInput‚ðŽg—p
+#	define DIRECTINPUT_VERSION 0x0700//DirectX7 ¤Î DirectInput¤òÊ¹ÓÃ
 #	include <dinput.h>
 #	include <iostream>
 #else

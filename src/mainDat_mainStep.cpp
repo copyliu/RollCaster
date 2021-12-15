@@ -84,7 +84,7 @@ int mainDatClass::mainStep(){
 	BYTE sessionNo;
 	BYTE sessionID;
 
-	//梫専摙
+	//要検討
 	if( myInfo.terminalMode == mode_root || myInfo.terminalMode == mode_debug || myInfo.terminalMode == mode_broadcast ){
 		sessionNo = myInfo.sessionNo;
 		sessionID = myInfo.sessionID;
@@ -113,11 +113,11 @@ int mainDatClass::mainStep(){
 		WriteMemory( (void*)rand_address, &sRand, 4 );
 	}
 
-	//娚榓
+	//緩和
 	DWORD roopCounterReq = 0;
 	DWORD roopCounterSend = 0;
 
-	//愭撉傒幚尡
+	//先読み実験
 	DWORD preReqTime = 0;
 
 	//sync
@@ -150,7 +150,7 @@ int mainDatClass::mainStep(){
 			return 1;
 		}
 		if( deInfo == de_body ){
-			//愴摤拞偺摨婜側偳
+			//戦闘中の同期など
 			ReadMemory( (void*)((DWORD)pStackBase - 420) , &menuFlg , 1 );	//12FE5C
 			ReadMemory( (void*)0x6718B4, &gameTime, 4 );
 			ReadMemory( (void*)0x67161C, &pauseFlg, 1 );
@@ -315,7 +315,7 @@ int mainDatClass::mainStep(){
 				}
 
 				if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
-					//娤愴偟偰偰僞僀儉傾僂僩偟偨偲偒偼roopFlg偑1偺傑傑偺偨傔
+					//観戦しててタイムアウトしたときはroopFlgが1のままのため
 					if( !Root.sin_addr.s_addr ){
 						roopFlg = 0;
 					}
@@ -432,7 +432,7 @@ int mainDatClass::mainStep(){
 								enSideInfo = &myInfo.A;
 							}
 
-							//wParamArray偺撪梕偼偙偙偐傜
+							//wParamArrayの内容はここから
 							BYTE mySide;
 							BYTE myCount;
 							BYTE enCount;
@@ -498,7 +498,7 @@ int mainDatClass::mainStep(){
 					}
 				}
 
-				//梫専摙
+				//要検討
 				myInfo.phase = phase_default;
 				dataInfo.phase = phase_default;
 
@@ -517,7 +517,7 @@ int mainDatClass::mainStep(){
 					cout << "debug : Sync Good " << Res << endl;
 				}
 				if( Res == 1 || Res == 2 || Res == 3 ){
-					//憡庤偑摨婜僠僃僢僋偵懳墳偟偰側偄偲偒側偳
+					//相手が同期チェックに対応してないときなど
 					cout << "Tested " << (gameTime - 200) << endl;
 					cout << "debug : sync error " << Res << endl;
 				}
@@ -589,7 +589,7 @@ int mainDatClass::mainStep(){
 			}
 
 			if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
-				//憗憲傝
+				//早送り
 				if( rockFlg ){
 					if( fastFlg ){
 						WriteCode( (void *)0x66C23C, 16);
@@ -616,20 +616,20 @@ int mainDatClass::mainStep(){
 				}
 			}
 
-			//愭撉傒
-			//梫専摙
+			//先読み
+			//要検討
 			if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
 				if( gameTime >= preReqTime + 60 ){
 					if( inputData.GetTime( sessionNo ) >= gameTime + 300 ){
 						if( !inputData.GetInputDataA( sessionNo, gameTime + 2, NULL ) && !inputData.GetInputDataB( sessionNo, gameTime + 2, NULL ) ){
 							if( inputData.GetInputDataA( sessionNo, gameTime + 62, NULL ) && inputData.GetInputDataB( sessionNo, gameTime + 62, NULL ) ){
-								//憲怣
+								//送信
 								if( zlibFlg ){
 									BYTE data[7];
 									data[0] = sessionNo;
 									data[1] = sessionID;
 									*(DWORD*)&data[2] = gameTime + 62;
-									data[6] = 0;	//巇條傪奼挘偡傞偨傔
+									data[6] = 0;	//仕様を拡張するため
 									SendCmd( dest_root, cmd_inputdata_req, data, 7 );
 								}else{
 									BYTE data[6];
@@ -669,7 +669,7 @@ int mainDatClass::mainStep(){
 				if( inputData.GetInputData( sessionNo, gameTime + offset + 2, myInfo.playerSide, NULL ) ){
 					inputData.SetInputData( sessionNo, gameTime + offset + 2, myInfo.playerSide, diInputA );
 
-					//僨乕僞憲怣
+					//データ送信
 					if( gameTime + offset - 8 >= 0 ){
 						inputData.GetInputData( sessionNo, gameTime + offset - 8, myInfo.playerSide, &sendBuf[5] );
 					}else{
@@ -735,7 +735,7 @@ int mainDatClass::mainStep(){
 				}
 			}
 
-			//愴摤廔椆屻偵帺摦偱恑傓
+			//戦闘終了後に自動で進む
 			if (keystate[KEY_INFINITE_SPIRIT_CHEAT] == 1) {
 				infiniteSpiritCheat = 1 - infiniteSpiritCheat;
 				if (infiniteSpiritCheat) {
@@ -836,7 +836,7 @@ int mainDatClass::mainStep(){
 				}
 			}
 
-			//delayTime曄峏
+			//delayTime変更
 			if( myInfo.terminalMode == mode_root || myInfo.terminalMode == mode_debug ){
 				WORD delayTimeNew = 0;
 				if (keystate[KEY_DELAY1] == 1) delayTimeNew = 2;
@@ -943,7 +943,7 @@ int mainDatClass::mainStep(){
 				}
 
 
-				//梫専摙
+				//要検討
 				BYTE menuIndex;
 				if( menuAddress ){
 					ReadMemory( (void*)(menuAddress + 0x118) , &menuIndex , 1 );
@@ -952,17 +952,17 @@ int mainDatClass::mainStep(){
 				}
 
 				if( menuIndex == 0 ){
-					//僎乕儉嵞奐
+					//ゲーム再開
 					//none
 				}else if( menuIndex == 1 ){
-					//僎乕儉廔椆
+					//ゲーム終了
 					if( diInputA != key_P ){
 						if( diInputA & key_A || diInputB & key_A ){
 							break;
 						}
 					}
 				}else if( menuIndex == 2 ){
-					//儕僾儗僀傪曐懚偟偰廔椆
+					//リプレイを保存して終了
 					if( diInputA != key_P ){
 						if( diInputA & key_A || diInputB & key_A ){
 							break;
@@ -972,22 +972,22 @@ int mainDatClass::mainStep(){
 			}else if( isRewinding && endOfMatch != 999999999 && (gameTime + 2 - endOfMatch) >= rewindAmount ) {
 				UnRockTime();
 			}else if( rockFlg ){
-				//儘僢僋拞
+				//ロック中
 				if( gameTime <= 200 ){
 					UnRockTime();
 				}else{
 					if( diInputA == 0xFF || diInputB == 0xFF ){	//0xFF == key_P
-						//億乕僘偵偡傞
-						//僼僅傾僌儔僂儞僪偺偲偒偩偗擖椡
-						//梫専摙
-						//梋暘側擖椡偑擖傞梋抧偑偁傞
+						//ポーズにする
+						//フォアグラウンドのときだけ入力
+						//要検討
+						//余分な入力が入る余地がある
 						UnRockTime();
 					}else{
 						if( !inputData.GetInputDataA( sessionNo, syncFrame, NULL ) && !inputData.GetInputDataB( sessionNo, syncFrame, NULL ) ){
-							//捠忢傊
+							//通常へ
 							UnRockTime();
 						}else{
-							//僨乕僞偑撏偄偰偄側偄偲偒
+							//データが届いていないとき
 //							if( datA.GetInputBuf( gameTime + 2, &InputA ) ) cout << "error at a." << gameTime + 2 << endl;
 //							if( datB.GetInputBuf( gameTime + 2, &InputB ) ) cout << "error at b." << gameTime + 2 << endl;
 
@@ -1025,14 +1025,14 @@ int mainDatClass::mainStep(){
 										}
 									}
 									if( inputData.GetInputData( sessionNo, myTime, mySide, NULL ) ){
-										//攋抅傊偺懳張
+										//破綻への対処
 										cout << "ERROR : recover" << endl;
 										inputData.SetInputData( sessionNo, myTime, mySide, 0 );
 									}
 								}
 							}else if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
 
-								//娤愴偟偰偰僞僀儉傾僂僩偟偨偲偒偼roopFlg偑1偺傑傑偺偨傔
+								//観戦しててタイムアウトしたときはroopFlgが1のままのため
 								if( !Root.sin_addr.s_addr ){
 									roopFlg = 0;
 								}else{
@@ -1042,7 +1042,7 @@ int mainDatClass::mainStep(){
 											data[0] = sessionNo;
 											data[1] = sessionID;
 											*(DWORD*)&data[2] = syncFrame;
-											data[6] = 0;	//巇條傪奼挘偡傞偨傔
+											data[6] = 0;	//仕様を拡張するため
 											SendCmd( dest_root, cmd_inputdata_req, data, 7 );
 										}else{
 											BYTE data[6];
@@ -1057,7 +1057,7 @@ int mainDatClass::mainStep(){
 									roopCounterReq++;
 								}
 							}else if( myInfo.terminalMode == mode_broadcast ){
-								//攋抅傊偺懳張
+								//破綻への対処
 								inputData.SetInputDataA( sessionNo, gameTime + 2, diInputA );
 								inputData.SetInputDataB( sessionNo, gameTime + 2, diInputB );
 							}
@@ -1199,7 +1199,7 @@ int mainDatClass::mainStep(){
 													}
 												}
 												if( inputData.GetInputData( sessionNo, myTime, mySide, NULL ) ){
-													//攋抅傊偺懳張
+													//破綻への対処
 													cout << "ERROR : recover" << endl;
 													inputData.SetInputData( sessionNo, myTime, mySide, 0 );
 												}
@@ -1208,7 +1208,7 @@ int mainDatClass::mainStep(){
 										}
 									}else if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
 										if( Counter > 30 ){
-											//娤愴偟偰偰僞僀儉傾僂僩偟偨偲偒偼roopFlg偑1偺傑傑偺偨傔
+											//観戦しててタイムアウトしたときはroopFlgが1のままのため
 											if( !Root.sin_addr.s_addr ){
 												roopFlg = 0;
 											}else{
@@ -1217,7 +1217,7 @@ int mainDatClass::mainStep(){
 													data[0] = sessionNo;
 													data[1] = sessionID;
 													*(DWORD*)&data[2] = syncFrame;
-													data[6] = 0;	//巇條傪奼挘偡傞偨傔
+													data[6] = 0;	//仕様を拡張するため
 													SendCmd( dest_root, cmd_inputdata_req, data, 7 );
 												}else{
 													BYTE data[6];
@@ -1230,7 +1230,7 @@ int mainDatClass::mainStep(){
 											Counter = 0;
 										}
 									}else if( myInfo.terminalMode == mode_broadcast ){
-										//攋抅傊偺懳張
+										//破綻への対処
 										inputData.SetInputDataA( sessionNo, gameTime + 2, diInputA );
 										inputData.SetInputDataB( sessionNo, gameTime + 2, diInputB );
 										break;
@@ -1252,12 +1252,12 @@ int mainDatClass::mainStep(){
 				diInputB = 0;
 			}
 
-			//body偺擖椡
+			//bodyの入力
 			datA.SetBodyInput( diInputA );
 			datB.SetBodyInput( diInputB );
 
 		}else if( deInfo == de_char ){
-			//char偺擖椡
+			//charの入力
 			ReadMemory( (void*)0x6718B4, &gameTime, 4 );
 			if( (DWORD)( gameTime / 2 ) * 2 != gameTime ) gameTime--;
 
@@ -1310,7 +1310,7 @@ int mainDatClass::mainStep(){
 				syncData.SetSyncDataHereB( gameTime, HPB, XB );
 			}
 			
-			//懳張乮億乕僘偺屻側偳乯
+			//対処（ポーズの後など）
 			if( gameTime > 200 ){
 				if( inputData.GetInputData( sessionNo, timeA, 0xA, NULL ) ){
 					BYTE inputTemp;
@@ -1326,15 +1326,15 @@ int mainDatClass::mainStep(){
 				}
 			}
 
-			//娤愴僨乕僞憲怣昿搙尭彮
-			//尰忬偱偼娐嫬偑埆偄
+			//観戦データ送信頻度減少
+			//現状では環境が悪い
 			if( gameTime > gameTimeNoCast && (!lessCastFlg || gameTime / 2 & 1) ) {
 				DWORD offTime = gameTime;
 				if (rollbackOk) {
 					offTime -= rewindAmount + 2;
 					offTime -= gracePeriod;
 				}
-				//敪怣
+				//発信
 				//side A
 				if( offTime - 8 >= 0 ){
 					inputData.GetInputData( sessionNo, offTime - 8, 0xA, &castBufA[5] );
@@ -1399,7 +1399,7 @@ int mainDatClass::mainStep(){
 				gameTimeNoCast = gameTime;
 			}
 			
-			//擖椡
+			//入力
 			if( gameTime <= 200 ){
 				InputA = 0;
 				InputB = 0;

@@ -2,7 +2,7 @@
 
 void FloatHL(BYTE* Target, int hs, int ls){
 	if(Target){
-		//上位4ビット
+		//ﾉﾏﾎｻ4･ﾓ･ﾃ･ﾈ
 		if(hs > 0){
 			hs = hs * 0x10;
 			if(*Target + hs > 0xFF){
@@ -20,7 +20,7 @@ void FloatHL(BYTE* Target, int hs, int ls){
 			}
 		}
 		
-		//下位4ビット
+		//ﾏﾂﾎｻ4･ﾓ･ﾃ･ﾈ
 		if(ls > 0){
 			if((*Target & 0x0F) + ls > 0xF){
 				*Target = *Target | 0x0F;
@@ -40,7 +40,7 @@ void FloatHL(BYTE* Target, int hs, int ls){
 
 void FloatH(BYTE* Target, int hs){
 	if(Target){
-		//上位4ビット
+		//ﾉﾏﾎｻ4･ﾓ･ﾃ･ﾈ
 		if(hs > 0){
 			hs = hs * 0x10;
 			if(*Target + hs > 0xFF){
@@ -62,7 +62,7 @@ void FloatH(BYTE* Target, int hs){
 
 void FloatL(BYTE* Target, int ls){
 	if(Target){
-		//下位4ビット
+		//ﾏﾂﾎｻ4･ﾓ･ﾃ･ﾈ
 		if(ls > 0){
 			if((*Target & 0x0F) + ls > 0xF){
 				*Target = *Target | 0x0F;

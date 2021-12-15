@@ -37,7 +37,7 @@
 #define sprite_filter_int3_address_end2 0x43dde6
 #define dllhook_int3_address 0x64232c
 
-//シングルステップモードフラグ
+//･ｷ･ｰ･�･ｹ･ﾆ･ﾃ･ﾗ･筰`･ﾉ･ﾕ･鬣ｰ
 #define EFLAGS_TF 0x00000100
 
 //de

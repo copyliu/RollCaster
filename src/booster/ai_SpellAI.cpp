@@ -6,25 +6,25 @@ void boosterDatClass::ReadSpellAI(){
 	if(eigenValueSpell[0][0]){
 		if(myGameInfo[ _info ][3][0]){
 			if(myGameInfo[ _info ][5][0] == 0){
-				if(myGameInfo[ _para ][5][0] < 3000){	//HP彮側偄丄愰尵壜擻  ...
+				if(myGameInfo[ _para ][5][0] < 3000){	//HP少ない、宣言可能  ...
 					Address = SpellAIbase + eigenValueSpell[0][3];
 
 					if(*Address == 0x25){
 						Address2 = Address;
 						if(*(Address2 + 1) > 90){
-							//僗儁儖僇乕僪愰尵
+							//スペルカード宣言
 							commandInput[0] = __22D;
 							decodeTime = 0;
 						#if debug_mode_SpellAI
-								cout << "愰尵" << endl;
+								cout << "宣言" << endl;
 							#endif
 						}
 					}
 				}
 			}else{
-				//僗儁儖僇乕僪愰尵拞
-				if(myID==9){	//渎崄
-					if(statusID >= 0xC0 && statusID <= 0xC7){	//儈僢僔儞僌宯
+				//スペルカード宣言中
+				if(myID==9){	//萃香
+					if(statusID >= 0xC0 && statusID <= 0xC7){	//ミッシング系
 						SpellAIBuf[0][0][0]=1;
 					}else{
 						SpellAIBuf[0][0][0]=0;
@@ -33,8 +33,8 @@ void boosterDatClass::ReadSpellAI(){
 
 				if(spell_control == 0 || *enGameInfo[ _status ][1][0] == 2 || *enGameInfo[ _status ][1][0] == 5){
 					if(SpellAIBuf[0][0][0]==0){
-						if(myGameInfo[ _info ][2][0]==0){	//楈椡偺僠僃僢僋
-							//僗儁儖敪摦壜擻丂
+						if(myGameInfo[ _info ][2][0]==0){	//霊力のチェック
+							//スペル発動可能　
 							Address = SpellAIbase + eigenValueSpell[0][3];
 							for(Counter=2; Counter<40; Counter+=2){
 								Address2 = Address + Counter;
@@ -44,7 +44,7 @@ void boosterDatClass::ReadSpellAI(){
 										commandInput[0] = statusArray[ *Address2 ][2];
 										decodeTime = 0;
 										#if debug_mode_SpellAI
-											cout << "僗儁儖僇乕僪敪摦" << endl;
+											cout << "スペルカード発動" << endl;
 										#endif
 									}
 								}
@@ -52,19 +52,19 @@ void boosterDatClass::ReadSpellAI(){
 						}
 					}
 				}
-				if(SpellAIBuf[0][0][0]==1){	//2偼敪幩丒揥奐拞
-					//僗儁儖奐曻乮僆乕儗儕乕僘僒儞側偳乯
+				if(SpellAIBuf[0][0][0]==1){	//2は発射展開中
+					//スペル開放（オーレリーズサンなど）
 					Address = SpellAIbase + eigenValueSpell[0][3];
 
 					if(spell_control == 0 || *enGameInfo[ _status ][1][0] == 2 || *enGameInfo[ _status ][1][0] == 5){
 						if(myID==1){
-							if(myGameInfo[ _info ][8][2] == 0xBC){	//僆乕儗儕乕僘僒儞
+							if(myGameInfo[ _info ][8][2] == 0xBC){	//オーレリーズサン
 								for(Counter=2; Counter<40; Counter+=2){
 									Address2 = Address + Counter;
 									if(*Address2 == 0){
 										Counter = 40;
 									}
-									if(*Address2 == 0xBD || *Address2 == 0xBE){	//敪幩丒揥奐
+									if(*Address2 == 0xBD || *Address2 == 0xBE){	//発射展開
 										if(*(Address2 + 1) > 80){
 											commandInput[0] = statusArray[ *Address2 ][2];
 											Counter = 40;
@@ -72,13 +72,13 @@ void boosterDatClass::ReadSpellAI(){
 									}
 								}
 							}
-							if(myGameInfo[ _info ][8][2] == 0xBF){	//僆乕儗儕乕僘僜乕儔乕僔僗僥儉
+							if(myGameInfo[ _info ][8][2] == 0xBF){	//オーレリーズソーラーシステム
 								for(Counter=2; Counter<40; Counter+=2){
 									Address2 = Address + Counter;
 									if(*Address2 == 0){
 										Counter = 40;
 									}
-									if(*Address2 == 0xC0 || *Address2 == 0xC1){	//敪幩丒揥奐
+									if(*Address2 == 0xC0 || *Address2 == 0xC1){	//発射展開
 										if(*(Address2 + 1) > 80){
 											commandInput[0] = statusArray[ *Address2 ][2];
 											Counter = 40;
@@ -88,13 +88,13 @@ void boosterDatClass::ReadSpellAI(){
 							}
 						}
 					}
-					if(myID==9){	//渎崄	//儈僢僔儞僌宯
+					if(myID==9){	//萃香	//ミッシング系
 						if(myGameInfo[ _info ][8][2] == 0xBC || myGameInfo[ _info ][8][2] == 0xBF){
 							if(myGameInfo[ _para ][1][0] > 4){
 								commandInput[0] = __6;
 							}else{
 								Address2 = Address + 20;
-								if(*(Address2 + 1) > 50){	//梫挷惍
+								if(*(Address2 + 1) > 50){	//要調整
 									commandInput[0] = statusArray[ *Address2 ][2];
 								}else{
 									commandInput[0] = __6;
@@ -114,22 +114,22 @@ void boosterDatClass::CallSpellAI(){
 	if(eigenValueSpell[0][0]){
 		//2byte * 20
 
-//		SpellAIBuf[0][0][0]	//僼儔僌偵棙梡
+//		SpellAIBuf[0][0][0]	//フラグに利用
 
 
-		//屌桳傾僪儗僗峏怴
-		//幚尡拞	//昡壙偑惓偟偔偝傟偰偄側偄丠
-		eigenValueSpell[1][2] = myGameInfo[ _para ][1][1];	//嫍棧
-		eigenValueSpell[2][2] = myGameInfo[ _para ][2][1];	//帺暘崅偝
-		eigenValueSpell[3][2] = *enGameInfo[ _para ][2][1];	//憡庤崅偝
-		eigenValueSpell[4][2] = *enGameInfo[ _status ][0][0];	//僥僉忬懺丒暘椶1
+		//固有アドレス更新
+		//実験中	//評価が正しくされていない？
+		eigenValueSpell[1][2] = myGameInfo[ _para ][1][1];	//距離
+		eigenValueSpell[2][2] = myGameInfo[ _para ][2][1];	//自分高さ
+		eigenValueSpell[3][2] = *enGameInfo[ _para ][2][1];	//相手高さ
+		eigenValueSpell[4][2] = *enGameInfo[ _status ][0][0];	//テキ状態分類1
 
 
 		for(Counter=9; Counter>0; Counter--){
 			if(eigenValueSpell[Counter][0]){
-				if(eigenValueSpell[Counter][2] >= eigenValueSpell[Counter][0]){		//抣傪僠僃僢僋
+				if(eigenValueSpell[Counter][2] >= eigenValueSpell[Counter][0]){		//値をチェック
 					eigenValueSpell[Counter][2] = eigenValueSpell[Counter][0] -1;
-				}											//屌桳傾僪儗僗寁嶼
+				}											//固有アドレス計算
 				eigenValueSpell[Counter - 1][3] = eigenValueSpell[Counter][1] * eigenValueSpell[Counter][2] + eigenValueSpell[Counter][3];
 			}
 		}
@@ -137,89 +137,89 @@ void boosterDatClass::CallSpellAI(){
 
 
 		if(myGameInfo[ _status ][2][2] && myGameInfo[ _status ][2][2] != __5){
-			if(myGameInfo[ _status ][0][2]==8 || myGameInfo[ _status ][5][0]==0x25){	//僗儁儖娭學
+			if(myGameInfo[ _status ][0][2]==8 || myGameInfo[ _status ][5][0]==0x25){	//スペル関係
 				for(Line=1; Line<10; Line++){
 					if(SpellAIBuf[Line][0][0]==0){
-						SpellAIBuf[Line][0][0] = 0xFF;	//岺掱悢
+						SpellAIBuf[Line][0][0] = 0xFF;	//工程数
 
-						if(myGameInfo[ _status ][5][0]==0x25){	//僗儁儖僇乕僪愰尵
+						if(myGameInfo[ _status ][5][0]==0x25){	//スペルカード宣言
 							SpellAIBuf[Line][4][0] = 1;
-							SpellAIBuf[Line][1][1] = 0x30;//憡娭
-							SpellAIBuf[Line][2][1] = 65;	//報徾	//壗傕婲偒側偄仺幐攕
-							Counter = 0;	//愰尵偑愭摢
+							SpellAIBuf[Line][1][1] = 0x30;//相関
+							SpellAIBuf[Line][2][1] = 65;	//印象	//何も起きない→失敗
+							Counter = 0;	//宣言が先頭
 						}else{
-							//愰尵埲奜
+							//宣言以外
 							SpellAIBuf[Line][4][0] = 0;
-							SpellAIBuf[Line][1][1] = 128;//憡娭
-							SpellAIBuf[Line][2][1] = 64;	//報徾
+							SpellAIBuf[Line][1][1] = 128;//相関
+							SpellAIBuf[Line][2][1] = 64;	//印象
 
-							//偙偙偐傜摿庩側僗儁儖
-							//憡娭抣偺弶婜抣偑彮側偄
-							//SpellAIBuf[Line][4][0]偑僼儔僌
+							//ここから特殊なスペル
+							//相関値の初期値が少ない
+							//SpellAIBuf[Line][4][0]がフラグ
 
-							if(myID==1){	//杺棟嵐僗儁儖
-								if(myGameInfo[ _status ][5][0]==0xBC || myGameInfo[ _status ][5][0]==0xBF){	//敪摦
+							if(myID==1){	//魔理沙スペル
+								if(myGameInfo[ _status ][5][0]==0xBC || myGameInfo[ _status ][5][0]==0xBF){	//発動
 									SpellAIBuf[Line][4][0] = 2;
-									SpellAIBuf[Line][1][1] = 0x30;//憡娭
-									SpellAIBuf[Line][2][1] = 65;	//報徾
+									SpellAIBuf[Line][1][1] = 0x30;//相関
+									SpellAIBuf[Line][2][1] = 65;	//印象
 								}
 								if(myGameInfo[ _status ][5][0]==0xBD || myGameInfo[ _status ][5][0]==0xBE
-								|| myGameInfo[ _status ][5][0]==0xC0 || myGameInfo[ _status ][5][0]==0xC1){	//敪幩丒揥奐
+								|| myGameInfo[ _status ][5][0]==0xC0 || myGameInfo[ _status ][5][0]==0xC1){	//発射展開
 									SpellAIBuf[0][0][0] = 2;
 									SpellAIBuf[Line][4][0] = 3;
-									SpellAIBuf[Line][1][1] = 128;//憡娭
-									SpellAIBuf[Line][2][1] = 64;	//報徾
+									SpellAIBuf[Line][1][1] = 128;//相関
+									SpellAIBuf[Line][2][1] = 64;	//印象
 								}
 							}
-							if(myID==2){	//嶇栭僗儁儖
+							if(myID==2){	//咲夜スペル
 								if(myGameInfo[ _status ][5][0]==0xB0 || myGameInfo[ _status ][5][0]==0xB3
 								|| myGameInfo[ _status ][5][0]==0xB6 || myGameInfo[ _status ][5][0]==0xB7
 								|| myGameInfo[ _status ][5][0]==0xB9 || myGameInfo[ _status ][5][0]==0xBA){
 									SpellAIBuf[Line][4][0] = 1;
-									SpellAIBuf[Line][1][1] = 0x70;//憡娭	//棴傔偑挿偄
-									SpellAIBuf[Line][2][1] = 65;	//報徾
+									SpellAIBuf[Line][1][1] = 0x70;//相関	//溜めが長い
+									SpellAIBuf[Line][2][1] = 65;	//印象
 								}
 							}
-							if(myID==4){	//僷僠儏儕乕僗儁儖
+							if(myID==4){	//パチュリースペル
 								if(myGameInfo[ _status ][5][0]==0xBF){
 									SpellAIBuf[Line][4][0] = 1;
-									SpellAIBuf[Line][1][1] = 0x60;//憡娭
-									SpellAIBuf[Line][2][1] = 65;	//報徾
+									SpellAIBuf[Line][1][1] = 0x60;//相関
+									SpellAIBuf[Line][2][1] = 65;	//印象
 								}
 							}
-							if(myID==5){	//梔柌僗儁儖
+							if(myID==5){	//妖夢スペル
 								if(myGameInfo[ _status ][5][0]==0xBC || myGameInfo[ _status ][5][0]==0xBF){
 									SpellAIBuf[Line][4][0] = 1;
-									SpellAIBuf[Line][1][1] = 0x60;//憡娭
-									SpellAIBuf[Line][2][1] = 65;	//報徾
+									SpellAIBuf[Line][1][1] = 0x60;//相関
+									SpellAIBuf[Line][2][1] = 65;	//印象
 								}
 							}
-							if(myID==8){	//巼僗儁儖
+							if(myID==8){	//紫スペル
 								if(myGameInfo[ _status ][5][0]==0xBF){
 									SpellAIBuf[Line][4][0] = 1;
-									SpellAIBuf[Line][1][1] = 0x60;//憡娭
-									SpellAIBuf[Line][2][1] = 65;	//報徾
+									SpellAIBuf[Line][1][1] = 0x60;//相関
+									SpellAIBuf[Line][2][1] = 65;	//印象
 								}
 							}
-							if(myID==9){	//渎崄僗儁儖
+							if(myID==9){	//萃香スペル
 								if(statusID==0xB0 || statusID==0xB3 || statusID==0xB6 || statusID==0xB9){
 									SpellAIBuf[Line][4][0] = 0;
-									SpellAIBuf[Line][1][1] = 0x60;//憡娭
-									SpellAIBuf[Line][2][1] = 64;	//報徾
+									SpellAIBuf[Line][1][1] = 0x60;//相関
+									SpellAIBuf[Line][2][1] = 64;	//印象
 								}
 
 								if(myGameInfo[ _status ][5][0]==0xBC || myGameInfo[ _status ][5][0]==0xBF){
-									SpellAIBuf[Line][4][0] = 0;	//崱偼捠忢僗儁儖偲偟偰埖偆
-									SpellAIBuf[Line][1][1] = 0x60;//憡娭
-									SpellAIBuf[Line][2][1] = 64;	//報徾
+									SpellAIBuf[Line][4][0] = 0;	//今は通常スペルとして扱う
+									SpellAIBuf[Line][1][1] = 0x60;//相関
+									SpellAIBuf[Line][2][1] = 64;	//印象
 								}
-								if(statusID >= 0xC0 && statusID <= 0xC7){	//儈僢僔儞僌宯
+								if(statusID >= 0xC0 && statusID <= 0xC7){	//ミッシング系
 									SpellAIBuf[Line][4][0] = 4;
-									SpellAIBuf[Line][1][1] = 0xFF;//憡娭
-									SpellAIBuf[Line][2][1] = 65;	//64;	//報徾	//梫専摙	//椙埬偑側偄
+									SpellAIBuf[Line][1][1] = 0xFF;//相関
+									SpellAIBuf[Line][2][1] = 65;	//64;	//印象	//要検討	//良案がない
 								}
 							}
-							Counter = 2;	//愰尵偑愭摢側偺偱
+							Counter = 2;	//宣言が先頭なので
 						}
 
 						Address = SpellAIbase + eigenValueSpell[0][3];
@@ -229,18 +229,18 @@ void boosterDatClass::CallSpellAI(){
 								Address2 = Address + Counter;
 								if(*Address2 == 0){
 									*(Address2) = statusID;
-									*(Address2 + 1) = 95;	//弶婜抣
+									*(Address2 + 1) = 95;	//初期値
 								}
-								if(*Address2 == statusID){	//myGameInfo[ _status ][5][0]偲摨偠	//偳偪傜偱彂偔偺偑偄偄偐幚尡
+								if(*Address2 == statusID){	//myGameInfo[ _status ][5][0]と同じ	//どちらで書くのがいいか実験
 									Counter = 20;
 									SpellAIBuf[Line][0][1] = (DWORD)Address2;
 								}
 							}
-						}else{	//SpellAIBuf[Line][4][0] == 4	//儈僢僔儞僌宯
+						}else{	//SpellAIBuf[Line][4][0] == 4	//ミッシング系
 							SpellAIBuf[Line][0][1] = (DWORD)Address;
 						}
 						SpellAIBuf[Line][3][1] = 0;
-						SpellAIBuf[Line][4][1] = (DWORD)statusID;	//(DWORD)myGameInfo[ _info ][8][0];	//晞庬椶
+						SpellAIBuf[Line][4][1] = (DWORD)statusID;	//(DWORD)myGameInfo[ _info ][8][0];	//符種類
 
 						Line = 10;
 					}
@@ -256,43 +256,43 @@ void boosterDatClass::CallSpellAI(){
 					SpellAIBuf[Line][1][1] = 0;
 				}
 
-				//捠忢
+				//通常
 				if(SpellAIBuf[Line][4][0]==0){
 					if(myGameInfo[ _para ][5][1]){
 						SpellAIBuf[Line][2][1] = SpellAIBuf[Line][2][1] - 10;
 						SpellAIBuf[Line][1][1] = 0;
 						#if debug_mode_SpellAI
-							cout << "僟儊乕僕" << endl;
+							cout << "ダメージ" << endl;
 						#endif
 					}
 					if(statusArray[ *enGameInfo[ _status ][9][1] ][0]==2 || (*enGameInfo[ _status ][0][0]==2 && *enGameInfo[ _para ][5][1])){
 						SpellAIBuf[Line][2][1] = SpellAIBuf[Line][2][1] + 10;
 						SpellAIBuf[Line][1][1] = 0;
 						#if debug_mode_SpellAI
-							cout << "梌僟儊乕僕" << endl;
+							cout << "与ダメージ" << endl;
 						#endif
 					}
 					if(myID==9 && (statusID == 0xB7 || statusID == 0xBA)){
 						SpellAIBuf[Line][2][1] = SpellAIBuf[Line][2][1] + 10;
 						SpellAIBuf[Line][1][1] = 0;
 						#if debug_mode_SpellAI
-							cout << "婼敍傝宯惉岟" << endl;
+							cout << "鬼縛り系成功" << endl;
 						#endif
 					}
 				}
 
-				//愰尵側偳
-				if(SpellAIBuf[Line][4][0]==1 || SpellAIBuf[Line][4][0]==2){	//憡娭抣偺弶婜抣偑彮側偄
+				//宣言など
+				if(SpellAIBuf[Line][4][0]==1 || SpellAIBuf[Line][4][0]==2){	//相関値の初期値が少ない
 					if(myGameInfo[ _para ][5][1]){
 						SpellAIBuf[Line][2][1] = SpellAIBuf[Line][2][1] - 10;
 						SpellAIBuf[Line][1][1] = 0;
 						#if debug_mode_SpellAI
-							cout << "僟儊乕僕" << endl;
+							cout << "ダメージ" << endl;
 						#endif
 					}
 				}
 
-				//僆乕儗儕乕僘僒儞側偳
+				//オーレリーズサンなど
 				if(SpellAIBuf[Line][4][0]==3){
 					if((myID==1 && SpellAIBuf[Line][1][1] > 60) || myID !=1){
 						if(myGameInfo[ _para ][5][1]){
@@ -302,7 +302,7 @@ void boosterDatClass::CallSpellAI(){
 								SpellAIBuf[Line][2][1] = 0;
 							}
 							#if debug_mode_SpellAI
-								cout << "僟儊乕僕" << endl;
+								cout << "ダメージ" << endl;
 							#endif
 						}
 						if(*enGameInfo[ _status ][0][0]==2){
@@ -312,13 +312,13 @@ void boosterDatClass::CallSpellAI(){
 								SpellAIBuf[Line][2][1] = 128;
 							}
 							#if debug_mode_SpellAI
-								cout << "梌僟儊乕僕" << endl;
+								cout << "与ダメージ" << endl;
 							#endif
 						}
 					}
 				}
 
-				//儈僢僔儞僌宯
+				//ミッシング系
 				if(SpellAIBuf[Line][4][0]==4){
 					if(statusID >= 0xC0 && statusID <= 0xC7){
 						if(*enGameInfo[ _status ][0][0]==2){
@@ -329,20 +329,20 @@ void boosterDatClass::CallSpellAI(){
 							}
 							SpellAIBuf[Line][1][1] = 0;
 							#if debug_mode_SpellAI
-								cout << "梌僟儊乕僕" << endl;
+								cout << "与ダメージ" << endl;
 							#endif
 						}
 					}else{
 						SpellAIBuf[0][0][0] = 0;
-						SpellAIBuf[Line][1][1] = 0;	//憡娭傪愗傞
+						SpellAIBuf[Line][1][1] = 0;	//相関を切る
 					}
 				}
 
 				if(SpellAIBuf[Line][1][1] < 8){
-					//廔椆
+					//終了
 					/*
 					#if debug_mode_SpellAI
-						cout << "廔椆" << endl;
+						cout << "終了" << endl;
 					#endif
 					*/
 					if(SpellAIBuf[Line][0][1]){
@@ -351,42 +351,42 @@ void boosterDatClass::CallSpellAI(){
 							SpellAIBuf[Line][0][1] = 0;
 							if(*Address2 == (BYTE)SpellAIBuf[Line][4][1]){
 								if(SpellAIBuf[Line][2][1] > 64){
-									//岲報徾
-									//挿偔巆偡僨乕僞側偺偱曣悢傪戝偒偔
+									//好印象
+									//長く残すデータなので母数を大きく
 									if(*(Address2 + 1) < 109){
 										*(Address2 + 1) = *(Address2 + 1) + 1;
 									}
 									if(SpellAIBuf[Line][4][0]==2){
-										SpellAIBuf[0][0][0] = 1;	//敪摦惉岟
+										SpellAIBuf[0][0][0] = 1;	//発動成功
 										#if debug_mode_SpellAI
-											cout << "僆乕儗儕乕僘宯敪摦惉岟" << endl;
+											cout << "オーレリーズ系発動成功" << endl;
 										#endif
 									}
 									if(SpellAIBuf[Line][4][0]==3){
-										SpellAIBuf[0][0][0] = 0;	//敪幩惉岟
+										SpellAIBuf[0][0][0] = 0;	//発射成功
 										#if debug_mode_SpellAI
-											cout << "僆乕儗儕乕僘宯惉岟" << endl;
+											cout << "オーレリーズ系成功" << endl;
 										#endif
 									}
 
 									#if debug_mode_SpellAI
-										cout << "僗儁儖岲報徾" << endl;
+										cout << "スペル好印象" << endl;
 									#endif
 								}else{
-									//埆報徾
+									//悪印象
 									*(Address2 + 1) = *(Address2 + 1) - (BYTE)(*(Address2 + 1) / 10);
 									if(SpellAIBuf[Line][4][0]==3){
-										SpellAIBuf[0][0][0] = 0;	//敪幩幐攕
+										SpellAIBuf[0][0][0] = 0;	//発射失敗
 										#if debug_mode_SpellAI
-											cout << "僆乕儗儕乕僘宯幐攕" << endl;
+											cout << "オーレリーズ系失敗" << endl;
 										#endif
 									}
 									#if debug_mode_SpellAI
-										cout << "僗儁儖埆報徾" << endl;
+										cout << "スペル悪印象" << endl;
 									#endif
 								}
 							}
-						}else{	//SpellAIBuf[Line][4][0] == 4;	//儈僢僔儞僌宯
+						}else{	//SpellAIBuf[Line][4][0] == 4;	//ミッシング系
 							Address = (BYTE*)SpellAIBuf[Line][0][1];
 							for(Counter=20; Counter<40; Counter+=2){
 								Address2 = Address + Counter;
@@ -396,13 +396,13 @@ void boosterDatClass::CallSpellAI(){
 								}
 								if(*Address2==(BYTE)SpellAIBuf[Line][4][1]){
 									if(SpellAIBuf[Line][2][1] > 64){
-										//岲報徾
+										//好印象
 										if(*(Address2 + 1) < 110){
 											*(Address2 + 1) = *(Address2 + 1) + 1;
 										}
 										if(Counter!=20){
 											if(*(Address2 + 1) >= *(Address2 - 1)){
-												//儔儞僋傾僢僾
+												//ランクアップ
 												DWORD Temp;
 												Temp                   = (DWORD)*(WORD*)(Address2 - 2);
 												*(WORD*)(Address2 - 2) = *(WORD*)Address2;
@@ -410,10 +410,10 @@ void boosterDatClass::CallSpellAI(){
 											}
 										}
 										#if debug_mode_SpellAI
-											cout << "儈僢僔儞僌宯岲報徾" << endl;
+											cout << "ミッシング系好印象" << endl;
 										#endif
 									}else{
-										//埆報徾
+										//悪印象
 										if(*(Address2 + 1)){
 											*(Address2 + 1) = *(Address2 + 1) - 1;
 										}
@@ -426,7 +426,7 @@ void boosterDatClass::CallSpellAI(){
 											}
 										}
 										#if debug_mode_SpellAI
-											cout << "儈僢僔儞僌宯埆報徾" << endl;
+											cout << "ミッシング系悪印象" << endl;
 										#endif
 									}
 									Counter = 40;

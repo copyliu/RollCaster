@@ -51,13 +51,13 @@ int DivideLine( char* , contextStruct*){
 
 
 	/*
-	if‚ğŒŸõ
-	enID‚ğŒŸõ
-	==‚ğŒŸõ
-	0x**‚ğ“Ç‚İ‚ñ‚ÅINT‚É•ÏŠ·
-	^‹U”»’è
-	then‚Ö
-	Às
+	if¤ò—ÊË÷
+	enID¤ò—ÊË÷
+	==¤ò—ÊË÷
+	0x**¤òÕi¤ßŞz¤ó¤ÇINT¤Ë‰ä“Q
+	Õæ‚ÎÅĞ¶¨
+	then¤Ø
+	ŒgĞĞ
 	endif
 	
 	*/

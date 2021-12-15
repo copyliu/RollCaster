@@ -433,7 +433,7 @@ void mainDatClass::runAutoSaveRename(){
 			n++;
 
 			if (!has_n) {
-				cout << "Error: Replay filename already exists - Is your format lacking a %n or %t?" << endl;
+				cout << "错误: 录像文件已存在. " << endl;
 				n = 0;
 				break;
 			}
@@ -527,7 +527,7 @@ void mainDatClass::requestPaletteInfo(int color) {
 		}
 
 		if (--max_time <= 0) {
-			cout << "Couldn't get palette information within 10s time, skipping..." << endl;
+			cout << "无法获得对方配色模版." << endl;
 			break;
 		}
 
@@ -792,12 +792,12 @@ int mainDatClass::GetMyPort(){
 	WORD myPortTemp;
 	if( GetMyPortSub( &s, &myPortTemp ) ){
 //		cout << "Port : BAD ( UDP." << myPort << " Open failed )" << endl;
-		cout << "Port : Unknown" << endl;
+		cout << "端口 : 未知" << endl;
 		myPort = 0;
 		return 1;
 	}
 	myPort = ntohs( myPortTemp );
-	cout << "Port : Using UDP." << dec << myPort << endl;
+	cout << "端口 : UDP." << dec << myPort << endl;
 	return 0;
 }
 
@@ -811,7 +811,7 @@ int mainDatClass::GetDelay( BYTE dest, float* delayTemp ){
 	DWORD timeTemp;
 
 
-	//庢傝埖偆帪娫偺惛搙傪愝掕
+	//取り扱う時間の精度を設定
 	TIMECAPS timeCaps;
 	WORD timeCapsFlg = 0;
 	if( timeGetDevCaps( &timeCaps, sizeof(timeCaps) ) == TIMERR_NOERROR ){
@@ -829,7 +829,7 @@ int mainDatClass::GetDelay( BYTE dest, float* delayTemp ){
 	}
 
 
-	//帪娫偺惛搙偺愝掕傪栠偡
+	//時間の精度の設定を戻す
 	if( timeCapsFlg ){
 		if( TIMERR_NOERROR != timeEndPeriod( timeCaps.wPeriodMin ) ) return 1;
 	}
@@ -934,7 +934,7 @@ int mainDatClass::GetPlayerSide(){
 			myInfo.playerSide = 0xA;
 		}
 	}
-	//梫専摙
+	//要検討
 	enInfo.playerSide = 0;
 	for(;;){
 		if( enInfo.playerSide ) break;
@@ -1081,7 +1081,7 @@ int mainDatClass::SetRandBreakPoint(){
 
 	BYTE code[40];
 	code[0] = 0x90;	//INT3 or NOP
-	code[1] = 0x69;	//IMUL EAX, DWORD PTR DS : [66C000], 15A4E35	//66C000仺rand_address
+	code[1] = 0x69;	//IMUL EAX, DWORD PTR DS : [66C000], 15A4E35	//66C000→rand_address
 	code[2] = 0x05;
 	/*
 	code[3] = 0x00;
@@ -1095,7 +1095,7 @@ int mainDatClass::SetRandBreakPoint(){
 	code[9] = 0x5A;
 	code[10] = 0x01;
 	code[11] = 0x40;	//INC EAX
-	code[12] = 0xA3;	//MOV DWORD PTR DS : [66C000]	//66C000仺rand_address
+	code[12] = 0xA3;	//MOV DWORD PTR DS : [66C000]	//66C000→rand_address
 	/*
 	code[13] = 0x00;
 	code[14] = 0xC0;
@@ -1236,10 +1236,10 @@ int mainDatClass::SetWindowResize() {
 int mainDatClass::SetCode(){
 	if( !th075Flg ) return 1;
 
-	//DirectInput傪柍岠偵偡傞
+	//DirectInputを無効にする
 	WriteCode( (void*)0x406E80, 0xC3 );	//RETN
 
-	//億乕僘偺僶僢僼傽傪柍岠偵偡傞
+	//ポーズのバッファを無効にする
 	WriteCode( (void*)0x43B4C8, 0xEB );	//JMP SHORT
 
 	// Replay
@@ -1248,7 +1248,7 @@ int mainDatClass::SetCode(){
 	// Palette
 	WriteCode( (void*)palette_int3_address, 0xCC ); // INT3
 
-	//儔儞僟儉
+	//ランダム
 	SetRandBreakPoint();
 	
  	if( newCWflg ){
@@ -1275,10 +1275,10 @@ int mainDatClass::SetCode(){
 int mainDatClass::RemoveCode(){
 	if( !th075Flg ) return 1;
 
-	//DirectInput傪桳岠偵偡傞
+	//DirectInputを有効にする
 	WriteCode( (void*)0x406E80, 0x55 );	//PUSH EBP
 
-	//億乕僘偺僶僢僼傽傪桳岠偵偡傞
+	//ポーズのバッファを有効にする
 	WriteCode( (void*)0x43B4C8 , 0x75 );	//JNZ	SHORT
 
 	// Replay
@@ -1287,7 +1287,7 @@ int mainDatClass::RemoveCode(){
 	// Palette
 	WriteCode( (void*)palette_int3_address, 0x52 ); // PUSH EDX
 
-	//儔儞僟儉
+	//ランダム
 //	RemoveRandBreakPoint();
 
 	//reset repName
@@ -1433,7 +1433,7 @@ int mainDatClass::hookStateDLL() {
 	}
 
 	if (rollbackFlg && !rollbackOk) {
-		cout << "ERROR : Could not load state.dll : rewinding disabled" << endl;
+		cout << "错误 : 无法读取 state.dll, 画面回滚已关闭" << endl;
 	}
 	
 	return res;
@@ -1482,11 +1482,11 @@ void mainDatClass::runKeybind(int key) {
 		roundShowFlg = (roundShowFlg+1)%3;
 		cout << "setting : RoundShow " << roundShowFlg << " : ";
 		if (roundShowFlg == 1) {
-			cout << "Print end of session summary." << endl;
+			cout << "对战结果统计已开启." << endl;
 		} else if (roundShowFlg == 2) {
-			cout << "Print all match info." << endl;
+			cout << "对战明细统计已开启." << endl;
 		} else {
-			cout << "Print nothing." << endl;
+			cout << "对战结果统计已关闭." << endl;
 		}
 		break;
 	case KEY_BGM_TOGGLE:
@@ -1550,7 +1550,7 @@ int mainDatClass::WriteMemory(void* Address, void* data, DWORD size){
 	return 0;
 }
 
-//僨乕僞憲怣
+//データ送信
 int mainDatClass::SendData(int dest, void* Address, DWORD size){
 	return SendDataSub( dest, Address, size, task_main );
 }
@@ -1638,7 +1638,7 @@ int mainDatClass::SendDataSub( SOCKADDR_IN* addr, void* Address, DWORD size, WOR
 }
 
 
-//楢寢僨乕僞憲怣
+//連結データ送信
 int mainDatClass::SendData(int dest, void* Address, DWORD size, void* Address2, DWORD size2){
 	return SendDataSub( dest, Address, size, Address2, size2, task_main );
 }
@@ -1810,7 +1810,7 @@ int mainDatClass::SendDataSub( SOCKADDR_IN* addr, void* Address, DWORD size, voi
 	return 0;
 }
 
-//傾僪儗僗
+//アドレス
 int mainDatClass::SendArea(int dest, void* Address, DWORD size){
 	return SendAreaSub( dest, Address, size, task_main );
 }

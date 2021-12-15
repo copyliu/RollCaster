@@ -7,7 +7,7 @@ void boosterDatClass::ReadRecoverAI(){
 		if((statusID==0x20 && myGameInfo[ _para ][2][0]) || (statusID==0x21 && myGameInfo[ _para ][2][0]==0)){
 			if(myGameInfo[ _info ][2][0] != 2 || myGameInfo[ _para ][2][0] == 0){
 				Address = RecoverAIbase + eigenValueRecover[0][3];
-				commandInput[0] = *Address;	//0偱傕傛偄乮擖椡僉儍儞僙儖偺偨傔乯
+				commandInput[0] = *Address;	//0でもよい（入力キャンセルのため）
 				#if debug_mode_RecoverAI
 					cout << "Recover" << endl;
 				#endif
@@ -20,11 +20,11 @@ void boosterDatClass::CallRecoverAI(){
 	if(eigenValueRecover[0][0]){
 		
 		if(myGameInfo[ _status ][2][2] && (myGameInfo[ _status ][5][0] == 0x90 || myGameInfo[ _status ][5][0] == 0x91 || myGameInfo[ _status ][5][0] == 0x92 || myGameInfo[ _status ][5][0] == 0x93)){
-			//2Byte * 10屄
+			//2Byte * 10個
 			Address = RecoverAIbase + eigenValueRecover[0][3];
 			RecoverAIBuf[0] = (DWORD)Address;
-			RecoverAIBuf[1] = 0x30;	//憡娭
-			RecoverAIBuf[2] = 1;	//報徾
+			RecoverAIBuf[1] = 0x30;	//相関
+			RecoverAIBuf[2] = 1;	//印象
 			RecoverAIBuf[4] = myGameInfo[ _status ][2][0];
 		}
 		
@@ -55,13 +55,13 @@ void boosterDatClass::CallRecoverAI(){
 								cout << "Recover end" << endl;
 							#endif
 							if(RecoverAIBuf[2]){
-								//岲報徾
-								//壛揰
+								//好印象
+								//加点
 								if(*(Address2 + 1) < 0xF){
 									*(Address2 + 1) = *(Address2 + 1) + 1;
 								}
 								if(Counter != 0){
-									//儔儞僋傾僢僾弨旛
+									//ランクアップ準備
 									if(*(Address2 + 1) >= *(Address2 - 1)){
 										DWORD Temp;
 										Temp                   = (DWORD)*(WORD*)(Address2 - 2);
@@ -70,13 +70,13 @@ void boosterDatClass::CallRecoverAI(){
 									}
 								}
 							}else{
-								//埆報徾
-								//尭揰
+								//悪印象
+								//減点
 								if(*(Address2 + 1)){
 									*(Address2 + 1) = *(Address2 + 1) - 1;
 								}
 								if(Counter != 18 && *(Address2 + 2)){
-									//儔儞僋僟僂儞弨旛
+									//ランクダウン準備
 									if(*(Address2 + 1) <= *(Address2 + 3)){
 										DWORD Temp;
 										Temp                   = (DWORD)*(WORD*)Address2;
@@ -98,10 +98,10 @@ void boosterDatClass::CallRecoverAI(){
 		}
 		
 		
-		//屌桳傾僪儗僗峏怴
-		eigenValueRecover[1][2] = myGameInfo[ _para ][1][1];	//嫍棧
-		eigenValueRecover[2][2] = myGameInfo[ _para ][2][1];	//帺暘崅偝
-		eigenValueRecover[3][2] = *enGameInfo[ _para ][2][1];	//憡庤崅偝
+		//固有アドレス更新
+		eigenValueRecover[1][2] = myGameInfo[ _para ][1][1];	//距離
+		eigenValueRecover[2][2] = myGameInfo[ _para ][2][1];	//自分高さ
+		eigenValueRecover[3][2] = *enGameInfo[ _para ][2][1];	//相手高さ
 		if(myGameInfo[ _info ][1][0] == 1){
 			if(eigenValueRecover[1][2] == 0 || eigenValueRecover[1][2] == 1){
 				eigenValueRecover[1][2] = eigenValueRecover[1][2] + 5;
@@ -110,9 +110,9 @@ void boosterDatClass::CallRecoverAI(){
 		
 		for(Counter=9; Counter>0; Counter--){
 			if(eigenValueRecover[Counter][0]){
-				if(eigenValueRecover[Counter][2] >= eigenValueRecover[Counter][0]){		//抣傪僠僃僢僋
+				if(eigenValueRecover[Counter][2] >= eigenValueRecover[Counter][0]){		//値をチェック
 					eigenValueRecover[Counter][2] = eigenValueRecover[Counter][0] -1;
-				}											//屌桳傾僪儗僗寁嶼
+				}											//固有アドレス計算
 				eigenValueRecover[Counter - 1][3] = eigenValueRecover[Counter][1] * eigenValueRecover[Counter][2] + eigenValueRecover[Counter][3];
 			}
 		}

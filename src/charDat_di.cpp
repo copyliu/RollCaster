@@ -1,7 +1,7 @@
 #include "charDatClass.h"
 using namespace std;
 
-//MingWの dinput.cを参考にした。
+//MingW､ﾎ dinput.c､ﾎｿｼ､ﾋ､ｷ､ｿ｡｣
 //http://www.ultrasync.net/yofune/?DirectInput
 //http://cvs.sourceforge.net/viewcvs.py/*checkout*/mingw/w32api/lib/dinput.c
 
@@ -371,7 +371,7 @@ int charDatClass::diInit(){
 		return 1;
 	}
 	if(inputDeviceType==0xFF){
-		//キーボード入力
+		//･ｭｩ`･ﾜｩ`･ﾉﾈ�ﾁｦ
 		if( di->EnumDevices(DIDEVTYPE_KEYBOARD, &DIEnumDevicesProc, this, DIEDFL_ATTACHEDONLY)){
 			di->Release();
 			return 1;
@@ -387,7 +387,7 @@ int charDatClass::diInit(){
 		}
 		isPolledDevice = 0;
 	}else{
-		//ジョイパッド入力
+		//･ｸ･逾､･ﾑ･ﾃ･ﾉﾈ�ﾁｦ
 		enumCounter = 0;
 		if( di->EnumDevices(DIDEVTYPE_JOYSTICK, &DIEnumDevicesProc, this, DIEDFL_ATTACHEDONLY) ){
 			di->Release();
@@ -439,7 +439,7 @@ int charDatClass::diInit(){
 		hRes = device->Acquire();
 	}
 	if( (hRes == DIERR_INVALIDPARAM) || (hRes == DIERR_NOTINITIALIZED) ){
-		//エラー
+		//･ｨ･鬩`
 		device->Release();
 		di->Release();
 		return 1;

@@ -1,7 +1,7 @@
 #include "conf.h"
 #include "boosterDatClass.h"
-//僐儞僗僩儔僋僞
-//僨僗僩儔僋僞
+//コンストラクタ
+//デストラクタ
 
 boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	playerSide = playerSideTemp;
@@ -52,7 +52,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 		AIsizeArray[Counter] =0;
 	}
 	
-	//偙偙偐傜AI偺弶婜愝掕
+	//ここからAIの初期設定
 	#if debug_mode_AIsize_show
 		cout << "debug : " << hex << playerSide << ".AIsize show" << endl;
 	#endif
@@ -69,18 +69,18 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	}
 	
 	//SNAI
-	eigenValueSN[0][0] = 1;	//帺桼搙
-	eigenValueSN[1][0] = 8;	//嫍棧帺桼搙
-	eigenValueSN[2][0] = 4;	//帺暘崅偝帺桼搙
-	eigenValueSN[3][0] = 5;	//僥僉崅偝帺桼搙
-	eigenValueSN[4][0] = 6;	//僥僉忬懺帺桼搙
-	eigenValueSN[5][0] = 1;	//帺桼搙		//婎杮忣曬奿巕
+	eigenValueSN[0][0] = 1;	//自由度
+	eigenValueSN[1][0] = 8;	//距離自由度
+	eigenValueSN[2][0] = 4;	//自分高さ自由度
+	eigenValueSN[3][0] = 5;	//テキ高さ自由度
+	eigenValueSN[4][0] = 6;	//テキ状態自由度
+	eigenValueSN[5][0] = 1;	//自由度		//基本情報格子
 	eigenValueSN[6][0] = 0;
 	eigenValueSN[7][0] = 0;
 	eigenValueSN[8][0] = 0;
 	eigenValueSN[9][0] = 0;
 	
-	eigenValueSN[5][1] = 2400;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 8Byte * 10 * 30屄
+	eigenValueSN[5][1] = 2400;	//基本情報格子の容量 : 基本情報単位 8Byte * 10 * 30個
 	
 	for(Counter=9; Counter>0; Counter--){
 		if(eigenValueSN[Counter][0]){
@@ -95,7 +95,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	#if debug_mode_AIsize_show
 		cout << "SmallScale N AI : " << dec << eigenValueSN[0][1] << " Byte" << endl;
 	#endif
-	AIsizeArray[0] = AIsizeArray[0] + eigenValueSN[0][1];	//AI偺憤検傪峏怴
+	AIsizeArray[0] = AIsizeArray[0] + eigenValueSN[0][1];	//AIの総量を更新
 	if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] > AI_size){
 		#if debug_mode_AIsize_show
 			cout	<< "Small Scale Normal AI    : AI_size is too small. Require "
@@ -113,18 +113,18 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	
 	
 	//SWAI
-	eigenValueSW[0][0] = 1;	//帺桼搙
-	eigenValueSW[1][0] = 3;	//嫍棧帺桼搙
-	eigenValueSW[2][0] = 4;	//帺暘崅偝帺桼搙
-	eigenValueSW[3][0] = 5;	//僥僉崅偝帺桼搙
-	eigenValueSW[4][0] = 6;	//僥僉忬懺帺桼搙
-	eigenValueSW[5][0] = 1;	//帺桼搙		//婎杮忣曬奿巕
+	eigenValueSW[0][0] = 1;	//自由度
+	eigenValueSW[1][0] = 3;	//距離自由度
+	eigenValueSW[2][0] = 4;	//自分高さ自由度
+	eigenValueSW[3][0] = 5;	//テキ高さ自由度
+	eigenValueSW[4][0] = 6;	//テキ状態自由度
+	eigenValueSW[5][0] = 1;	//自由度		//基本情報格子
 	eigenValueSW[6][0] = 0;
 	eigenValueSW[7][0] = 0;
 	eigenValueSW[8][0] = 0;
 	eigenValueSW[9][0] = 0;
 	
-	eigenValueSW[5][1] = 4800;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 8Byte * 20 * 30屄
+	eigenValueSW[5][1] = 4800;	//基本情報格子の容量 : 基本情報単位 8Byte * 20 * 30個
 	
 	for(Counter=9; Counter>0; Counter--){
 		if(eigenValueSW[Counter][0]){
@@ -139,7 +139,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	#if debug_mode_AIsize_show
 		cout << "SmallScale W AI : " << dec << eigenValueSW[0][1] << " Byte" << endl;
 	#endif
-	AIsizeArray[0] = AIsizeArray[0] + eigenValueSW[0][1];	//AI偺憤検傪峏怴
+	AIsizeArray[0] = AIsizeArray[0] + eigenValueSW[0][1];	//AIの総量を更新
 	if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] > AI_size){
 		#if debug_mode_AIsize_show
 			cout	<< "Small Scale Wall Side AI : AI_size is too small. Require "
@@ -155,18 +155,18 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	}
 	
 	//Spell
-	eigenValueSpell[0][0] = 1;	//帺桼搙
-	eigenValueSpell[1][0] = 5;	//嫍棧帺桼搙
-	eigenValueSpell[2][0] = 3;	//帺暘崅偝帺桼搙
-	eigenValueSpell[3][0] = 3;	//僥僉崅偝帺桼搙
-	eigenValueSpell[4][0] = 11;	//僥僉忬懺帺桼搙
-	eigenValueSpell[5][0] = 1;	//帺桼搙		//婎杮忣曬奿巕
+	eigenValueSpell[0][0] = 1;	//自由度
+	eigenValueSpell[1][0] = 5;	//距離自由度
+	eigenValueSpell[2][0] = 3;	//自分高さ自由度
+	eigenValueSpell[3][0] = 3;	//テキ高さ自由度
+	eigenValueSpell[4][0] = 11;	//テキ状態自由度
+	eigenValueSpell[5][0] = 1;	//自由度		//基本情報格子
 	eigenValueSpell[6][0] = 0;	
 	eigenValueSpell[7][0] = 0;
 	eigenValueSpell[8][0] = 0;
 	eigenValueSpell[9][0] = 0;
 	
-	eigenValueSpell[5][1] = 40;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 2Byte * 20屄	//戝偟偨検偱偼側偄偺偱懡傔偵
+	eigenValueSpell[5][1] = 40;	//基本情報格子の容量 : 基本情報単位 2Byte * 20個	//大した量ではないので多めに
 	
 	for(Counter=9; Counter>0; Counter--){
 		if(eigenValueSpell[Counter][0]){
@@ -181,7 +181,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	#if debug_mode_AIsize_show
 		cout << "Spell        AI : " << dec << eigenValueSpell[0][1] << " Byte" << endl;
 	#endif
-	AIsizeArray[1] = AIsizeArray[1] + eigenValueSpell[0][1];	//AI偺憤検傪峏怴
+	AIsizeArray[1] = AIsizeArray[1] + eigenValueSpell[0][1];	//AIの総量を更新
 	if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] > AI_size){
 		#if debug_mode_AIsize_show
 			cout	<< "Spell AI : AI_size is too small. Require "
@@ -198,21 +198,21 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	
 	
 	
-	//偙偙偐傜 _vs_.dat
+	//ここから _vs_.dat
 	
 	//LNAI
-	eigenValueLN[0][0] = 1;	//帺桼搙
-	eigenValueLN[1][0] = 7;	//嫍棧帺桼搙
-	eigenValueLN[2][0] = 3;	//帺暘崅偝帺桼搙
-	eigenValueLN[3][0] = 3;	//僥僉崅偝帺桼搙
-	eigenValueLN[4][0] = 1;	//帺桼搙		//婎杮忣曬奿巕
+	eigenValueLN[0][0] = 1;	//自由度
+	eigenValueLN[1][0] = 7;	//距離自由度
+	eigenValueLN[2][0] = 3;	//自分高さ自由度
+	eigenValueLN[3][0] = 3;	//テキ高さ自由度
+	eigenValueLN[4][0] = 1;	//自由度		//基本情報格子
 	eigenValueLN[5][0] = 0;
 	eigenValueLN[6][0] = 0;
 	eigenValueLN[7][0] = 0;
 	eigenValueLN[8][0] = 0;
 	eigenValueLN[9][0] = 0;
 	
-	eigenValueLN[4][1] = 50000;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 4Byte * 5 * 50 * 50屄
+	eigenValueLN[4][1] = 50000;	//基本情報格子の容量 : 基本情報単位 4Byte * 5 * 50 * 50個
 	
 	for(Counter=9; Counter>0; Counter--){
 		if(eigenValueLN[Counter][0]){
@@ -227,7 +227,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	#if debug_mode_AIsize_show
 		cout << "LargeScale N AI : " << dec << eigenValueLN[0][1] << " Byte" << endl;
 	#endif
-	AIsizeArray[2] = AIsizeArray[2] + eigenValueLN[0][1];	//AI偺憤検傪峏怴
+	AIsizeArray[2] = AIsizeArray[2] + eigenValueLN[0][1];	//AIの総量を更新
 	if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] > AI_size){
 		#if debug_mode_AIsize_show
 			cout	<< "Large Scale AI : AI_size is too small. Require "
@@ -243,18 +243,18 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	}
 	
 	//RecoverAI
-	eigenValueRecover[0][0] = 1;	//帺桼搙
-	eigenValueRecover[1][0] = 7;	//嫍棧帺桼搙
-	eigenValueRecover[2][0] = 3;	//帺暘崅偝帺桼搙
-	eigenValueRecover[3][0] = 3;	//僥僉崅偝帺桼搙
-	eigenValueRecover[4][0] = 1;	//帺桼搙		//婎杮忣曬奿巕
+	eigenValueRecover[0][0] = 1;	//自由度
+	eigenValueRecover[1][0] = 7;	//距離自由度
+	eigenValueRecover[2][0] = 3;	//自分高さ自由度
+	eigenValueRecover[3][0] = 3;	//テキ高さ自由度
+	eigenValueRecover[4][0] = 1;	//自由度		//基本情報格子
 	eigenValueRecover[5][0] = 0;
 	eigenValueRecover[6][0] = 0;
 	eigenValueRecover[7][0] = 0;
 	eigenValueRecover[8][0] = 0;
 	eigenValueRecover[9][0] = 0;
 	
-	eigenValueRecover[4][1] = 20;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 2Byte * 10屄	//偲傝偁偊偢懡傔偵
+	eigenValueRecover[4][1] = 20;	//基本情報格子の容量 : 基本情報単位 2Byte * 10個	//とりあえず多めに
 	
 	for(Counter=9; Counter>0; Counter--){
 		if(eigenValueRecover[Counter][0]){
@@ -269,7 +269,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	#if debug_mode_AIsize_show
 		cout << "Recover      AI : " << dec << eigenValueRecover[0][1] << " Byte" << endl;
 	#endif
-	AIsizeArray[2] = AIsizeArray[2] + eigenValueRecover[0][1];	//AI偺憤検傪峏怴
+	AIsizeArray[2] = AIsizeArray[2] + eigenValueRecover[0][1];	//AIの総量を更新
 	if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] > AI_size){
 		#if debug_mode_AIsize_show
 			cout	<< "Recover      AI : AI_size is too small. Require "
@@ -285,22 +285,22 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	}
 	
 	
-	//偙偙偐傜 local.dat
+	//ここから local.dat
 	
 	Flg = AI_local;
 	if(Flg){
-		eigenValueLocal[0][0] = AI_local;//帺桼搙				//eigenValueLocal偺揥奐
-		eigenValueLocal[1][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[2][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[3][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[4][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[5][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[6][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[7][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[8][0] = 1;	//帺桼搙	//枹掕
-		eigenValueLocal[9][0] = 1;	//帺桼搙	//枹掕
+		eigenValueLocal[0][0] = AI_local;//自由度				//eigenValueLocalの展開
+		eigenValueLocal[1][0] = 1;	//自由度	//未定
+		eigenValueLocal[2][0] = 1;	//自由度	//未定
+		eigenValueLocal[3][0] = 1;	//自由度	//未定
+		eigenValueLocal[4][0] = 1;	//自由度	//未定
+		eigenValueLocal[5][0] = 1;	//自由度	//未定
+		eigenValueLocal[6][0] = 1;	//自由度	//未定
+		eigenValueLocal[7][0] = 1;	//自由度	//未定
+		eigenValueLocal[8][0] = 1;	//自由度	//未定
+		eigenValueLocal[9][0] = 1;	//自由度	//未定
 		
-		eigenValueLocal[9][1] = 0;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 枹掕
+		eigenValueLocal[9][1] = 0;	//基本情報格子の容量 : 基本情報単位 未定
 		
 		for(Counter=9; Counter>0; Counter--){
 			if(eigenValueLocal[Counter][0]){
@@ -311,7 +311,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 		#if debug_mode_AIsize_show
 			cout << "Local        AI : " << dec << eigenValueLocal[0][1] << " Byte" << endl;
 		#endif
-		AIsizeArray[3] = AIsizeArray[3] + eigenValueLocal[0][1];	//AI偺憤検傪峏怴
+		AIsizeArray[3] = AIsizeArray[3] + eigenValueLocal[0][1];	//AIの総量を更新
 		if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] > AI_size){
 			#if debug_mode_AIsize_show
 				cout	<< "Local        AI : AI_size is too small. Require "
@@ -328,18 +328,18 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	}
 	
 	//BackAI
-	eigenValueBack[0][0] = 1;	//帺桼搙
-	eigenValueBack[1][0] = 5;	//嫍棧帺桼搙
-	eigenValueBack[2][0] = 3;	//帺暘崅偝帺桼搙
-	eigenValueBack[3][0] = 4;	//僥僉崅偝帺桼搙
-	eigenValueBack[4][0] = 1;	//帺桼搙		//婎杮忣曬奿巕
+	eigenValueBack[0][0] = 1;	//自由度
+	eigenValueBack[1][0] = 5;	//距離自由度
+	eigenValueBack[2][0] = 3;	//自分高さ自由度
+	eigenValueBack[3][0] = 4;	//テキ高さ自由度
+	eigenValueBack[4][0] = 1;	//自由度		//基本情報格子
 	eigenValueBack[5][0] = 0;
 	eigenValueBack[6][0] = 0;
 	eigenValueBack[7][0] = 0;
 	eigenValueBack[8][0] = 0;
 	eigenValueBack[9][0] = 0;
 	
-	eigenValueBack[4][1] = 1200;	//婎杮忣曬奿巕偺梕検 : 婎杮忣曬扨埵 4Byte * 10 * 30屄
+	eigenValueBack[4][1] = 1200;	//基本情報格子の容量 : 基本情報単位 4Byte * 10 * 30個
 	
 	for(Counter=9; Counter>0; Counter--){
 		if(eigenValueBack[Counter][0]){
@@ -354,7 +354,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 	#if debug_mode_AIsize_show
 		cout << "Backward     AI : " << dec << eigenValueBack[0][1] << " Byte" << endl;
 	#endif
-	AIsizeArray[4] = AIsizeArray[4] + eigenValueBack[0][1];	//AI偺憤検傪峏怴
+	AIsizeArray[4] = AIsizeArray[4] + eigenValueBack[0][1];	//AIの総量を更新
 	if(AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] + AIsizeArray[4] > AI_size){
 		#if debug_mode_AIsize_show
 			cout	<< "Backward     AI : AI_size is too small. Require "
@@ -369,7 +369,7 @@ boosterDatClass::boosterDatClass(WORD playerSideTemp){
 		}
 	}
 	
-	//AI偺傑偲傔
+	//AIのまとめ
 	AI = 0;
 	AI = (char*)malloc( AIsizeArray[0] + AIsizeArray[1] + AIsizeArray[2] + AIsizeArray[3] + AIsizeArray[4] );
 	#if debug_mode_AIsize_show
@@ -387,10 +387,10 @@ boosterDatClass::~boosterDatClass(){
 		cout << "debug : " << hex << playerSide << ".~boosterDatC()" << endl;
 	#endif
 	
-	//儃僞儞擖椡傪奐曻
+	//ボタン入力を開放
 	if(bodyIniFlg==0){
 		for(Counter=1;Counter<9;Counter++){
-			if(gameInfoIni[Counter][5]){	//墴偝傟偰偄傞
+			if(gameInfoIni[Counter][5]){	//押されている
 				Input.type = INPUT_KEYBOARD;
 				Input.ki.wVk = gameInfoIni[Counter][2];
 				Input.ki.wScan = MapVirtualKey(gameInfoIni[Counter][2], 0);
@@ -404,7 +404,7 @@ boosterDatClass::~boosterDatClass(){
 		}
 	}
 	
-	if(strcmp(Name, "init") && strcmp(Name, "second")){			//init,second埲奜偺偲偒曐懚
+	if(strcmp(Name, "init") && strcmp(Name, "second")){			//init,second以外のとき保存
 		
 		Flg = CloseAI();
 		

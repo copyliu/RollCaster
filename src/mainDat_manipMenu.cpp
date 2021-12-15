@@ -7,7 +7,7 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 	if(dest->phase > now->phase){
 		switch( now->phase ){
 		case 0 :
-			//傑偢僉儍儔偺埵抲傪崌傢偣傞
+			//まずキャラの位置を合わせる
 			if( dest->ID != now->ID ){
 				if(dest->ID > now->ID){
 					if( dest->ID > now->ID + 5 ){
@@ -23,7 +23,7 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 					}
 				}
 			}else{
-				//寛掕
+				//決定
 				if (dest->color & 1) {
 					return key_D;
 				} else {
@@ -44,7 +44,7 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 					return key_down;
 				}
 			}else{
-				//寛掕
+				//決定
 				return key_A;
 			}
 		case 2 :
@@ -69,11 +69,11 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 					return key_down;
 				}
 			}else{
-				//寛掕
+				//決定
 				return key_A;
 			}
 		case 4 :
-			//応強
+			//場所
 			if( dest->ID != now->ID ){
 				return key_B;
 			}
@@ -102,15 +102,15 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 	}
 
 	if(dest->phase < now->phase){
-		//僉儍儞僙儖
+		//キャンセル
 		return key_B;
 	}
 
 	if(dest->phase == now->phase){
-		//僇乕僜儖堏摦偩偗
+		//カーソル移動だけ
 		switch( now->phase ){
 		case 0 :
-			//僉儍儔墶曽岦
+			//キャラ横方向
 			if(dest->ID != now->ID){
 				if(dest->ID > now->ID){
 					if( dest->ID > now->ID + 5 ){
@@ -131,7 +131,7 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 			if(dest->ID != now->ID){
 				return key_B;
 			}
-			//僗儁儖廲曽岦
+			//スペル縦方向
 				if( abs(dest->placeTime-now->placeTime)>10){
 					return key_D;
 				}
@@ -156,7 +156,7 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 				if( abs(dest->placeTime-now->placeTime)>10){
 					return key_D;
 				}
-			//僗儁儖廲曽岦
+			//スペル縦方向
 			if(dest->spellPlace != now->spellPlace){
 				switch( dest->spellPlace ){
 				case 0 :
@@ -178,7 +178,7 @@ BYTE ManipMenuSub( charInfoStruct* now, charInfoStruct* dest){
 			if(dest->secondSpell != now->secondSpell ){
 				return key_B;
 			}
-			//応強
+			//場所
 			if(dest->place != now->place){
 				if(dest->place > now->place){
 					if(dest->place > now->place + 4){
@@ -250,17 +250,17 @@ int mainDatClass::ManipMenu(){
 	//test
 	DWORD menuAddressTemp = 0;
 
-	//娚榓
+	//緩和
 	DWORD roopCounter = 0;
 	DWORD stageRandCounter = 0;
 
 
 	//HWND hWnd = FindWindow( NULL , windowName );
 
-	//僗僥乕僕慖戰偺堎忢偵墳媫慬抲
+	//ステージ選択の異常に応急措置
 	WORD placeRecoverFlg = 0;
 
-	//僗僥乕僕慖戰傪帺桼偵
+	//ステージ選択を自由に
 	WORD placeFreeFlg = 0;
 
 	DWORD keyCancelCounter = 0;
@@ -387,26 +387,26 @@ int mainDatClass::ManipMenu(){
 				}
 
 				if( myInfo.terminalMode == mode_root || myInfo.terminalMode == mode_debug ){
-					//儖乕僩偺応崌
+					//ルートの場合
 					if( enInfo.phase == phase_battle || enInfo.phase == phase_read ){
 						enInfo.A.phase = 5;
 						enInfo.B.phase = 5;
 					}
 
-					//僨乕僞傪梫媮
+					//データを要求
 					if (myInfo.terminalMode == mode_debug) {
 						enInfo = myInfo;
 					} else {
 						SendCmd( dest_away, cmd_gameInfo, (void *)cowcaster_id, 5 );
 					}
 
-					//sessionNo偱懳墳
+					//sessionNoで対応
 //					if( enInfo.gameTime > 2 ) return 1;
 
-					//梫専摙
+					//要検討
 //					cout << menuFlg << " " << battleFlgA << " " << battleFlgB << endl;
 
-					//僗僥乕僕儔儞僟儉屻偼偟偽傜偔寛掕偱偒側偄傛偆偵偡傞
+					//ステージランダム後はしばらく決定できないようにする
 					if( stageRandCounter ) stageRandCounter++;
 					if( stageRandCounter > 36 ) stageRandCounter = 0;
 
@@ -486,7 +486,7 @@ int mainDatClass::ManipMenu(){
 							}
 
 
-							//慜柺偐偳偆偐
+							//前面かどうか
 							if( datA.inputDeviceType == 0xFF ){
 								HWND hFocus = GetForegroundWindow();
 								if( hFocus && hWnd != hFocus ){
@@ -508,11 +508,11 @@ int mainDatClass::ManipMenu(){
 							}
 
 							if( !placeFreeFlg ){
-								//偄偔偮偐偺応強傪慖戰晄壜偵偡傞
+								//いくつかの場所を選択不可にする
 								if( myInfo.A.phase == 4 && InputA & key_A ){
-									if( myInfo.place == 9	//尪憐嫿
-									|| (myInfo.place == 5 && myInfo.placeTime == 0)		//戝栘偺偁傞曟抧拫
-									|| (myInfo.place == 2 && myInfo.placeTime == 0)	)	//帪寁戜拫
+									if( myInfo.place == 9	//幻想郷
+									|| (myInfo.place == 5 && myInfo.placeTime == 0)		//大木のある墓地昼
+									|| (myInfo.place == 2 && myInfo.placeTime == 0)	)	//時計台昼
 									{
 										InputA = 0;
 									}
@@ -535,7 +535,7 @@ int mainDatClass::ManipMenu(){
 							}
 						}
 						if( myInfo.playerSide == 0xB ){
-							//僥僗僩
+							//テスト
 							if( enInfo.A.place > 10 ){
 								enInfo.A.place = 0;
 								enInfo.A.placeTime = 0;
@@ -545,7 +545,7 @@ int mainDatClass::ManipMenu(){
 
 							InputB = datA.GetInput();
 
-							//慜柺偐偳偆偐
+							//前面かどうか
 							if( datA.inputDeviceType == 0xFF ){
 								HWND hFocus = GetForegroundWindow();
 								if( hFocus && hWnd != hFocus ){
@@ -572,14 +572,14 @@ int mainDatClass::ManipMenu(){
 						}
 
 						if( ( enInfo.phase == phase_battle || enInfo.phase == phase_read && myInfo.A.phase == 4 && myInfo.B.phase == 4 ) && myInfo.sessionNo == enInfo.sessionNo ){
-							//専徹偡傞
+							//検証する
 							if( myInfo.A.ID == enInfo.A.ID && myInfo.A.firstSpell == enInfo.A.firstSpell && myInfo.A.secondSpell == enInfo.A.secondSpell
 							 && myInfo.B.ID == enInfo.B.ID && myInfo.B.firstSpell == enInfo.B.firstSpell && myInfo.B.secondSpell == enInfo.B.secondSpell
 							 && myInfo.place == enInfo.place && myInfo.placeTime == enInfo.placeTime )
 							{
 								if( myInfo.playerSide == 0xB ){
 									//Color
-									//偱偒傟偽擖椡偱懳墳偟偨偄偲偙傠
+									//できれば入力で対応したいところ
 									BYTE dataTemp;
 									if ( !(enInfo.A.color & 2) && !(enInfo.B.color & 2) ) {
 										if( enInfo.A.color & 1 ){
@@ -609,12 +609,12 @@ int mainDatClass::ManipMenu(){
 						if( myInfo.playerSide == 0xA ){
 							break;
 						}else{
-							//専徹偡傞
+							//検証する
 							if( myInfo.A.ID == enInfo.A.ID && myInfo.A.firstSpell == enInfo.A.firstSpell && myInfo.A.secondSpell == enInfo.A.secondSpell
 							 && myInfo.B.ID == enInfo.B.ID && myInfo.B.firstSpell == enInfo.B.firstSpell && myInfo.B.secondSpell == enInfo.B.secondSpell
 							 && myInfo.place == enInfo.place && myInfo.placeTime == enInfo.placeTime )
 							{
-								//師偺僗僥僢僾傊
+								//次のステップへ
 								break;
 							}else{
 								return 1;
@@ -623,7 +623,7 @@ int mainDatClass::ManipMenu(){
 					}
 
 
-					//楢懪廋惓
+					//連打修正
 					if( pushFlg ){
 						if( myInfo.playerSide == 0xA ) InputB = 0;
 						if( myInfo.playerSide == 0xB ) InputA = 0;
@@ -640,13 +640,13 @@ int mainDatClass::ManipMenu(){
 					}
 
 				}else if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
-					//揮憲偺応崌
+					//転送の場合
 					if( dataInfo.phase == phase_battle || dataInfo.phase == phase_read ){
 						dataInfo.A.phase = 5;
 						dataInfo.B.phase = 5;
 					}
 
-					//僨乕僞傪梫媮
+					//データを要求
 					if( !roopCounter ){
 //						SendCmd( dest_branch, cmd_dataInfo );
 						SendCmd( dest_root, cmd_dataInfo, (void *)cowcaster_id, 5);
@@ -667,7 +667,7 @@ int mainDatClass::ManipMenu(){
 						if (myInfo.B.phase > 0) {
 							myInfo.B.color = dataInfo.B.color;
 						}
-						//専徹偡傞
+						//検証する
 						if( ( dataInfo.phase == phase_battle || dataInfo.phase == phase_read ) && ( myInfo.A.phase == 4 && myInfo.B.phase == 4 ) ){
 							if( myInfo.A.ID == dataInfo.A.ID && myInfo.A.firstSpell == dataInfo.A.firstSpell && myInfo.A.secondSpell == dataInfo.A.secondSpell
 							 && myInfo.B.ID == dataInfo.B.ID && myInfo.B.firstSpell == dataInfo.B.firstSpell && myInfo.B.secondSpell == dataInfo.B.secondSpell
@@ -700,25 +700,25 @@ int mainDatClass::ManipMenu(){
 						myInfo.A.color = dataInfo.A.color;
 						myInfo.B.color = dataInfo.B.color;
 
-						//専徹偡傞
+						//検証する
 						if( myInfo.A.ID == dataInfo.A.ID && myInfo.A.firstSpell == dataInfo.A.firstSpell && myInfo.A.secondSpell == dataInfo.A.secondSpell
 						 && myInfo.B.ID == dataInfo.B.ID && myInfo.B.firstSpell == dataInfo.B.firstSpell && myInfo.B.secondSpell == dataInfo.B.secondSpell
 						 && myInfo.place == dataInfo.place && myInfo.placeTime == dataInfo.placeTime )
 						{
-							//師偺僗僥僢僾傊
+							//次のステップへ
 							break;
 						}else{
 							return 1;
 						}
 					}
 
-					//楢懪廋惓
+					//連打修正
 					if( pushFlg ){
 						InputA = 0;
 						InputB = 0;
 					}
 				}else if( myInfo.terminalMode == mode_broadcast ){
-					//僽儘乕僪僉儍僗僩偺応崌
+					//ブロードキャストの場合
 					if( menuFlg == 3 && !battleFlgA && !battleFlgB ){
 						HWND hFocus = GetForegroundWindow();
 						InputA = datA.GetInput();
@@ -734,7 +734,7 @@ int mainDatClass::ManipMenu(){
 							}
 						}
 					}else{
-						//師偺僗僥僢僾傊
+						//次のステップへ
 						break;
 					}
 				}

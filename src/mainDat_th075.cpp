@@ -2,13 +2,13 @@
 using namespace std;
 
 //http://nienie.com/~masapico/doc_ApiSpy.html
-//仾偺儁乕僕乽MASAPICO'S Page乿傪嶲峫
+//↑のページ「MASAPICO'S Page」を参考
 
 int mainDatClass::th075Roop( DWORD* deInfo ){
 	CONTEXT ct;
 	
 	*deInfo = 0;
-	/* 僨僶僢僌偺宲懕 */
+	/* デバッグの継続 */
 	if( deInitFlg ){
 		if( !ContinueDebugEvent(de.dwProcessId, de.dwThreadId, ContinueStatus) ){
 			WaitForSingleObject( hPrintMutex, INFINITE );
@@ -77,7 +77,7 @@ int mainDatClass::th075Roop( DWORD* deInfo ){
 			//}
 
 			if( stageLimitCancelFlg ){
-				//僗僥乕僕惂尷柍岠
+				//ステージ制限無効
 				BYTE code[8];
 				code[0] = 0xE9;
 				code[1] = 0x9F;
@@ -90,7 +90,7 @@ int mainDatClass::th075Roop( DWORD* deInfo ){
 			}
 
 			if( replaySaveFlg || autoSaveFlg==1 ){
-				//懳愴廔椆帪偺儊僯儏乕偺僨僼僅儖僩傪儕僾儗僀曐懚偵偡傞
+				//対戦終了時のメニューのデフォルトをリプレイ保存にする
 				WriteCode( (void*)0x43BCBE, 2 );
 				if( autoSaveFlg==1 ) {
 					SetAutoSave();
@@ -157,10 +157,10 @@ int mainDatClass::th075Roop( DWORD* deInfo ){
 
 		return 1;
 
-	case EXCEPTION_DEBUG_EVENT: /* 椺奜敪惗 */
+	case EXCEPTION_DEBUG_EVENT: /* 例外発生 */
 		switch(de.u.Exception.ExceptionRecord.ExceptionCode) {
 		case EXCEPTION_BREAKPOINT:
-			/* 僽儗乕僋億僀儞僩偵憳嬾偟偨応崌 */
+			/* ブレークポイントに遭遇した場合 */
 			ct.ContextFlags = CONTEXT_CONTROL;
 			
 			if( de.dwThreadId != processThID ){
@@ -570,13 +570,13 @@ int mainDatClass::th075Roop( DWORD* deInfo ){
 				}
 			}
 
-			//婲摦帪偵忢偵昁梫
+			//起動時に常に必要
 			ContinueStatus = DBG_CONTINUE;
 
 			break;
 
-		case EXCEPTION_SINGLE_STEP: // 僔儞僌儖僗僥僢僾幚峴椺奜
-			// 嵞傃僽儗乕僋億僀儞僩傪愝抲偡傞
+		case EXCEPTION_SINGLE_STEP: // シングルステップ実行例外
+			// 再びブレークポイントを設置する
 
 			{
 				BYTE newCode = 0xCC;
@@ -588,7 +588,7 @@ int mainDatClass::th075Roop( DWORD* deInfo ){
 				}
 			}
 			FlushInstructionCache(pi.hProcess, NULL, 0);
-			// 僔儞僌儖僗僥僢僾儌乕僪傪拞巭
+			// シングルステップモードを中止
 			ct.ContextFlags = CONTEXT_CONTROL;
 			if(!GetThreadContext(hProcessTh, &ct)){
 				WaitForSingleObject( hPrintMutex, INFINITE );

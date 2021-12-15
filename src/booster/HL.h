@@ -3,10 +3,10 @@
 
 #include "windows.h"
 
-void FloatHL(BYTE*, int, int);//‰ÁZŒ¸Z	//(•‚‚©‚Î‚¹‚éE’¾‚ß‚éŠ´‚¶‚É‹ß‚¢)
+void FloatHL(BYTE*, int, int);//¼ÓËãœpËã	//(¸¡¤«¤Ğ¤»¤ëÉò¤á¤ë¸Ğ¤¸¤Ë½ü¤¤)
 void FloatH(BYTE*, int);
 void FloatL(BYTE*, int);
-BYTE GetH(BYTE*);			//•Ô‚·
+BYTE GetH(BYTE*);			//·µ¤¹
 BYTE GetL(BYTE*);
 void SetH(BYTE*, BYTE);
 void SetL(BYTE*, BYTE);

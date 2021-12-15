@@ -3,9 +3,10 @@
 using namespace std;
 
 int mainDatClass::mainDatInit(int argc, char** argv){
-	cout << "RollCaster version " << cowcaster_version_string << endl;
+	cout << "東方萃夢想 RollCaster 版本 " << cowcaster_version_string << endl;
 	//cout << ", protocol version " << (int)cowcaster_protocol_version << endl;
 	//cout << "Command version : " << cmd_version << endl;
+	cout << "汉化版本 20211215" << endl;
 	startTime = time( NULL );
 
 	//nowDir
@@ -19,7 +20,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 				dir[199] = 0;
 				lstrcpyW( nowDir, dir );
 
-				//嶌嬈僼僅儖僟愝掕
+				//作業フォルダ設定
 				SetCurrentDirectoryW( nowDir );
 			}
 		}
@@ -169,7 +170,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 		cout << "debug : arg Mode" << endl;
 
 		if( strcmp( argData.targetIP, "default" ) && argData.argMode == 2 ){
-			//摿掕憡庤懸偪
+			//特定相手待ち
 			argData.argMode = 1;
 		}
 
@@ -235,7 +236,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	memset( &Standby[1] , 0, sizeof(SOCKADDR_IN) );
 
 	memset( windowName, 0, sizeof(windowName) );
-	strcpy( windowName, "搶曽渎柌憐 乣 Immaterial and Missing Power. ver1.11" );
+	strcpy( windowName, "東方萃夢想 ～ Immaterial and Missing Power. ver1.11" );
 
 	memset( myPlayerName, 0, sizeof(myPlayerName) );
 	memset( myShortName, 0, sizeof(myShortName) );
@@ -588,7 +589,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
  		windowWidth = GetPrivateProfileIntW( L"WINDOW", L"windowWidth", 640, iniPath );
  		if (windowWidth < 320) {
 			windowWidth = 320;
-			cout << "Error reading config file: POSITION::width must be at least 320" << endl;
+			cout << "配置文件错误 : POSITION::width 需大于 320" << endl;
  		}
  		if (windowWidth != 640) {
  			windowResizeFlg = 1;
@@ -654,12 +655,12 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 		WORD Temp;
 		myPort = 7500;
 		cout	<< endl
-			<< "<StartUp>" << endl
+			<< "<端口设置>" << endl
 			<< "0 : Exit" << endl
 			<< "1 : UDP.7500" << endl
 			<< "2 : UDP.0" << endl
-			<< "3 : Specific Port" << endl
-			<< "Input >";
+			<< "3 : 手动指定" << endl
+			<< "请选择 >";
 		cin >> Temp;
 		if( cin.fail() ){
 			//cin.clear();
@@ -677,7 +678,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 		case 3 :
 			cin.clear();
 			cin.ignore(1024,'\n');
-			cout << "Input Port Number >";
+			cout << "输入端口号 >";
 			cin >> myPort;
 			if( cin.fail() ){
 				myPort = 7500;
@@ -728,7 +729,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 			memcpy(myShortName, myPlayerName, 4);
 			myShortName[4] = '\0';
 		}
-		cout << "You are identified as: [" << myShortName << "] " << myPlayerName << endl;
+		cout << "玩家名称已设为 : [" << myShortName << "] " << myPlayerName << endl;
 	}
 
 	WORD wVersion = MAKEWORD( 2, 0);
@@ -748,7 +749,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 								s = socket(AF_INET , SOCK_DGRAM , 0);
 								if( s != INVALID_SOCKET ){
 									if( bind( s, (SOCKADDR*)&Here, sizeof(Here)) >= 0 ){
-										//梫専摙
+										//要検討
 										GetMyPort();
 										hSendTh = (HANDLE)_beginthreadex(NULL, 0, sendThread, this, 0, NULL);
 										if( hSendTh ){
@@ -771,9 +772,8 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 											}
 										}
 									}else{
-										cout << "debug : Bind error." << endl;
-										cout << "        You probably have another Caster running on the same port." << endl;
-										cout << "        Close it out." << endl;
+										cout << "debug : 端口绑定失败." << endl;
+										cout << "        请留意是否有其他程序使用该端口或双开了本程序." << endl;
 										Sleep( 2000 );
 									}
 									closesocket(s);
@@ -841,7 +841,7 @@ int mainDatClass::TerminateTh075(){
 
 
 int mainDatClass::mainDatEnd(){
-	//僗儗僢僪傪暵偠傞
+	//スレッドを閉じる
 	continueFlg = 0;
 	
 	if( hSendTh ){
@@ -866,7 +866,7 @@ int mainDatClass::mainDatEnd(){
 	
 	WSACleanup();
 	
-	//渎柌憐偺僗儗僢僪偑奐偄偰偄偨傜暵偠傞
+	//萃夢想のスレッドが開いていたら閉じる
 	TerminateTh075();
 
 	WaitForSingleObject(hManageTh, 1000);
@@ -913,7 +913,7 @@ int mainDatClass::charInit(){
 	} else {
 		if ( datA.init() ) {
 			if (datA.init_simple_kbd()) return 1;
-			cout << "Spectating and player 1 pad not found, using default keyboard inputs." << endl;
+			cout << "找不到观战和P1手柄设置, 请使用默认键盘设置." << endl;
 		}
 	}
 	return 0;

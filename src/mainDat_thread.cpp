@@ -82,7 +82,7 @@ unsigned __stdcall boosterThread(void* Address){
 					stateFlgA = 0;
 					stateFlgB = 0;
 
-					while(stateFlgA != 0xF && stateFlgB != 0xF && dat->continueFlg && dat->boosterFlg){	//0xF偱廔傢傝
+					while(stateFlgA != 0xF && stateFlgB != 0xF && dat->continueFlg && dat->boosterFlg){	//0xFで終わり
 						if(Counter >= __magnification){
 							stateFlgA = boosterDatA.RefleshDat();
 							stateFlgB = boosterDatB.RefleshDat();
@@ -90,8 +90,8 @@ unsigned __stdcall boosterThread(void* Address){
 								boosterDatA.ConvertDat();
 								boosterDatB.ConvertDat();
 
-								boosterDatA.mainRoop();	//儖乕僾椙岲
-								boosterDatB.mainRoop();	//儖乕僾椙岲
+								boosterDatA.mainRoop();	//ループ良好
+								boosterDatB.mainRoop();	//ループ良好
 							}
 							Counter = 0;
 						}
@@ -101,7 +101,7 @@ unsigned __stdcall boosterThread(void* Address){
 						if( listeningMode ){
 							Sleep( 1 );
 						}else{
-							Sleep(sleep_time);	//1僼儗乕儉偱16ms偖傜偄
+							Sleep(sleep_time);	//1フレームで16msぐらい
 						}
 						Counter++;
 					}
@@ -128,13 +128,13 @@ unsigned __stdcall manageThread(void* Address){
 		ReleaseMutex( dat->hPrintMutex );
 	#endif
 
-	//僞僀儉傾僂僩娗棟側偳
+	//タイムアウト管理など
 	lastTimeStruct* lastTime = &(dat->lastTime);
 	DWORD* nowTime = &(dat->nowTime);
 	int size = sizeof(SOCKADDR_IN);
 	DWORD Counter;
 
-	//cmd_echo偱偼側偄傎偆偑傛偄
+	//cmd_echoではないほうがよい
 
 	for(;;){
 		*nowTime = timeGetTime();
@@ -161,7 +161,7 @@ unsigned __stdcall manageThread(void* Address){
 
 		if( dat->Away.sin_addr.s_addr && lastTime->Away ){
 			if( dat->toughModeFlg ){
-				//TIMEOUT傪柍帇
+				//TIMEOUTを無視
 				if( lastTime->Away + 4000 < *nowTime ){
 					dat->SendCmdM( dest_away, cmd_continue );
 				}
@@ -179,7 +179,7 @@ unsigned __stdcall manageThread(void* Address){
 		}
 		if( dat->Root.sin_addr.s_addr && lastTime->Root ){
 			if( dat->toughModeFlg ){
-				//TIMEOUT傪柍帇
+				//TIMEOUTを無視
 				if( lastTime->Root + 4000 < *nowTime ){
 					dat->SendCmdM( dest_root, cmd_continue );
 				}
@@ -188,12 +188,12 @@ unsigned __stdcall manageThread(void* Address){
 				memset( &(dat->Root), 0, size );
 				ReleaseMutex( dat->hMutex );
 
-				//梫専摙
+				//要検討
 				if( dat->roopFlg ){
 					cout << "ERROR : TIMEOUT ( Root )" << endl;
 				}
 
-				//娤愴偟偰偰丄僨乕僞偑巆偭偰偄傞偲偒偺懳張
+				//観戦してて、データが残っているときの対処
 				if( dat->myInfo.phase == phase_battle && ( dat->myInfo.terminalMode == mode_branch || dat->myInfo.terminalMode == mode_subbranch ) ){
 					//none
 				}else{
@@ -216,7 +216,7 @@ unsigned __stdcall manageThread(void* Address){
 		}
 		if( dat->Access.sin_addr.s_addr && lastTime->Access ){
 			if( dat->toughModeFlg ){
-				//TIMEOUT傪柍帇
+				//TIMEOUTを無視
 				/*
 				if( lastTime->Access + 4000 < *nowTime ){
 					dat->SendCmdM( dest_access, cmd_continue );
@@ -489,22 +489,22 @@ unsigned __stdcall sendThread(void* Address){
 
 
 
-//儘乕僇儖IP傪抏偔
-//枹僥僗僩
-//127.0.0.1仺7F 00 00 01
+//ローカルIPを弾く
+//未テスト
+//127.0.0.1→7F 00 00 01
 int TestIP( DWORD IP ){
 	if( !IP ) return 1;
 	BYTE* ip = (BYTE*)&IP;
 
 //	cout << (WORD)ip[0] << (WORD)ip[1] << (WORD)ip[2] << (WORD)ip[3] << endl;
 
-	//10.0.0.0乣10.255.255.255
+	//10.0.0.0～10.255.255.255
 	if( ip[0] == 10 ) return 1;
 
-	//172.16.0.0乣172.31.255.255
+	//172.16.0.0～172.31.255.255
 	if( ip[0] == 172 && ip[1] >= 16 && ip[1] <= 31 ) return 1;
 
-	//192.168.0.0乣192.168.255.255
+	//192.168.0.0～192.168.255.255
 	if( ip[0] == 192 && ip[1] == 168 ) return 1;
 
 	//127.0.0.1
@@ -597,7 +597,7 @@ BYTE GetCWflg( mainDatClass* dat, BYTE* recvData, int size ){
 	return flg;
 }
 
-//addr偺拞恎傪楳傞偲偒偼MUTEX傪庢摼偡傞
+//addrの中身を弄るときはMUTEXを取得する
 unsigned __stdcall recvThread(void* Address){
 	mainDatClass* dat = (mainDatClass*)Address;
 	if(!dat) return 1;
@@ -610,7 +610,7 @@ unsigned __stdcall recvThread(void* Address){
 
 
 
-	//僶乕僕儑儞忣曬傕偁偭偨傎偆偑偄偄
+	//バージョン情報もあったほうがいい
 	int	addrSize = sizeof(SOCKADDR_IN);
 	int	size;
 	SOCKADDR_IN addr;
@@ -653,9 +653,9 @@ unsigned __stdcall recvThread(void* Address){
 		size = recvfrom( dat->s, (char*)recvBuf, recv_buf_size, 0, (SOCKADDR*)&addr, &addrSize);
 
 		if( size < 0) {
-			//梫専摙
+			//要検討
 			if( addr.sin_addr.s_addr == 0 ){
-				//庤堘偄偺偲偒偺偨傔偺懳張
+				//手違いのときのための対処
 				if( dat->continueFlg ){
 					Sleep(1);
 				}
@@ -669,7 +669,7 @@ unsigned __stdcall recvThread(void* Address){
 
 				if( recvBuf[0] == cmd_version && recvBuf[1] == cmd_casters && recvBuf[2] == cmd_space_2 && recvBuf[3] == cmd_space_3 ){
 					if( addr.sin_addr.s_addr == dat->Away.sin_addr.s_addr){
-						//懳愴憡庤偐傜偺捠怣
+						//対戦相手からの通信
 						if( *command != cmd_exit ){
 							lastTime->Away = *nowTime;
 						}
@@ -806,7 +806,7 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case cmd_sendinput :
-							//愴摤拞偺擖椡僨乕僞傪奿擺偡傞
+							//戦闘中の入力データを格納する
 							{
 								BYTE enSide = 0;
 								if( dat->myInfo.playerSide == 0xA ){
@@ -842,7 +842,7 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case res_input_req :
-							//愴摤拞偺擖椡僨乕僞傪奿擺偡傞
+							//戦闘中の入力データを格納する
 							{
 								BYTE enSide = 0;
 								if( dat->myInfo.playerSide == 0xA ){
@@ -856,7 +856,7 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case cmd_input_req :
-							//擖椡傪曉怣偡傞
+							//入力を返信する
 							{
 								BYTE mySide = dat->myInfo.playerSide;
 								if( !( dat->inputData.GetInputData( recvData[0], *(DWORD*)&recvData[2], mySide, &data[6] ) ) ){
@@ -868,19 +868,19 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case res_time :
-							//憡庤偺帪娫傪奿擺
+							//相手の時間を格納
 							dat->enInfo.gameTime = *(DWORD*)recvData;
 							break;
 						case cmd_time :
-							//帪娫傪憲傞
+							//時間を送る
 							dat->SendCmdR( dest_away, res_time, &( dat->myInfo.gameTime ), 4 );
 							break;
 						case res_gameInfo :
-							//儊僯儏乕偺忣曬傪奿擺
+							//メニューの情報を格納
 							memcpy( &(dat->enInfo), recvData, sizeof(dat->enInfo) );
 							break;
 						case cmd_gameInfo :
-							//儊僯儏乕偺忣曬傪憲傞
+							//メニューの情報を送る
 							memcpy(data, &dat->myInfo, sizeof(dat->myInfo));
 							if (dat->enCowCaster < 4) {
 								((gameInfoStruct *)data)->A.color &= 1;
@@ -894,7 +894,7 @@ unsigned __stdcall recvThread(void* Address){
 							dat->SendCmdR( dest_away, res_delay, data, 4 );
 							break;
 						case res_delay :
-							//delayObs傕昞帵偝偣偨偄
+							//delayObsも表示させたい
 							dat->delayTime = *(WORD*)recvData;
 							dat->delay = ( (float)*(WORD*)&recvData[2] ) / 10;
 							break;
@@ -908,7 +908,7 @@ unsigned __stdcall recvThread(void* Address){
 								dat->delayTimeObsNo = dat->delayTimeObsNo + 1;
 							}
 							break;
-						case cmd_rand :	//偱偒傟偽嵶偐偄僨乕僞偼傑偲傔傞曽岦偱
+						case cmd_rand :	//できれば細かいデータはまとめる方向で
 							data[0] = dat->myRandNo;
 							data[1] = dat->myRand;
 							dat->SendCmdR( dest_away, res_rand, data, 2 );
@@ -1059,14 +1059,14 @@ unsigned __stdcall recvThread(void* Address){
 							dat->SendCmdR( &addr, res_join, data, 1 );
 							break;
 						case cmd_inputdata_req :
-							//椉僒僀僪偺忣曬傪憲傞
+							//両サイドの情報を送る
 //							cout << "cmd_inputdata_req : " << (WORD)recvData[0] << ", " << *(DWORD*)&recvData[2] << endl;
 							{
 								DWORD gameTimeTemp = *(DWORD*)&recvData[2];
-								//梷惂僥僗僩
+								//抑制テスト
 								if( reqTime[ Index ][0] == gameTimeTemp && reqTime[ Index ][1] + 950 > *nowTime ){
-									//梷惂
-									//梫専摙
+									//抑制
+									//要検討
 								}else{
 									if( !( dat->inputData.GetInputDataA( recvData[0], gameTimeTemp, &data[6] ) )
 									 && !( dat->inputData.GetInputDataB( recvData[0], gameTimeTemp, &data[7] ) )
@@ -1111,7 +1111,7 @@ unsigned __stdcall recvThread(void* Address){
 												}
 
 												if( Buf && dataSize ){
-													//zlib巊梡
+													//zlib使用
 													unsigned long bufSize = 1014;
 													if( compress( &data[10], &bufSize, Buf, dataSize ) == Z_OK ){
 														//send
@@ -1126,7 +1126,7 @@ unsigned __stdcall recvThread(void* Address){
 														//debug
 //														cout << "zSize : " << bufSize << endl;
 													}else{
-														//zlib晄巊梡
+														//zlib不使用
 														data[0] = recvData[0];
 														data[1] = recvData[1];
 														*(DWORD*)&data[2] = gameTimeTemp;
@@ -1189,7 +1189,7 @@ unsigned __stdcall recvThread(void* Address){
 							}
 						}
 					}else if( addr.sin_addr.s_addr == dat->Root.sin_addr.s_addr ){
-						//Root偐傜偺捠怣
+						//Rootからの通信
 						if( *command != res_dataInfo && *command != cmd_exit ){
 							lastTime->Root = *nowTime;
 						}
@@ -1200,7 +1200,7 @@ unsigned __stdcall recvThread(void* Address){
 							memset( &(dat->Root), 0, sizeof(SOCKADDR_IN));
 							ReleaseMutex( dat->hMutex );
 
-							//娤愴偟偰偰丄僨乕僞偑巆偭偰偄傞偲偒偺懳張
+							//観戦してて、データが残っているときの対処
 							if( dat->myInfo.phase == phase_battle && ( dat->myInfo.terminalMode == mode_branch || dat->myInfo.terminalMode == mode_subbranch ) ){
 								//none
 							}else{
@@ -1210,7 +1210,7 @@ unsigned __stdcall recvThread(void* Address){
 						case cmd_addr_leaf :
 //							cout << "debug : cmd_addr_leaf ( Root )" << endl;
 							if( transTime + 200 < *nowTime ){
-								//nowTime偼500崗傒
+								//nowTimeは500刻み
 								SOCKADDR_IN addrTemp = *(SOCKADDR_IN*)recvData;
 								dat->SendCmdR( &addrTemp, cmd_echo );
 								if( size > sizeof( SOCKADDR_IN ) + 6 ){
@@ -1243,7 +1243,7 @@ unsigned __stdcall recvThread(void* Address){
 							dat->echoFlg.Root = 1;
 							break;
 						case res_dataInfo :
-							//儊僯儏乕偺忣曬傪奿擺
+							//メニューの情報を格納
 							memcpy( &(dat->dataInfo), recvData, sizeof(dat->dataInfo) );
 							if( size > 37 ){
 								dat->targetMode = recvData[ sizeof(dat->dataInfo) ];
@@ -1305,8 +1305,8 @@ unsigned __stdcall recvThread(void* Address){
 								}
 							}
 
-							//梫専摙
-							//Leaf傊偺揱払偱巊偆乮娤愴拞偐偳偆偐乯
+							//要検討
+							//Leafへの伝達で使う（観戦中かどうか）
 							if( dat->roopFlg ) dat->dataInfo.terminalMode = dat->myInfo.terminalMode;
 							break;
 						case res_join :
@@ -1317,7 +1317,7 @@ unsigned __stdcall recvThread(void* Address){
 
 							{
 								DWORD gameTimeTemp = *(DWORD*)&recvData[2];
-								//梫専摙
+								//要検討
 								dat->dataInfo.gameTime = gameTimeTemp;
 								dat->inputData.SetTime( recvData[0], gameTimeTemp );
 
@@ -1361,7 +1361,7 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case res_inputdata_z :
-							//幚尡
+							//実験
 //							cout << "res_inputdata_z" << endl;
 							if( dat->zlibFlg ){
 								if( *(WORD*)&recvData[8] < z_buf_size ){
@@ -1380,8 +1380,8 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case cmd_addr_branch :
-							//幚尡
-							//梫専摙
+							//実験
+							//要検討
 //							cout << "debug : cmd_addr_branch ( Root )" << endl;
 							WaitForSingleObject( dat->hMutex, INFINITE );
 							dat->Root = *(SOCKADDR_IN*)recvData;
@@ -1410,7 +1410,7 @@ unsigned __stdcall recvThread(void* Address){
 							break;
 						}
 					}else if( addr.sin_addr.s_addr == dat->Access.sin_addr.s_addr ){
-						//傾僋僙僗憡庤偐傜偺捠怣
+						//アクセス相手からの通信
 						if( *command != cmd_exit ){
 							lastTime->Access = *nowTime;
 						}
@@ -1629,15 +1629,15 @@ unsigned __stdcall recvThread(void* Address){
 								break;
 							}
 						case cmd_addr_branch :
-							//幚尡
-							//梫専摙
+							//実験
+							//要検討
 //							cout << "debug : cmd_addr_branch ( Access )" << endl;
 							WaitForSingleObject( dat->hMutex, INFINITE );
 							dat->Access = *(SOCKADDR_IN*)recvData;
 							ReleaseMutex( dat->hMutex );
 							break;
 						case res_dataInfo :
-							//儊僯儏乕偺忣曬傪奿擺
+							//メニューの情報を格納
 							memcpy( &(dat->dataInfo), recvData, sizeof(dat->dataInfo) );
 							if( size > 37 ){
 								dat->targetMode = recvData[ sizeof(dat->dataInfo) ];
@@ -1698,14 +1698,14 @@ unsigned __stdcall recvThread(void* Address){
 								}
 							}
 
-							//梫専摙
-							//Leaf傊偺揱払偱巊偆乮娤愴拞偐偳偆偐乯
+							//要検討
+							//Leafへの伝達で使う（観戦中かどうか）
 							if( dat->roopFlg ) dat->dataInfo.terminalMode = dat->myInfo.terminalMode;
 							break;
 						case cmd_ready :
-							//梫専摙
+							//要検討
 							if( readyTime + 200 < *nowTime ){
-								//nowTime偼500崗傒
+								//nowTimeは500刻み
 								SOCKADDR_IN addrTemp = *(SOCKADDR_IN*)recvData;
 								dat->SendCmdR( &addrTemp, res_continue );
 								readyTime = *nowTime;
@@ -1853,9 +1853,9 @@ unsigned __stdcall recvThread(void* Address){
 							break;
 						case cmd_access :
 							if( dat->myInfo.terminalMode == mode_wait || (dat->myInfo.terminalMode == mode_wait_target && addr.sin_addr.s_addr == dat->waitTargetIP ) ){
-								//愙懕懸婡拞
+								//接続待機中
 								if( !(dat->Access.sin_addr.s_addr) && !(dat->Away.sin_addr.s_addr) ){
-									//梫専摙
+									//要検討
 									BYTE flg = GetCWflg( dat, recvData, size );
 
 									if (flg == 0xF) {
@@ -1962,7 +1962,7 @@ unsigned __stdcall recvThread(void* Address){
 							}
 							break;
 						case cmd_dataInfo :
-							//儊僯儏乕偺忣曬傪憲傞
+							//メニューの情報を送る
 							if (size >= 10 && !memcmp(recvData, cowcaster_id, 4)) {
 								data[0] = dat->myInfo.terminalMode;
 								memcpy(data+1, cowcaster_id, 5);
@@ -2116,7 +2116,7 @@ unsigned __stdcall recvThread(void* Address){
 									dat->SendCmdR( &addr, res_join, data, 1 );
 								}else{
 									if( addr.sin_addr.s_addr && TestIP( addr.sin_addr.s_addr ) && dat->Leaf[0].sin_addr.s_addr && TestIP( dat->Leaf[0].sin_addr.s_addr ) ){
-										//梫専摙
+										//要検討
 										WaitForSingleObject( dat->hMutex, INFINITE );
 										SOCKADDR_IN addrTemp = dat->Leaf[0];
 										ReleaseMutex( dat->hMutex );
@@ -2171,7 +2171,7 @@ unsigned __stdcall recvThread(void* Address){
 						}
 					}
 				}else{
-					//僶乕僕儑儞偑堘偆偲偒
+					//バージョンが違うとき
 					if( addr.sin_addr.s_addr == dat->Access.sin_addr.s_addr ){
 						dat->accessFlg = status_error;
 					}
@@ -2249,7 +2249,7 @@ unsigned __stdcall recvThread(void* Address){
 		free( zBuf );
 		zBuf = NULL;
 
-		//寈崘徚偟偺偨傔
+		//警告消しのため
 		if( zBuf ){}
 	}
 
