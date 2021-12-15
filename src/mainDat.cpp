@@ -236,7 +236,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	memset( &Standby[1] , 0, sizeof(SOCKADDR_IN) );
 
 	memset( windowName, 0, sizeof(windowName) );
-	strcpy( windowName, "–|·½İÍ‰ôÏë ¡« Immaterial and Missing Power. ver1.11" );
+	strcpy( windowName, "“Œ•ûäÂ–²‘z ` Immaterial and Missing Power. ver1.11" );
 
 	memset( myPlayerName, 0, sizeof(myPlayerName) );
 	memset( myShortName, 0, sizeof(myShortName) );
