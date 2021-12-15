@@ -6,7 +6,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	cout << "東方萃夢想 RollCaster 版本 " << cowcaster_version_string << endl;
 	//cout << ", protocol version " << (int)cowcaster_protocol_version << endl;
 	//cout << "Command version : " << cmd_version << endl;
-	cout << "汉化版本 20211215" << endl;
+	cout << "汉化版本 20211215-3" << endl;
 	startTime = time( NULL );
 
 	//nowDir
