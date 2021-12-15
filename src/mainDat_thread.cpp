@@ -170,7 +170,7 @@ unsigned __stdcall manageThread(void* Address){
 				memset( &(dat->Away), 0, size );
 				ReleaseMutex( dat->hMutex );
 
-				cout << "ERROR : TIMEOUT ( Away )" << endl;
+				cout << "错误 : 超时 ( 离开 )" << endl;
 
 				dat->roopFlg = 0;
 			}else if( lastTime->Away + 4000 < *nowTime ){
@@ -190,7 +190,7 @@ unsigned __stdcall manageThread(void* Address){
 
 				//要検討
 				if( dat->roopFlg ){
-					cout << "ERROR : TIMEOUT ( Root )" << endl;
+					cout << "错误 : 超时 ( 根节点 )" << endl;
 				}
 
 				//観戦してて、データが残っているときの対処
@@ -227,7 +227,7 @@ unsigned __stdcall manageThread(void* Address){
 				memset( &(dat->Access), 0, size );
 				ReleaseMutex( dat->hMutex );
 
-				cout << "ERROR : TIMEOUT ( Access )" << endl;
+				cout << "错误 : 超时 ( 连接 )" << endl;
 
 			}else if( lastTime->Access + 4000 < *nowTime ){
 				dat->SendCmdM( dest_access, cmd_continue );
@@ -323,7 +323,7 @@ unsigned __stdcall th075Thread(void* Address){
  	 		dat->windowWidth = GetPrivateProfileIntW( L"WINDOW", L"windowWidth", dat->windowWidth, dat->iniPath );
  	 		if (dat->windowWidth < 320) {
  	 			dat->windowWidth = 320;
- 				cout << "Error reading config file: POSITION::width must be at least 320" << endl;
+ 				cout << "配置文件错误: POSITION::width 必须大于 320" << endl;
  	 		}
 
  	 		dat->windowFilterState = GetPrivateProfileIntW( L"WINDOW", L"bilinearFilterState", dat->windowFilterState, dat->iniPath );
@@ -350,9 +350,8 @@ unsigned __stdcall th075Thread(void* Address){
 		}
 
 		if( !CreateProcessW( path, NULL, NULL, NULL, FALSE, DEBUG_PROCESS, NULL, NULL, &si, &(dat->pi) ) ){
-			cout << "ERROR : th075 start failed." << endl;
-			cout << "You probably need to put RollCaster.exe and th075.exe in the exact same folder." << endl;
-			cout << "Also, if you are running it, stop GameGuard. It prevents Caster from working." << endl;
+			cout << "错误 : 游戏启动失败." << endl;
+			cout << "请将本程序和游戏本体 (th075.exe) 放置在同一目录. 并留意杀毒软件是否有拦截." << endl;
 			dat->hProcess = NULL;
 			if( dat->hCheckEvent ){
 				SetEvent(dat->hCheckEvent);
@@ -752,7 +751,7 @@ unsigned __stdcall recvThread(void* Address){
 									dat->accessFlg = recvData[0];
 									break;
 								case 0xF :
-									cout << "ERROR : float setting error" << endl;
+									cout << "错误 : 浮点数同步修正失败" << endl;
 									dat->accessFlg = status_error;
 
 									WaitForSingleObject( dat->hMutex, INFINITE );
@@ -1616,7 +1615,7 @@ unsigned __stdcall recvThread(void* Address){
 									dat->accessFlg = recvData[0];
 									break;
 								case 0xF :
-									cout << "ERROR : float setting error" << endl;
+									cout << "错误 : 浮点数修正失败" << endl;
 									dat->accessFlg = status_error;
 
 									WaitForSingleObject( dat->hMutex, INFINITE );
@@ -2047,7 +2046,7 @@ unsigned __stdcall recvThread(void* Address){
 											}
 										}else{
 											dat->obsIP[Counter] = addr.sin_addr.s_addr;
-											cout << "observer #" << Counter << " has connected";
+											cout << "观战者 #" << Counter << " 已连接";
 
 											if (!memcmp(&recvData[2], cowcaster_id, 4) && recvData[6] >= 5 && recvData[7] > 0) {
 												char shortStr[5], longStr[16];
@@ -2070,7 +2069,7 @@ unsigned __stdcall recvThread(void* Address){
 											cout << endl;
 
 											if( Counter == 63 ){
-												cout << "observers : Counter Limit" << endl;
+												cout << "观战者已达上限" << endl;
 											}
 											break;
 										}
