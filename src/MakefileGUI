@@ -1,0 +1,51 @@
+CPP = bcc32
+CPPFLAGS = -WM -O2 -c
+
+TARGET2	= RollCasterGUI
+OBJ2	= RollCasterGUI.obj guiIO.obj guiClass.obj guiClass_console.obj guiClass_onCommand.obj
+OBJ3	= lobbyClass.obj unicodeStringConv.obj lobbyClass_thread.obj lobbyClass_onCommand.obj guiClass_list.obj
+OBJ4	= casterClass.obj charConvClass.obj lobbyUserClass.obj lobbyUserSubClass.obj
+OBJ5	= messageClass.obj messageSubClass.obj
+LIB		= dinput.lib cw32mt.lib winmm.lib zlib.lib shlwapi.lib caster/caster.lib
+ICON	= icon/RollCaster.res
+
+all: $(TARGET2)
+
+$(TARGET2) : $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(ICON)
+	cd caster
+	make -DCONSOLEFLAGS=-DGUI_CONSOLE
+	cd ..
+	$(CPP) -tW -e$(TARGET2) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(LIB)
+
+
+.cpp.obj:
+	$(CPP) $(CPPFLAGS) $<
+
+# cleanup
+clean:
+	-del *.obj
+	-del RollCasterGUI.exe
+	-del *.tds
+
+	cd caster
+	make clean
+	cd ..
+
+casterClass.obj			: *.h caster/*.h
+charConvClass.obj		: *.h caster/*.h
+guiClass.obj			: *.h caster/*.h
+guiClass_console.obj	: *.h caster/*.h
+guiClass_list.obj		: *.h caster/*.h
+guiClass_onCommand.obj	: *.h caster/*.h
+guiIO.obj				: *.h caster/*.h
+lobbyClass.obj			: *.h caster/*.h
+lobbyClass_onCommand.obj: *.h caster/*.h
+lobbyClass_thread.obj	: *.h caster/*.h
+lobbyUserClass.obj		: *.h caster/*.h
+lobbyUserSubClass.obj	: *.h caster/*.h
+messageClass.obj		: *.h caster/*.h
+messageSubClass.obj		: *.h caster/*.h
+RollCaster.obj			: *.h caster/*.h
+RollCasterGUI.obj		: *.h caster/*.h
+unicodeStringConv.obj	: *.h caster/*.h
+
