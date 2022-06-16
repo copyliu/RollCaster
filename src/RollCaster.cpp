@@ -3,10 +3,11 @@
 #else
 #	include <windows.h>
 #endif
-#include "mainDatClass.h"
+#include "caster\mainDatClass.h"
 using namespace std;
+using namespace N_Caster;
 
-#pragma resource "RollCaster.res"
+#pragma resource "icon/RollCaster.res"
 
 int main( int argc, char *argv[] ){
 
