@@ -1,0 +1,30 @@
+CPP = bcc32
+CPPFLAGS = -WM -O2 -c
+
+TARGET1	= RollCaster
+OBJ1	= RollCaster.obj
+LIB		= dinput.lib cw32mt.lib winmm.lib zlib.lib shlwapi.lib caster/caster.lib
+ICON	= icon/RollCaster.res
+
+all: $(TARGET1)
+
+$(TARGET1) : $(OBJ1) $(ICON)
+	cd caster
+	make
+	cd ..
+	$(CPP) -e$(TARGET1) $(OBJ1) $(LIB)
+
+.cpp.obj:
+	$(CPP) $(CPPFLAGS) $<
+
+# cleanup
+clean:
+	-del *.obj
+	-del RollCaster.exe
+	-del *.tds
+
+	cd caster
+	make clean
+	cd ..
+
+RollCaster.obj: caster/*.h
