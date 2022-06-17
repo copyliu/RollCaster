@@ -53,10 +53,10 @@ lobbyClass::~lobbyClass(){
 int lobbyClass::init(){
 	guiClass* gui = g_gui;
 	
-	//弶婜壔偟偰側偐偭偨傜弶婜壔
+	//初期化してなかったら初期化
 	if( !gui || !buf ) return 0xF;
 	
-	//梫専摙
+	//要検討
 	if( status == LOBBY_CLIENT_STATUS_ERROR ){
 //		end();
 		return 1;
@@ -161,7 +161,7 @@ int lobbyClass::init(){
 		}
 		
 		
-		//僶乕僕儑儞僠僃僢僋
+		//バージョンチェック
 		SendCmd( CHECK_VERSION );
 		Counter = 0;
 		for(;;){
@@ -176,7 +176,7 @@ int lobbyClass::init(){
 			Counter++;
 		}
 		
-		// 怴婯愙懕梫媮
+		// 新規接続要求
 		{
 			int outBufSize = 3000;
 			BYTE* bufTemp = (BYTE*)malloc( outBufSize );
@@ -203,8 +203,8 @@ int lobbyClass::init(){
 				dos.writeUTF(&strPlayerLongMessage);
 				dos.writeUTF(&strPlayerShortMessage);
 				dos.writeShort(myPort);
-				dos.writeByte(0);	//0:忢偵嫋壜, 1:懳愴拞晄嫋壜 2:忢偵嫅斲
-				dos.writeByte(0);	//IP傪塀偡偐偳偆偐
+				dos.writeByte(0);	//0:常に許可, 1:対戦中不許可 2:常に拒否
+				dos.writeByte(0);	//IPを隠すかどうか
 				
 				SendCmd( NEW_CONNECT, dos.data, dos.nowData );
 				
@@ -226,7 +226,7 @@ int lobbyClass::init(){
 			Counter++;
 		}
 		
-		// 儐乕僓乕堦棗偺梫媮
+		// ユーザー一覧の要求
 		SendCmd( REQUEST_USERLIST );
 		Counter = 0;
 		for(;;){
@@ -242,7 +242,7 @@ int lobbyClass::init(){
 		}
 		
 		
-		// IM棜楌偺梫媮
+		// IM履歴の要求
 		SendCmd( REQUEST_STORED_INSTANTMESSAGES, REQUEST_MESSAGE_NUM );
 		Counter = 0;
 		for(;;){
@@ -265,7 +265,7 @@ int lobbyClass::init(){
 	
 	
 	if( status != LOBBY_CLIENT_STATUS_DEFAULT &&  status != LOBBY_CLIENT_STATUS_ERROR ){
-		//wait偵栠偡
+		//waitに戻す
 		changeStatus(LOBBY_CLIENT_STATUS_IDLE);
 //		SendCmd( MODIFY_STATE, STATE_WAITING );
 //		status = LOBBY_CLIENT_STATUS_IDLE;
@@ -282,7 +282,7 @@ int lobbyClass::init(){
  * End, Disconnect
  ********************************************************/
 int lobbyClass::end(){
-	//廔椆張棟
+	//終了処理
 	endFlg = 1;
 	
 	//logout
@@ -290,7 +290,7 @@ int lobbyClass::end(){
 		
 		Sleep(500);
 		if( SendCmd( BYE ) != SOCKET_ERROR ){
-			//巄掕
+			//暫定
 			int Counter;
 			for( Counter = 0; Counter < 200; Counter++ ){
 				Sleep(50);

@@ -52,7 +52,7 @@ int mainDatClass::WaitForIni(){
 		ReleaseMutex( hPrintMutex );
 	#endif
 
-	//昁梫側偄丠
+	//必要ない？
 	DWORD deInfo;
 	DWORD Counter = 0;
 	for(;;){
@@ -100,22 +100,22 @@ int mainDatClass::th075Quit(){
 				hWnd = FindWindow( NULL , windowName );
 				if( hWnd ){
 					if( menuFlg == 3 && gameMode == 2 ){
-						//僉儍儔僋僞乕慖戰
+						//キャラクター選択
 						PostMessage(hWnd, WM_CLOSE, 0, 0);
 						Flg = 0;
 
 					}else if( menuFlg == 0xD ){
-						//儉乕價乕
+						//ムービー
 						PostMessage(hWnd, WM_CLOSE, 0, 0);
 						Flg = 0;
 
 					}else if( menuFlg == 2 ){
-						//儊僯儏乕
+						//メニュー
 						PostMessage(hWnd, WM_CLOSE, 0, 0);
 						Flg = 0;
 
 					}else if( FlgA && FlgB ){
-						//愴摤拞偱丄偐偮HP偑偁傞偲偒
+						//戦闘中で、かつHPがあるとき
 						ReadMemory( (void*)(FlgA + 0x39D) , &HPCountA , 1 );
 						ReadMemory( (void*)(FlgB + 0x39D) , &HPCountB , 1 );
 						if( HPCountA && HPCountB || autoNextFlg ){
@@ -211,7 +211,7 @@ int mainDatClass::WaitForMenu(){
 			return 1;
 		}
 		if( deInfo == de_body ){
-			//儊僯儏乕傪懸偮
+			//メニューを待つ
 //			InputA = 0;
 			InputB = 0;
 			ReadProcessMemory( hProcess, (void *)((DWORD)pStackBase - 420) , &menuFlg , 1 , NULL );	//12FE5C
@@ -219,7 +219,7 @@ int mainDatClass::WaitForMenu(){
 			ReadProcessMemory( hProcess , (void*)(0x671418 + 0x218) , &gameMode , 1 , NULL );	//0x671418 + 0x218	//BYTE
 			ReadProcessMemory( hProcess , (void*)0x671418 , &battleFlg , 4 , NULL );
 			if( menuFlg == 2 ){
-				//僗僞僢僋偐傜
+				//スタックから
 				ReadProcessMemory( hProcess , (void*)(menuAddress + 0x38), &menuIndex , 1 , NULL );
 			}
 
@@ -231,7 +231,7 @@ int mainDatClass::WaitForMenu(){
 				}
 //				cout << (WORD)menuFlg << " : " << (WORD)gameMode << endl;
 
-				//儉乕價乕僗僉僢僾偲儊僯儏乕帺摦慖戰
+				//ムービースキップとメニュー自動選択
 				if( menuFlg == 0xD ){
 					InputA = key_A;
 				}else if( menuFlg == 2 ){
@@ -257,8 +257,8 @@ int mainDatClass::WaitForMenu(){
 					InputB = datB.GetInput();
 				}
 
-				//梫専摙
-				//儕僾儗僀曐懚偺屻偱menuFlg != 2偑柍偄偲忋庤偔摦偐側偄
+				//要検討
+				//リプレイ保存の後でmenuFlg != 2が無いと上手く動かない
 				if( battleFlg && menuFlg != 2){
 					//auto
 					if( autoNextFlg ){
@@ -314,13 +314,13 @@ int mainDatClass::WaitForStart(){
 			return 1;
 		}
 		if( deInfo == de_body ){
-			//gameTime傪懸偮
+			//gameTimeを待つ
 			ReadMemory( (void*)0x6718B4, &myInfo.gameTime, 4 );
 			if( myInfo.gameTime ) break;
 		}
 	}
 
-	//梫専摙
+	//要検討
 	if( myInfo.terminalMode == mode_root || myInfo.terminalMode == mode_debug || myInfo.terminalMode == mode_broadcast ){
 		if( inputData.Start( &myInfo ) ) return 1;
 	}else if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
@@ -330,7 +330,7 @@ int mainDatClass::WaitForStart(){
 	if( syncData.init() ) return 1;
 
 
-	//梫専摙
+	//要検討
 	myInfo.phase = phase_battle;
 	dataInfo.phase = phase_battle;
 	{
@@ -420,7 +420,7 @@ int mainDatClass::WaitForStart(){
 					return 1;
 				}
 				if( deInfo == de_body ){
-					//憡庤偺gameTime==1傪懸偮
+					//相手のgameTime==1を待つ
 					if( enInfo.gameTime ) break;
 					
 					if (rollbackOk) {
@@ -431,7 +431,7 @@ int mainDatClass::WaitForStart(){
 						counter = 0;
 					}
 
-					//憲怣
+					//送信
 					SendCmd( dest_away, cmd_gameInfo );
 				}
 			}

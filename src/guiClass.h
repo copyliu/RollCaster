@@ -18,7 +18,7 @@ namespace N_Gui{
 #define MAX_LINE_NUM  20
 #define TAB_WINDOW_HEIGHT 30
 #define LINE_HEIGHT   20
-//‚¨‚¨‚æ‚»
+//¤ª¤ª¤è¤½
 #define MIN_LINE_NUM  5
 #define RETURN_INTERVAL 1000
 

@@ -20,7 +20,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 				dir[199] = 0;
 				lstrcpyW( nowDir, dir );
 
-				//嶌嬈僼僅儖僟愝掕
+				//作業フォルダ設定
 				SetCurrentDirectoryW( nowDir );
 			}
 		}
@@ -170,7 +170,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 		cout << "debug : arg Mode" << endl;
 
 		if( strcmp( argData.targetIP, "default" ) && argData.argMode == 2 ){
-			//摿掕憡庤懸偪
+			//特定相手待ち
 			argData.argMode = 1;
 		}
 
@@ -236,7 +236,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	memset( &Standby[1] , 0, sizeof(SOCKADDR_IN) );
 
 	memset( windowName, 0, sizeof(windowName) );
-	strcpy( windowName, "搶曽渎柌憐 乣 Immaterial and Missing Power. ver1.11" );
+	strcpy( windowName, "東方萃夢想 ～ Immaterial and Missing Power. ver1.11" );
 
 	memset( myPlayerName, 0, sizeof(myPlayerName) );
 	memset( myShortName, 0, sizeof(myShortName) );
@@ -296,7 +296,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	paletteNo[1] = -1;
 
 	
-	//儔儞僶僩梡
+	//ランバト用
 	memset( ran_account, 0, sizeof( ran_account ) );
 	memset( ran_pass, 0, sizeof( ran_pass ) );
 	memset( ran_server, 0, sizeof( ran_server ) );
@@ -552,7 +552,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 		//floatControl
 		floatControlFlg = (WORD)GetPrivateProfileIntW( ini_block, L"floatControl", floatControlFlg, iniPath );
 
-		//儔儞僶僩梡
+		//ランバト用
 		ran_flag = GetPrivateProfileIntW( L"RAN_BATTLE", L"ran_flag", 0, iniPath );
 		iniReadStringNonUnicode( L"RAN_BATTLE", L"ran_account", L"\0", ran_account, sizeof(ran_account) - 1, iniPath);
 		iniReadStringNonUnicode( L"RAN_BATTLE", L"ran_pass"   , L"\0", ran_pass   , sizeof(ran_pass) - 1   , iniPath);
@@ -772,7 +772,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 								s = socket(AF_INET , SOCK_DGRAM , 0);
 								if( s != INVALID_SOCKET ){
 									if( bind( s, (SOCKADDR*)&Here, sizeof(Here)) >= 0 ){
-										//梫専摙
+										//要検討
 										GetMyPort();
 										hSendTh = (HANDLE)_beginthreadex(NULL, 0, sendThread, this, 0, NULL);
 										if( hSendTh ){
@@ -867,7 +867,7 @@ int mainDatClass::TerminateTh075(){
 
 
 int mainDatClass::mainDatEnd(){
-	//僗儗僢僪傪暵偠傞
+	//スレッドを閉じる
 	continueFlg = 0;
 	
 	if( hSendTh ){
@@ -894,7 +894,7 @@ int mainDatClass::mainDatEnd(){
 	WSACleanup();
 #endif
 	
-	//渎柌憐偺僗儗僢僪偑奐偄偰偄偨傜暵偠傞
+	//萃夢想のスレッドが開いていたら閉じる
 	TerminateTh075();
 
 	WaitForSingleObject(hManageTh, 1000);

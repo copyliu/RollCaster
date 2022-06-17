@@ -13,7 +13,7 @@
 #include "scriptClass.h"
 namespace N_Booster{
 
-#define _PAGE	5	//myGameInfo偺儁乕僕悢
+#define _PAGE	5	//myGameInfoのページ数
 
 class boosterDatClass{
 	public:
@@ -83,11 +83,11 @@ class boosterDatClass{
 	DWORD	eigenValueLocal[10][4];
 
 	DWORD	LNAIBuf[20][10][20];
-	DWORD	SNAIBuf[20][10][20];	//幚尡拞
-	DWORD	SWAIBuf[20][10][20];	//幚尡拞
-	DWORD	SpellAIBuf[10][5][20];	//幚尡拞
+	DWORD	SNAIBuf[20][10][20];	//実験中
+	DWORD	SWAIBuf[20][10][20];	//実験中
+	DWORD	SpellAIBuf[10][5][20];	//実験中
 	DWORD RecoverAIBuf[5];
-	DWORD	BackAIBuf[10][6][20];	//幚尡拞
+	DWORD	BackAIBuf[10][6][20];	//実験中
 
 	DWORD	Flg;
 	DWORD	Line;

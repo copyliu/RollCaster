@@ -9,10 +9,10 @@ namespace N_Booster{
 #define _input	3
 #define _info	4
 
-//伀偺抣帺懱偼堄枴偼帩偨側偄
+//↓の値自体は意味は持たない
 #define __5	1
 #define __1	2
-#define __2	2	//偟傖偑傒僈乕僪
+#define __2	2	//しゃがみガード
 #define __3	3
 #define __4	4
 #define __6	6
@@ -63,7 +63,7 @@ namespace N_Booster{
 #define __412C	72
 #define __41236A	73
 #define __41236B	74
-#define __D6A	80	//幚尡拞
+#define __D6A	80	//実験中
 #define __D6B	81
 #define __D63A	82
 #define __D63B	83

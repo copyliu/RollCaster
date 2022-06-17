@@ -302,7 +302,7 @@ class mainDatClass{
 
 	float windowMultiplier;
 	
-	//ƒ‰ƒ“ƒoƒg—p
+	//¥é¥ó¥Ğ¥ÈÓÃ
 	char ran_account[256];
 	char ran_pass[256];
 	char ran_server[256];

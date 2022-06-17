@@ -43,10 +43,10 @@ int charDatClass::init(){
 		ReadProcessMemory( *hProcess , (void*)(0x671418 + 0x50) , iniBuf , 40 , NULL );
 	}
 
-	//渎柌憐偺愝掕傪撉傓
+	//萃夢想の設定を読む
 	inputDeviceType = iniBuf[0];
 	if(inputDeviceType == 0xFF){
-		//僉乕儃乕僪擖椡
+		//キーボード入力
 		keyIniLeft  = iniBuf[0x4];
 		keyIniRight = iniBuf[0x8];
 		keyIniUp    = iniBuf[0xC];
@@ -57,7 +57,7 @@ int charDatClass::init(){
 		keyIniD = iniBuf[0x20];
 		keyIniP = iniBuf[0x24];
 	}else{
-		//僕儑僀僷僢僪擖椡
+		//ジョイパッド入力
 		keyIniA = iniBuf[0x14];
 		keyIniB = iniBuf[0x18];
 		keyIniC = iniBuf[0x1C];
@@ -131,11 +131,11 @@ BYTE charDatClass::GetInput(){
 			return 0;
 		}
 
-		//僉乕儃乕僪擖椡庢摼
+		//キーボード入力取得
 		if( device->GetDeviceState(256, keyStatus ) ){
 			cout << "GetDeviceState Error" << endl;
 		}
-		//枹僠僃僢僋
+		//未チェック
 		if( keyStatus[keyIniLeft]  & 0x80 )	Input = Input | key_left;
 		if( keyStatus[keyIniRight] & 0x80 )	Input = Input | key_right;
 		if( keyStatus[keyIniUp]  & 0x80 )	Input = Input | key_up;
@@ -146,7 +146,7 @@ BYTE charDatClass::GetInput(){
 		if( keyStatus[keyIniD] & 0x80 )	Input = Input | key_D;
 		if( keyStatus[keyIniP] & 0x80 )	Input = Input | key_P;
 	}else{
-		//僕儑僀僷僢僪擖椡庢摼
+		//ジョイパッド入力取得
 		if ( isPolledDevice )	device->Poll();
 		if( device->GetDeviceState(80, &joyStatus) ){
 			cout << "GetDeviceState Error" << endl;

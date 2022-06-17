@@ -114,8 +114,8 @@ guiClass::guiClass(HINSTANCE hInstParam){
 	::memset(inputHistory, 0, sizeof(inputHistory));
 	inputHistoryPosition = 0;
 	
-	//—vŒŸ“¢
-//	hFont = ::CreateFont(13, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"‚l‚r ƒSƒVƒbƒN");
+	//Òª—ÊÓ‘
+//	hFont = ::CreateFont(13, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"£Í£Ó ¥´¥·¥Ã¥¯");
 	hFont = ::CreateFont(13, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, NULL);
 }
 
@@ -697,7 +697,7 @@ void guiClass::onCreate(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp){
 		gui->hInst,
 		NULL);
 	
-	//Ý’èƒtƒ@ƒCƒ‹‚ð•\Ž¦
+	//ÔO¶¨¥Õ¥¡¥¤¥ë¤ò±íÊ¾
 	if(initSettingsWindow()){
 		::SetWindowText(gui->hSettings, L"ini read failed");
 	}
@@ -763,13 +763,13 @@ void guiClass::onCreate(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp){
 		gui->hInst,
 		NULL);
 	
-	//EnterŒŸo‚Ìˆ×
+	//Enter—Ê³ö¤Îžé
 	origEditWindowProc = ( WNDPROC )::GetWindowLong( gui->hLobbyEdit, GWL_WNDPROC );
 	::SetWindowLong( gui->hLobbyEdit, GWL_WNDPROC, (LONG)EditWindowProc );
 
 	//Create Button Background Window
-	//‚¿‚ç‚Â‚«–hŽ~‚Å”wŒi•`‰æ‚ð–³Œø‚É‚·‚é‚ÆAƒEƒBƒ“ƒhƒEƒTƒCƒY•ÏX‚Å”wŒi‚ÉŽc‘œ‚ª‚Å‚«‚Ä‚µ‚Ü‚¤B
-	//ƒ{ƒ^ƒ“”wŒi•”•ª‚ðƒEƒBƒ“ƒhƒE‚Å–„‚ß‚Ä‘Î‰ž
+	//¤Á¤é¤Ä¤­·ÀÖ¹¤Ç±³¾°Ãè»­¤òŸo„¿¤Ë¤¹¤ë¤È¡¢¥¦¥£¥ó¥É¥¦¥µ¥¤¥º‰ä¸ü¤Ç±³¾°¤Ë²ÐÏñ¤¬¤Ç¤­¤Æ¤·¤Þ¤¦¡£
+	//¥Ü¥¿¥ó±³¾°²¿·Ö¤ò¥¦¥£¥ó¥É¥¦¤ÇÂñ¤á¤ÆŒê
 	gui->hBttnBackground = ::CreateWindowEx(
 		0,
 		L"STATIC",

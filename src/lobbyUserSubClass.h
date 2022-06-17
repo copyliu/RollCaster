@@ -13,7 +13,7 @@ class lobbyUserSubClass{
 	int registerInfo( WCHAR*, WCHAR*, WCHAR*, WCHAR*, DWORD, WORD, BYTE );
 	int clear();
 	
-	//MD5 hash 128bit‚ğ16i”•\‹L¨32BYTE?
+	//MD5 hash 128bit¤ò16ßMÊı±íÓ›¡ú32BYTE?
 	WCHAR* name;
 	WCHAR* UID;
 	WCHAR* shortMessage;

@@ -25,8 +25,8 @@ public:
 		if(c){}
 	}
 	bool fail(){
-		//dummy‚Íí‚Éfalse
-		//ƒ[ƒjƒ“ƒOÁ‹‚Ì‚½‚ß
+		//dummy¤Ï³£¤Ëfalse
+		//¥ï©`¥Ë¥ó¥°ÏûÈ¥¤Î¤¿¤á
 		return dummy;
 	}
 	

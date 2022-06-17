@@ -132,7 +132,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR commandLineParam,
 	
 	{
 		//TODO
-		//Save and Restart偱嵞婲摦屻偺慜僾儘僙僗廔椆懸偪
+		//Save and Restartで再起動後の前プロセス終了待ち
 		unsigned int size = wcslen(commandLine);
 		WCHAR* param = new WCHAR[size + 1];
 		memset(param, 0, (size + 1) * sizeof(WCHAR));
@@ -236,7 +236,7 @@ LRESULT CALLBACK N_Gui::ImgWindowProc(HWND hWnd, UINT message, WPARAM wp, LPARAM
 		SetFocus(gui->hWnd);
 		break;
 	case WM_ERASEBKGND:
-		//偪傜偮偒杊巭偺偨傔
+		//ちらつき防止のため
 		return 1;
 	case WM_PAINT:
 		if(hbmpMem != NULL){
@@ -304,7 +304,7 @@ LRESULT CALLBACK N_Gui::WindowProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp){
 			MoveWindow(hWnd, gui->windowPositionX, gui->windowPositionY, gui->windowWidth, gui->windowHeight, TRUE);
 		}else{
 			//TODO
-			//僐儞僜乕儖偑弌椡偝傟傞慜偵僒僀僘曄峏偟偰偍偒偨偄 
+			//コンソールが出力される前にサイズ変更しておきたい 
 			RECT windowRect;
 			GetWindowRect(hWnd, &windowRect);
 			MoveWindow(gui->hImgWnd, windowRect.left, windowRect.top, gui->windowWidth, gui->windowHeight, TRUE);
@@ -353,8 +353,8 @@ LRESULT CALLBACK N_Gui::WindowProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp){
 		gui->onWindowSizeChange();
 		
 		if(!gui->wineFlg){
-			//WM_SIZE偼楢懕偱捠抦偝傟傞偨傔丄夋憸僒僀僘曄峏偼抶墑傪偐偗偰峴偆
-			//backGroundThread偐傜WM_COMMAND偺ID_DELAYED_WM_SIZE傪億僗僩偡傞
+			//WM_SIZEは連続で通知されるため、画像サイズ変更は遅延をかけて行う
+			//backGroundThreadからWM_COMMANDのID_DELAYED_WM_SIZEをポストする
 			gui->windowSizeChangeEvent = 1;
 			break;
 		}else{
@@ -375,7 +375,7 @@ LRESULT CALLBACK N_Gui::WindowProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp){
 		case ID_LOBBY_LIST:
 			switch (nmhdr->code) {
 			case LVN_ITEMCHANGED:
-				//暋悢夞憲傜傟傞
+				//複数回送られる
 				gui->onPlayerListSelect();
 				break;
 			case NM_DBLCLK:
@@ -418,7 +418,7 @@ LRESULT CALLBACK N_Gui::WindowProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp){
 		break;
 	case WM_ERASEBKGND:
 		if(gui->cursorBlinkFlg == 2 || gui->cursorBlinkFlg == 3){
-			//偪傜偮偒杊巭偺偨傔
+			//ちらつき防止のため
 			return 1;
 		}
 		return DefWindowProc(hWnd, msg, wp, lp);

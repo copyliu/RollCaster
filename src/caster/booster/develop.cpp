@@ -11,60 +11,60 @@ void boosterDatClass::CalcAddress(){
 
 	//DWORD gameInfoIni[10][6]
 	for(Counter =0;Counter<10;Counter++){gameInfoIni[Counter][0]=0;}
-	gameInfoIni[0][0] = (DWORD)&bodyBuf[0] + myIniOffset;			//僷僢僪偺斣崋丠00偱僷僢僪 FF偱僉乕儃乕僪
-	gameInfoIni[1][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x04;	//left	//僷僢僪偺応崌FF偱曽岦僉乕偦偺傑傑//僉乕儃乕僪偼DirectInput偺僉乕僐乕僪
-	gameInfoIni[2][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x08;	//right	//僷僢僪偺応崌FF偱曽岦僉乕偦偺傑傑
-	gameInfoIni[3][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x0C;	//up	//僷僢僪偺応崌FF偱曽岦僉乕偦偺傑傑
-	gameInfoIni[4][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x10;	//down	//僷僢僪偺応崌FF偱曽岦僉乕偦偺傑傑
-	gameInfoIni[5][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x14;	//A	//PAD偺偲偒偼儃僞儞偺斣崋
+	gameInfoIni[0][0] = (DWORD)&bodyBuf[0] + myIniOffset;			//パッドの番号？00でパッド FFでキーボード
+	gameInfoIni[1][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x04;	//left	//パッドの場合FFで方向キーそのまま//キーボードはDirectInputのキーコード
+	gameInfoIni[2][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x08;	//right	//パッドの場合FFで方向キーそのまま
+	gameInfoIni[3][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x0C;	//up	//パッドの場合FFで方向キーそのまま
+	gameInfoIni[4][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x10;	//down	//パッドの場合FFで方向キーそのまま
+	gameInfoIni[5][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x14;	//A	//PADのときはボタンの番号
 	gameInfoIni[6][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x18;	//B
 	gameInfoIni[7][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x1C;	//C
 	gameInfoIni[8][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x20;	//D
 	gameInfoIni[9][0] = (DWORD)&bodyBuf[0] + myIniOffset + 0x24;	//pause
 
-	//擖椡
-	//DWORD gameInfoInput[10][3]	//戞嶰崁栚偵僥僉偺傾僪儗僗丅
+	//入力
+	//DWORD gameInfoInput[10][3]	//第三項目にテキのアドレス。
 	//myInfo[3] = &gameInfoInput[0][0]
 	for(Counter =0;Counter<10;Counter++){gameInfoInput[Counter][0]=0;gameInfoInput[Counter][2]=0;}
-	gameInfoInput[0][0] = (DWORD)&myBuf[0] + 0x4C4;	//忋	//擖椡丅儃僞儞傪墴偟偰偄傞僼儗乕儉悢
-	gameInfoInput[1][0] = 0;				//壓	//壓偑惓
-	gameInfoInput[2][0] = (DWORD)&myBuf[0] + 0x4C0;	//嵍	//忋壓擖椡丂塃偑惓//惓曽岦
-	gameInfoInput[3][0] = 0;				//塃				//媡曽岦
+	gameInfoInput[0][0] = (DWORD)&myBuf[0] + 0x4C4;	//上	//入力。ボタンを押しているフレーム数
+	gameInfoInput[1][0] = 0;				//下	//下が正
+	gameInfoInput[2][0] = (DWORD)&myBuf[0] + 0x4C0;	//左	//上下入力　右が正//正方向
+	gameInfoInput[3][0] = 0;				//右				//逆方向
 	gameInfoInput[4][0] = (DWORD)&myBuf[0] + 0x4C8;	//A
 	gameInfoInput[5][0] = (DWORD)&myBuf[0] + 0x4CC;	//B
 	gameInfoInput[6][0] = (DWORD)&myBuf[0] + 0x4D0;	//C
 	gameInfoInput[7][0] = (DWORD)&myBuf[0] + 0x4D4;	//D
 
-	//棫偪夞傝偵娭傢傞傕偺
+	//立ち回りに関わるもの
 	//DWORD gameInfoPara[20][3]
 	//myInfo[4] = &gameInfoPara[0][0]
 	for(Counter =0;Counter<20;Counter++){gameInfoPara[Counter][0]=0;gameInfoPara[Counter][2]=0;}
-	gameInfoPara[0][0] = (DWORD)&myBuf[0] + 0x44;	//帺暘X嵗昗	float	//僉儑儕
+	gameInfoPara[0][0] = (DWORD)&myBuf[0] + 0x44;	//自分X座標	float	//キョリ
 	gameInfoPara[1][0] = 0;
-	gameInfoPara[2][0] = (DWORD)&myBuf[0] + 0x48;	//崅偝	float	//0xBC;
-	gameInfoPara[3][0] = (DWORD)&myBuf[0] + 0x3B0;	//楈椡
-	gameInfoPara[4][0] = (DWORD)&myBuf[0] + 0x36C;	//晞椡 float
-	gameInfoPara[5][0] = (DWORD)&myBuf[0] + 0x366;	//楈寕
-	gameInfoPara[6][0] = (DWORD)&myBuf[0] + 0x3B6;	//楈椡僎乕僕夞暅傑偱偺帪娫
-	gameInfoPara[7][0] = (DWORD)&myBuf[0] + 0x3A0;	//僗儁儖僇乕僪愰尵廔傢傝傑偱偺帪娫
-	gameInfoPara[8][0] = (DWORD)&myBuf[0] + 0x3AC;	//嬻拞僟僢僔儏
-	gameInfoPara[9][0] = (DWORD)&myBuf[0] + 0x47C;	//僟僢僔儏慡斒乮屻傠僟僢僔儏偺敾掕偨傔乯
-	gameInfoPara[10][0] = (DWORD)&myBuf[0] + 0x398;	//堧晞庬椶	帺暘偺僗儁儖僇乕僪偺庬椶
-	gameInfoPara[11][0] = (DWORD)&myBuf[0] + 0x39A;	//擉晞庬椶
-	gameInfoPara[12][0] = (DWORD)&myBuf[0] + 0x39D;	//懱椡僶乕杮悢
-	gameInfoPara[13][0] = (DWORD)&myBuf[0] + 0xC0;	//塃岦偒偐嵍岦偒偐
-	gameInfoPara[15][0] = (DWORD)&myBuf[0] + 0x60;	//忬懺
-	gameInfoPara[16][0] = (DWORD)&myBuf[0] + 0x3B8;	//帪晞梡
-	gameInfoPara[17][0] = (DWORD)&myBuf[0] + 0x3BA;	//帪晞梡
+	gameInfoPara[2][0] = (DWORD)&myBuf[0] + 0x48;	//高さ	float	//0xBC;
+	gameInfoPara[3][0] = (DWORD)&myBuf[0] + 0x3B0;	//霊力
+	gameInfoPara[4][0] = (DWORD)&myBuf[0] + 0x36C;	//符力 float
+	gameInfoPara[5][0] = (DWORD)&myBuf[0] + 0x366;	//霊撃
+	gameInfoPara[6][0] = (DWORD)&myBuf[0] + 0x3B6;	//霊力ゲージ回復までの時間
+	gameInfoPara[7][0] = (DWORD)&myBuf[0] + 0x3A0;	//スペルカード宣言終わりまでの時間
+	gameInfoPara[8][0] = (DWORD)&myBuf[0] + 0x3AC;	//空中ダッシュ
+	gameInfoPara[9][0] = (DWORD)&myBuf[0] + 0x47C;	//ダッシュ全般（後ろダッシュの判定ため）
+	gameInfoPara[10][0] = (DWORD)&myBuf[0] + 0x398;	//壱符種類	自分のスペルカードの種類
+	gameInfoPara[11][0] = (DWORD)&myBuf[0] + 0x39A;	//弐符種類
+	gameInfoPara[12][0] = (DWORD)&myBuf[0] + 0x39D;	//体力バー本数
+	gameInfoPara[13][0] = (DWORD)&myBuf[0] + 0xC0;	//右向きか左向きか
+	gameInfoPara[15][0] = (DWORD)&myBuf[0] + 0x60;	//状態
+	gameInfoPara[16][0] = (DWORD)&myBuf[0] + 0x3B8;	//時符用
+	gameInfoPara[17][0] = (DWORD)&myBuf[0] + 0x3BA;	//時符用
 
-	//報徾偺學悢偵娭傢傞傕偺
+	//印象の係数に関わるもの
 	//DWORD gameInfoImpress[10][3]
 	//myInfo[5] = &gameInfoImpress[0][0]
 	for(Counter =0;Counter<10;Counter++){gameInfoImpress[Counter][0]=0;gameInfoImpress[Counter][2]=0;}
-	gameInfoImpress[0][0] = (DWORD)&myBuf[0] + 0xA4;	//僴儞僨	3F00 / 3F40 / 3F80 / 3FC0 / 4000
-	gameInfoImpress[1][0] = (DWORD)&myBuf[0] + 0x324;	//帺暘懱椡僎乕僕
-	gameInfoImpress[2][0] = (DWORD)&myBuf[0] + 0x3C6;	//帺暘僠僃僀儞僟儊乕僕乮帺摦偱儕僙僢僩偝傟側偄乯
-	gameInfoImpress[3][0] = (DWORD)&myBuf[0] + 0x3C4;	//帺暘僠僃僀儞僸僢僩悢乮帺摦偱儕僙僢僩偝傟側偄乯
+	gameInfoImpress[0][0] = (DWORD)&myBuf[0] + 0xA4;	//ハンデ	3F00 / 3F40 / 3F80 / 3FC0 / 4000
+	gameInfoImpress[1][0] = (DWORD)&myBuf[0] + 0x324;	//自分体力ゲージ
+	gameInfoImpress[2][0] = (DWORD)&myBuf[0] + 0x3C6;	//自分チェインダメージ（自動でリセットされない）
+	gameInfoImpress[3][0] = (DWORD)&myBuf[0] + 0x3C4;	//自分チェインヒット数（自動でリセットされない）
 
 	//DWORD* enGameInfo[5][10][5]
 	//myInfo[7] = &myGameInfo[0][0][0]
@@ -110,7 +110,7 @@ int boosterDatClass::ConvertIni(){
 		cout << "debug : " << hex << playerSide << ".iniConvert() " << endl;
 	#endif
 	if(bodyIniFlg){
-		bufSize = bodyBuf_size;						//bodyBuf[] 偼 CHAR
+		bufSize = bodyBuf_size;						//bodyBuf[] は CHAR
 		hProcess  = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
 		ReadProcessMemory( hProcess , (void *)(baseAddress) , &bodyBuf[0] , bufSize, &bufSize );
 		CloseHandle( hProcess );
@@ -121,16 +121,16 @@ int boosterDatClass::ConvertIni(){
 				gameInfoIni[Counter][1] = *(DWORD *)gameInfoIni[Counter][0];
 			}
 		}
-		if(gameInfoIni[0][1]==0xFF){					//gameInfoIni[ ][2]偵僉乕僐乕僪傪曄姺偟偰奿擺乮傕偲偼DirectInput偺僉乕僐乕僪乯
-			for(Counter=1;Counter<10;Counter++){		//keycodeArray偱傕嶌偭偨傎偆偑偄偄偐傕
-				if(gameInfoIni[Counter][1] == 0xCB){gameInfoIni[Counter][2]=0x25; gameInfoIni[Counter][3]=1;}	//仼
-				if(gameInfoIni[Counter][1] == 0xC8){gameInfoIni[Counter][2]=0x26; gameInfoIni[Counter][3]=1;}	//仾
-				if(gameInfoIni[Counter][1] == 0xCD){gameInfoIni[Counter][2]=0x27; gameInfoIni[Counter][3]=1;}	//仺
-				if(gameInfoIni[Counter][1] == 0xD0){gameInfoIni[Counter][2]=0x28; gameInfoIni[Counter][3]=1;}	//伀
-				if(gameInfoIni[Counter][1] == 0x4B){gameInfoIni[Counter][2]=0x64; gameInfoIni[Counter][3]=1;}	//僥儞僉乕4:仼
-				if(gameInfoIni[Counter][1] == 0x48){gameInfoIni[Counter][2]=0x68; gameInfoIni[Counter][3]=1;}	//僥儞僉乕8:仾
-				if(gameInfoIni[Counter][1] == 0x4D){gameInfoIni[Counter][2]=0x66; gameInfoIni[Counter][3]=1;}	//僥儞僉乕6:仺
-				if(gameInfoIni[Counter][1] == 0x50){gameInfoIni[Counter][2]=0x62; gameInfoIni[Counter][3]=1;}	//僥儞僉乕2:伀
+		if(gameInfoIni[0][1]==0xFF){					//gameInfoIni[ ][2]にキーコードを変換して格納（もとはDirectInputのキーコード）
+			for(Counter=1;Counter<10;Counter++){		//keycodeArrayでも作ったほうがいいかも
+				if(gameInfoIni[Counter][1] == 0xCB){gameInfoIni[Counter][2]=0x25; gameInfoIni[Counter][3]=1;}	//←
+				if(gameInfoIni[Counter][1] == 0xC8){gameInfoIni[Counter][2]=0x26; gameInfoIni[Counter][3]=1;}	//↑
+				if(gameInfoIni[Counter][1] == 0xCD){gameInfoIni[Counter][2]=0x27; gameInfoIni[Counter][3]=1;}	//→
+				if(gameInfoIni[Counter][1] == 0xD0){gameInfoIni[Counter][2]=0x28; gameInfoIni[Counter][3]=1;}	//↓
+				if(gameInfoIni[Counter][1] == 0x4B){gameInfoIni[Counter][2]=0x64; gameInfoIni[Counter][3]=1;}	//テンキー4:←
+				if(gameInfoIni[Counter][1] == 0x48){gameInfoIni[Counter][2]=0x68; gameInfoIni[Counter][3]=1;}	//テンキー8:↑
+				if(gameInfoIni[Counter][1] == 0x4D){gameInfoIni[Counter][2]=0x66; gameInfoIni[Counter][3]=1;}	//テンキー6:→
+				if(gameInfoIni[Counter][1] == 0x50){gameInfoIni[Counter][2]=0x62; gameInfoIni[Counter][3]=1;}	//テンキー2:↓
 				if(gameInfoIni[Counter][1] == 0x0B){gameInfoIni[Counter][2]=0x30; gameInfoIni[Counter][3]=0;}	//0
 				if(gameInfoIni[Counter][1] == 0x02){gameInfoIni[Counter][2]=0x31; gameInfoIni[Counter][3]=0;}	//1
 				if(gameInfoIni[Counter][1] == 0x03){gameInfoIni[Counter][2]=0x32; gameInfoIni[Counter][3]=0;}	//2
@@ -166,7 +166,7 @@ int boosterDatClass::ConvertIni(){
 				if(gameInfoIni[Counter][1] == 0x26){gameInfoIni[Counter][2]=0x4C; gameInfoIni[Counter][3]=0;}	//L
 				if(gameInfoIni[Counter][1] == 0x27){gameInfoIni[Counter][2]=0xBB; gameInfoIni[Counter][3]=0;}	//;
 				if(gameInfoIni[Counter][1] == 0x2A){gameInfoIni[Counter][2]=0x10; gameInfoIni[Counter][3]=1;}	//Shift(L)
-				if(gameInfoIni[Counter][1] == 0x2B){gameInfoIni[Counter][2]=0xE2; gameInfoIni[Counter][3]=0;}	//亸
+				if(gameInfoIni[Counter][1] == 0x2B){gameInfoIni[Counter][2]=0xE2; gameInfoIni[Counter][3]=0;}	//￥
 				if(gameInfoIni[Counter][1] == 0x2C){gameInfoIni[Counter][2]=0x5A; gameInfoIni[Counter][3]=0;}	//Z
 				if(gameInfoIni[Counter][1] == 0x2D){gameInfoIni[Counter][2]=0x58; gameInfoIni[Counter][3]=0;}	//X
 				if(gameInfoIni[Counter][1] == 0x2E){gameInfoIni[Counter][2]=0x43; gameInfoIni[Counter][3]=0;}	//C
@@ -184,9 +184,9 @@ int boosterDatClass::ConvertIni(){
 	}
 	/* Why is this even done?
 	if(gameInfoIni[0][1] != 0xFF){
-		//僉乕儃乕僪偱偼側偄
+		//キーボードではない
 		if(AIMode == 2){
-			//僷僢僪偩偲擖椡偡傞庤抜偑側偄
+			//パッドだと入力する手段がない
 			AIMode = 1;
 		}
 	}
@@ -201,7 +201,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 	#endif
 
 	for(Counter=0; Counter<800; Counter++){
-		statusIDArray[Counter] = 0xFF;			//奩摉柍偟偱弶婜壔
+		statusIDArray[Counter] = 0xFF;			//該当無しで初期化
 	}
 	for(Counter=0; Counter<256; Counter++){
 		statusArray[Counter][0] = 0xFF;
@@ -209,7 +209,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		statusArray[Counter][2] = 0;
 	}
 
-	//statusIDArray[800]偺愝掕
+	//statusIDArray[800]の設定
 
 	statusIDArray[0x0] = 0x01;
 	statusIDArray[0x1] = 0x02;
@@ -231,39 +231,39 @@ void boosterDatClass::statusInit(){								//statusInit()
 	statusIDArray[0xCE] = 0x1A;
 	statusIDArray[0xCF] = 0x10;
 
-	//偔傜偄
+	//くらい
 	for(Counter = 0x30; Counter <= 0x4F; Counter++){
 		statusIDArray[Counter] = 0x20;
 	}
 
-	//僟僂儞
+	//ダウン
 	for(Counter = 0x50; Counter <= 0x7F; Counter++){
 		statusIDArray[Counter] = 0x21;
 	}
-	//傂傞傒
+	//ひるみ
 	for(Counter = 0x80; Counter <= 0x95; Counter++){
 		statusIDArray[Counter] = 0x22;
 	}
 
-	//庴恎
+	//受身
 	for(Counter = 0xB0; Counter <= 0xBF; Counter++){
 		statusIDArray[Counter] = 0x23;
 	}
 
-	//楈寕
+	//霊撃
 	for(Counter = 0x250; Counter <= 0x255; Counter++){
 		statusIDArray[Counter] = 0x24;
 	}
 
-	//愰尵
+	//宣言
 	statusIDArray[0x31B] = 0x25;
 
-	//僈乕僪
+	//ガード
 	for(Counter = 0x96; Counter <= 0xAF; Counter++){
 		statusIDArray[Counter] = 0x26;
 	}
 
-	//壓抜僈乕僪
+	//下段ガード
 	statusIDArray[0x9A] = 0x28;
 	statusIDArray[0x9B] = 0x28;
 	statusIDArray[0x9C] = 0x28;
@@ -271,13 +271,13 @@ void boosterDatClass::statusInit(){								//statusInit()
 	statusIDArray[0xA4] = 0x28;
 	statusIDArray[0xA5] = 0x28;
 
-	//忋抜峌寕傪壓抜僈乕僪
-	//壓抜峌寕傪忋抜僈乕僪
-	//[15][1]偐傜偺忣曬偱偼偲傟側偝偦偆丅
-	//傂傞傒偵側偭偨偲偒偺忣曬偐傜庢傞偺偼尰幚揑偱偼側偄丅
-	//偳偪傜偱傛偔僈乕僪偟偰偄傞偐偱敾掕偡傞偟偐側偝偦偆丅
+	//上段攻撃を下段ガード
+	//下段攻撃を上段ガード
+	//[15][1]からの情報ではとれなさそう。
+	//ひるみになったときの情報から取るのは現実的ではない。
+	//どちらでよくガードしているかで判定するしかなさそう。
 
-	//statusArray[256][3] 嫟捠晹暘偺愝掕
+	//statusArray[256][3] 共通部分の設定
 
 	for(Counter= 0x0; Counter <= 0x0F; Counter++){
 		statusArray[Counter][0] = 0;
@@ -350,7 +350,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		statusArray[Counter][1] = 3;
 	}
 
-	//statusArray[256][2]	//擖椡偺嫟捠晹暘偺愝掕
+	//statusArray[256][2]	//入力の共通部分の設定
 	statusArray[0x01][2] = __5;
 	statusArray[0x02][2] = __5;
 //	statusArray[0x02][2] = __2;
@@ -372,7 +372,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 	statusArray[0x19][2] = __D9;
 	statusArray[0x1A][2] = __D7;
 
-	//庴恎偼堏摦僐儅儞僪偺偲偙傠偱愝掕
+	//受身は移動コマンドのところで設定
 	statusArray[0x24][2] = __22C;
 	statusArray[0x25][2] = __22D;
 	statusArray[0x26][2] = __4;
@@ -383,10 +383,10 @@ void boosterDatClass::statusInit(){								//statusInit()
 
 	Index = 0;
 
-	//statusIDArray[ ] ,statusArray[ statusID ][2] 愝掕乮懳墳偡傞僐儅儞僪乯
-	//擖椡偺嵺偼儈僗偵拲堄
-	if(myID == 0x00){							//楈柌
-		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;		//峌寕
+	//statusIDArray[ ] ,statusArray[ statusID ][2] 設定（対応するコマンド）
+	//入力の際はミスに注意
+	if(myID == 0x00){							//霊夢
+		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;		//攻撃
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12F ] = Index; statusArray[ Index ][2] = __2A;
 		Index = 0x33; statusIDArray[ 0x130 ] = Index; statusArray[ Index ][2] = __2B;
@@ -406,7 +406,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0x43; statusIDArray[ 0x1F8 ] = Index; statusArray[ Index ][2] = __421B;
 		Index = 0x44; statusIDArray[ 0x1FA ] = Index; statusArray[ Index ][2] = __623A;
 		Index = 0x45; statusIDArray[ 0x1FB ] = Index; statusArray[ Index ][2] = __623B;
-		Index = 0x60; statusIDArray[ 0x196 ] = Index; statusArray[ Index ][2] = __A;		//幩寕
+		Index = 0x60; statusIDArray[ 0x196 ] = Index; statusArray[ Index ][2] = __A;		//射撃
 		Index = 0x61; statusIDArray[ 0x197 ] = Index; statusArray[ Index ][2] = __6A;
 		Index = 0x62; statusIDArray[ 0x198 ] = Index; statusArray[ Index ][2] = __2A;
 		Index = 0x63; statusIDArray[ 0x19A ] = Index; statusArray[ Index ][2] = __A;
@@ -425,7 +425,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0x71; statusIDArray[ 0x25D ] = Index; statusArray[ Index ][2] = __236B;
 		Index = 0x72; statusIDArray[ 0x25E ] = Index; statusArray[ Index ][2] = __236A;
 		Index = 0x73; statusIDArray[ 0x25F ] = Index; statusArray[ Index ][2] = __236B;
-		Index = 0x80; statusIDArray[ 0x258 ] = Index; statusArray[ Index ][2] = __214A;	//抶墑幩寕丒堏摦丒摿庩
+		Index = 0x80; statusIDArray[ 0x258 ] = Index; statusArray[ Index ][2] = __214A;	//遅延射撃移動特殊
 		Index = 0x81; statusIDArray[ 0x259 ] = Index; statusArray[ Index ][2] = __214B;
 		Index = 0x82; statusIDArray[ 0x25A ] = Index; statusArray[ Index ][2] = __214A;
 		Index = 0x83; statusIDArray[ 0x25B ] = Index; statusArray[ Index ][2] = __214B;
@@ -433,7 +433,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0x91; statusIDArray[ 0xB5 ]  = Index; statusArray[ Index ][2] = __D4;
 		Index = 0x92; statusIDArray[ 0x5D ]  = Index; statusArray[ Index ][2] = __D6;
 		Index = 0x93; statusIDArray[ 0x5E ]  = Index; statusArray[ Index ][2] = __D4;
-		Index = 0xB0; statusIDArray[ 0x2BC ] = Index; statusArray[ Index ][2] = __236D;	//僗儁儖僇乕僪
+		Index = 0xB0; statusIDArray[ 0x2BC ] = Index; statusArray[ Index ][2] = __236D;	//スペルカード
 		Index = 0xB3; statusIDArray[ 0x2BD ] = Index; statusArray[ Index ][2] = __236D;
 		Index = 0xB6; statusIDArray[ 0x2BE ] = Index; statusArray[ Index ][2] = __236D;
 		Index = 0xB9; statusIDArray[ 0x2BF ] = Index; statusArray[ Index ][2] = __236D;
@@ -441,8 +441,8 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C1 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x01){							//杺棟嵐
-		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;	//峌寕
+	if(myID == 0x01){							//魔理沙
+		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;	//攻撃
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
 		Index = 0x33; statusIDArray[ 0x12F ] = Index; statusArray[ Index ][2] = __2B;
@@ -499,7 +499,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 	}
 
 
-	if(myID == 0x02){							//嶇栭
+	if(myID == 0x02){							//咲夜
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -558,7 +558,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2BF ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x03){							//傾儕僗
+	if(myID == 0x03){							//アリス
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -608,7 +608,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C1 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x04){							//僷僠儏儕乕
+	if(myID == 0x04){							//パチュリー
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -664,7 +664,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C1 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x05){							//梔柌
+	if(myID == 0x05){							//妖夢
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -715,7 +715,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C1 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x06){							//儗儈儕傾
+	if(myID == 0x06){							//レミリア
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -761,7 +761,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C5 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x07){							//桯乆巕
+	if(myID == 0x07){							//幽々子
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -815,7 +815,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C3 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x08){							//巼
+	if(myID == 0x08){							//紫
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -874,7 +874,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBF; statusIDArray[ 0x2C2 ] = Index; statusArray[ Index ][2] = __236D;
 	}
 
-	if(myID == 0x09){							//渎崄
+	if(myID == 0x09){							//萃香
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12E ] = Index; statusArray[ Index ][2] = __2A;
@@ -926,19 +926,19 @@ void boosterDatClass::statusInit(){								//statusInit()
 		Index = 0xBC; statusIDArray[ 0x2C0 ] = Index; statusArray[ Index ][2] = __236D;
 		Index = 0xBF; statusIDArray[ 0x2D4 ] = Index; statusArray[ Index ][2] = __236D;
 
-		//儈僢僔儞僌宯
+		//ミッシング系
 		Index = 0xC0; statusIDArray[ 0x2C1 ] = Index; statusIDArray[ 0x2D5 ] = Index;
-				  statusIDArray[ 0x2C9 ] = Index; statusIDArray[ 0x2DD ] = Index; statusArray[ Index ][2] = __5;	//棫偪丒弅彫
-		Index = 0xC1; statusIDArray[ 0x2C2 ] = Index; statusIDArray[ 0x2D6 ] = Index; statusArray[ Index ][2] = __6;	//堏摦
-		Index = 0xC2; statusIDArray[ 0x2C3 ] = Index; statusIDArray[ 0x2D7 ] = Index; statusArray[ Index ][2] = __9;	//僕儍儞僾
+				  statusIDArray[ 0x2C9 ] = Index; statusIDArray[ 0x2DD ] = Index; statusArray[ Index ][2] = __5;	//立ち縮小
+		Index = 0xC1; statusIDArray[ 0x2C2 ] = Index; statusIDArray[ 0x2D6 ] = Index; statusArray[ Index ][2] = __6;	//移動
+		Index = 0xC2; statusIDArray[ 0x2C3 ] = Index; statusIDArray[ 0x2D7 ] = Index; statusArray[ Index ][2] = __9;	//ジャンプ
 		Index = 0xC3; statusIDArray[ 0x2C4 ] = Index; statusIDArray[ 0x2D8 ] = Index; statusArray[ Index ][2] = __A;	//A
 		Index = 0xC4; statusIDArray[ 0x2C5 ] = Index; statusIDArray[ 0x2D9 ] = Index; statusArray[ Index ][2] = __B;	//B
 		Index = 0xC5; statusIDArray[ 0x2C6 ] = Index; statusIDArray[ 0x2DA ] = Index; statusArray[ Index ][2] = __C;	//C
-		Index = 0xC6; statusIDArray[ 0x2C7 ] = Index; statusIDArray[ 0x2DB ] = Index; statusArray[ Index ][2] = __A;	//嬻拞A
-		Index = 0xC7; statusIDArray[ 0x2C8 ] = Index; statusIDArray[ 0x2DC ] = Index; statusArray[ Index ][2] = __B;	//嬻拞B
+		Index = 0xC6; statusIDArray[ 0x2C7 ] = Index; statusIDArray[ 0x2DB ] = Index; statusArray[ Index ][2] = __A;	//空中A
+		Index = 0xC7; statusIDArray[ 0x2C8 ] = Index; statusIDArray[ 0x2DC ] = Index; statusArray[ Index ][2] = __B;	//空中B
 	}
 
-	if(myID == 0x0A){							//旤楅
+	if(myID == 0x0A){							//美鈴
 		Index = 0x30; statusIDArray[ 0x12C ] = Index; statusArray[ Index ][2] = __A;
 		Index = 0x31; statusIDArray[ 0x12D ] = Index; statusArray[ Index ][2] = __B;
 		Index = 0x32; statusIDArray[ 0x12F ] = Index; statusArray[ Index ][2] = __2A;
@@ -1001,9 +1001,9 @@ void boosterDatClass::statusInit(){								//statusInit()
 		commandArray[Counter] = 0;
 	}
 
-	//commandArray偼8僶僀僩
-	commandArray[ __5 ]	= 0x0F;		//0F 擖椡柍偟
-	commandArray[ __1 ]	= 0x2E01;		//2E 挿帪娫墴偟
+	//commandArrayは8バイト
+	commandArray[ __5 ]	= 0x0F;		//0F 入力無し
+	commandArray[ __1 ]	= 0x2E01;		//2E 長時間押し
 	commandArray[ __2 ]	= 0x2E01;
 //	commandArray[ __2 ]	= 0x2E02;
 	commandArray[ __3 ]	= 0x03;
@@ -1012,19 +1012,19 @@ void boosterDatClass::statusInit(){								//statusInit()
 	commandArray[ __7 ]	= 0x07;
 	commandArray[ __8 ]	= 0x08;
 	commandArray[ __9 ]	= 0x09;
-	commandArray[ __D4 ]	= 0x04140D;		//D 仺 4傪摨帪墴偟	仺0D 仺 14
+	commandArray[ __D4 ]	= 0x04140D;		//D → 4を同時押し	→0D → 14
 	commandArray[ __D6 ]	= 0x06160D;
 	commandArray[ __D6_ ]	= 0x2E06160D;
 	commandArray[ __D7 ]	= 0x07170D;
 	commandArray[ __D8 ]	= 0x08180D;
 	commandArray[ __D9 ]	= 0x09190D;
 	commandArray[ __A ]	= 0x0A0F;
-	commandArray[ __A_ ]	= 0x2E0A0F;		//1E 挿墴偟
+	commandArray[ __A_ ]	= 0x2E0A0F;		//1E 長押し
 	commandArray[ __B ]	= 0x0B0F;
 	commandArray[ __B_ ]	= 0x2E0B0F;
 	commandArray[ __C ]	= 0x0C0F;
 	commandArray[ __C_ ]	= 0x2E0C0F;
-	commandArray[ __2A ]	= 0x0F1A02;	//嵟屻偺0x0F偼幚尡拞	//偨傑偵擣幆偟側偄偙偲偑桳傞
+	commandArray[ __2A ]	= 0x0F1A02;	//最後の0x0Fは実験中	//たまに認識しないことが有る
 	commandArray[ __2B ]	= 0x0F1B02;
 	commandArray[ __2C ]	= 0x0F1C02;
 	commandArray[ __6A ]	= 0x0F1A06;
@@ -1032,7 +1032,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 	commandArray[ __6C ]	= 0x0F1C06;
 	commandArray[ __3A ]	= 0x0F1A03;
 	commandArray[ __3B ]	= 0x0F1B03;
-	commandArray[ __22A ]	= 0x0A020F02;	//0F 擖椡柍偟	//偨傑偵擣幆偟側偄偙偲偑桳傞
+	commandArray[ __22A ]	= 0x0A020F02;	//0F 入力無し	//たまに認識しないことが有る
 	commandArray[ __22B ]	= 0x0B020F02;
 	commandArray[ __22C ]	= 0x0C020F02;
 	commandArray[ __22D ]	= 0x0D020F02;
@@ -1060,7 +1060,7 @@ void boosterDatClass::statusInit(){								//statusInit()
 	commandArray[ __41236A ] = 0x0A0603020104LL;
 	commandArray[ __41236B ] = 0x0B0603020104LL;
 #endif
-	commandArray[ __D6A ] = 0x1A061D06;		//幚尡拞
+	commandArray[ __D6A ] = 0x1A061D06;		//実験中
 	commandArray[ __D6B ] = 0x1B061D06;
 	commandArray[ __D63A ] = 0x1A031D06;
 	commandArray[ __D63B ] = 0x1B031D06;

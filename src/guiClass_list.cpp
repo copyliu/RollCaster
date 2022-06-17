@@ -119,13 +119,13 @@ void insertUserItem(lobbyUserSubClass* user, HWND hLobbyList){
 void guiClass::onLobbyListRefresh(){
 	lobbyClass* lobby = g_lobby;
 	//TODO
-	//巄掕懳墳偱偄偭偨傫儕僗僩傪僋儕傾偡傞
-	//偨傇傫僼僅乕僇僗偑奜傟傞
+	//暫定対応でいったんリストをクリアする
+	//たぶんフォーカスが外れる
 	ListView_DeleteAllItems(hLobbyList);
 	
 	lobbyUserSubClass* user;
 	
-	//懳愴懸偪傪愭摢偵昞帵偡傞
+	//対戦待ちを先頭に表示する
 	//TODO
 	for(int Counter=0; Counter < LOBBY_USER_MAX; Counter++){
 		user = &(lobby->user.user[Counter]);

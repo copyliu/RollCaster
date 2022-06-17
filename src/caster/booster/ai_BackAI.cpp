@@ -10,7 +10,7 @@ void boosterDatClass::ReadBackAI(){
 		Flg = 0;
 		
 		#if debug_height
-			if(myGameInfo[ _para ][2][0] && *enGameInfo[ _para ][2][0]){	//幚尡拞
+			if(myGameInfo[ _para ][2][0] && *enGameInfo[ _para ][2][0]){	//実験中
 //			if(*enGameInfo[ _para ][2][0]){
 				Temp = 1;
 			}
@@ -31,17 +31,17 @@ void boosterDatClass::ReadBackAI(){
 			if(*Address2 == 0){
 				Counter = 1200;
 			}else{
-				if(*Address2 == (BYTE)myGameInfo[ _status ][6][0]){	//帺暘慜峴摦
+				if(*Address2 == (BYTE)myGameInfo[ _status ][6][0]){	//自分前行動
 					Counter = 1200;
 					Address3 = Address2 + 4;
-					if(GetL(Address3 + 3) > 6){	//昡壙偑堦掕埲忋
+					if(GetL(Address3 + 3) > 6){	//評価が一定以上
 						if(!(*Address3==0x24 && myGameInfo[ _info ][4][0]==0)){
-							//楈椡僠僃僢僋
+							//霊力チェック
 							if(!(myGameInfo[ _info ][2][0]
 							&& (statusArray[ *Address3 ][0] == 4 || statusArray[ *Address3 ][0] == 5 || statusArray[ *Address3 ][0] == 6))){
 								if(!(Flg && statusArray[ *Address3 ][0] == 3
 								&& !(GetH(Address3 + 3) >= (BYTE)myGameInfo[ _para ][3][2]
-								  && GetH(Address3 + 3) <= debug_height_value + (BYTE)myGameInfo[ _para ][3][2]))){	//崅偝曗惓	//幚尡拞
+								  && GetH(Address3 + 3) <= debug_height_value + (BYTE)myGameInfo[ _para ][3][2]))){	//高さ補正	//実験中
 									Time = (DWORD)((gameTime - myGameInfo[ _status ][6][1]) / 10);
 									if(((BYTE)(Time + Temp) >= *(Address3 + 1) && (BYTE)Time < 3+ *(Address3 + 1))){
 										commandInput[0] = statusArray[ *Address3 ][2];
@@ -65,13 +65,13 @@ void boosterDatClass::ReadBackAI(){
 
 void boosterDatClass::CallBackAI(){
 	if(eigenValueBack[0][0]){
-//		Line==0偼慡懱偵懳偡傞僶僢僼傽偲偟偰巊梡
+//		Line==0は全体に対するバッファとして使用
 //		BackAIBuf[0][0][0] = ;
 //		BackAIBuf[0][1][0] = ;
 //		BackAIBuf[0][2][0] = ;
-//		BackAIBuf[0][3][0] = myGameInfo[ _status ][5][1];	//帪娫
-//		BackAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//擖椡ID
-//		BackAIBuf[0][5][0] = myGameInfo[ _para ][3][2];	//崅偝曗惓忣曬
+//		BackAIBuf[0][3][0] = myGameInfo[ _status ][5][1];	//時間
+//		BackAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//入力ID
+//		BackAIBuf[0][5][0] = myGameInfo[ _para ][3][2];	//高さ補正情報
 		
 		if(BackAIBuf[0][4][0]==0){
 			BackAIBuf[0][4][0] = 0xFF;
@@ -84,7 +84,7 @@ void boosterDatClass::CallBackAI(){
 			&& myGameInfo[ _status ][5][0] != 0x90 && myGameInfo[ _status ][5][0] != 0x91 && myGameInfo[ _status ][5][0] != 0x92 && myGameInfo[ _status ][5][0] != 0x93
 			){
 				if(myGameInfo[ _info ][0][1]){
-					//屻傠岦偒
+					//後ろ向き
 					Flg = 1;
 				}
 			}
@@ -92,19 +92,19 @@ void boosterDatClass::CallBackAI(){
 		if(Flg){
 			for(Line=1; Line<10; Line++){
 				if(BackAIBuf[Line][0][0]==0){
-					//儔僀儞怴愝
+					//ライン新設
 					#if debug_mode_BackAI
-						cout << "儔僀儞怴愝" << endl;
+						cout << "ライン新設" << endl;
 					#endif
 					BackAIBuf[Line][0][0] = 0xFF;
 					BackAIBuf[Line][1][0] = 0;
 					BackAIBuf[Line][2][0] = 0;
-					BackAIBuf[Line][3][0] = BackAIBuf[0][3][0];	//慜擖椡帪娫
-					BackAIBuf[Line][4][0] = BackAIBuf[0][4][0];	//慜峴摦
+					BackAIBuf[Line][3][0] = BackAIBuf[0][3][0];	//前入力時間
+					BackAIBuf[Line][4][0] = BackAIBuf[0][4][0];	//前行動
 					BackAIBuf[Line][5][0] = 0;
 					
-					BackAIBuf[Line][1][1] = 128;	//憡娭
-					BackAIBuf[Line][2][1] = 64;	//報徾
+					BackAIBuf[Line][1][1] = 128;	//相関
+					BackAIBuf[Line][2][1] = 64;	//印象
 					Line = 10;
 				}
 			}
@@ -123,7 +123,7 @@ void boosterDatClass::CallBackAI(){
 					Address = BackAIbase + eigenValueBack[0][3];
 					for(Counter=0; Counter<1200; Counter+=40){
 						Address2 = Address + Counter;
-						if(*Address2 == (BYTE)BackAIBuf[Line][4][Index -1]){	//帺暘慜峴摦
+						if(*Address2 == (BYTE)BackAIBuf[Line][4][Index -1]){	//自分前行動
 							Counter = 1200;
 							BackAIBuf[Line][0][Index] = (DWORD)Address2;
 						}else{
@@ -135,12 +135,12 @@ void boosterDatClass::CallBackAI(){
 						}
 					}
 					if(Index != 1){
-						BackAIBuf[Line][1][Index] = BackAIBuf[Line][1][Index - 1];	//憡娭
-						BackAIBuf[Line][2][Index] = BackAIBuf[Line][2][Index - 1];	//報徾
+						BackAIBuf[Line][1][Index] = BackAIBuf[Line][1][Index - 1];	//相関
+						BackAIBuf[Line][2][Index] = BackAIBuf[Line][2][Index - 1];	//印象
 					}
-					BackAIBuf[Line][3][Index] = (myGameInfo[ _status ][5][1] - BackAIBuf[Line][3][Index -1]) / 10;	//帪娫嵎
-					BackAIBuf[Line][4][Index] = myGameInfo[ _status ][5][0];	//擖椡乮ID乯
-					BackAIBuf[Line][5][Index] = BackAIBuf[0][5][0];			//崅偝曗惓忣曬
+					BackAIBuf[Line][3][Index] = (myGameInfo[ _status ][5][1] - BackAIBuf[Line][3][Index -1]) / 10;	//時間差
+					BackAIBuf[Line][4][Index] = myGameInfo[ _status ][5][0];	//入力（ID）
+					BackAIBuf[Line][5][Index] = BackAIBuf[0][5][0];			//高さ補正情報
 				}
 				if(BackAIBuf[Line][0][0]==0xFF){
 					Index = 1;
@@ -148,7 +148,7 @@ void boosterDatClass::CallBackAI(){
 					Index = BackAIBuf[Line][0][0];
 				}
 				if(BackAIBuf[Line][1][Index] >= __magnification){
-					BackAIBuf[Line][1][Index] = BackAIBuf[Line][1][Index] - __magnification;	//憡娭抣偼尭彮偡傞
+					BackAIBuf[Line][1][Index] = BackAIBuf[Line][1][Index] - __magnification;	//相関値は減少する
 				}else{
 					BackAIBuf[Line][1][Index] = 0;
 				}
@@ -159,30 +159,30 @@ void boosterDatClass::CallBackAI(){
 				
 				if(*enGameInfo[ _para ][5][1] || *enGameInfo[ _status ][9][1]==0x22){
 					#if debug_mode_BackAI
-						cout << "梌僟儊乕僕" << endl;
+						cout << "与ダメージ" << endl;
 					#endif
 					if(BackAIBuf[Line][2][Index] <= 245){
 						BackAIBuf[Line][2][Index] = BackAIBuf[Line][2][Index] + 10;
 					}else{
 						BackAIBuf[Line][2][Index] = 255;
 					}
-					BackAIBuf[Line][1][Index] = 0;	//憡娭傪愗傞
+					BackAIBuf[Line][1][Index] = 0;	//相関を切る
 				}
 				
 				if(myGameInfo[ _para ][5][1] && (myGameInfo[ _status ][0][0]==2 || myGameInfo[ _status ][0][0]==9 || myGameInfo[ _status ][9][1]==0x22)){
 					#if debug_mode_BackAI
-						cout << "旐僟儊乕僕" << endl;
+						cout << "被ダメージ" << endl;
 					#endif
 					if(BackAIBuf[Line][2][Index] >= 10){
 						BackAIBuf[Line][2][Index] = BackAIBuf[Line][2][Index] - 10;
 					}else{
 						BackAIBuf[Line][2][Index] = 0;
 					}
-					BackAIBuf[Line][1][Index] = 0;	//憡娭傪愗傞
+					BackAIBuf[Line][1][Index] = 0;	//相関を切る
 				}
 				
-				if(Index >= 19 || (BackAIBuf[Line][1][Index] < 5 && myGameInfo[ _input ][9][0] == 0)){	//憡娭丒梫挷惍
-					//廔椆
+				if(Index >= 19 || (BackAIBuf[Line][1][Index] < 5 && myGameInfo[ _input ][9][0] == 0)){	//相関要調整
+					//終了
 					#if debug_mode_BackAI
 						cout << hex << playerSide << ".line" << Line << " Close" << endl;
 					#endif
@@ -190,25 +190,25 @@ void boosterDatClass::CallBackAI(){
 					if(BackAIBuf[Line][0][Index]){
 						Address2 = (BYTE*)BackAIBuf[Line][0][Index];
 						BackAIBuf[Line][0][Index] = 0;
-						if(*Address2 == (BYTE)BackAIBuf[Line][4][Index -1]){	//妋擣
+						if(*Address2 == (BYTE)BackAIBuf[Line][4][Index -1]){	//確認
 							for(Counter2=4; Counter2<40; Counter2+=4){
 								Address3 = Address2 + Counter2;
 								if(*(Address3)==(BYTE)BackAIBuf[Line][4][Index]){
 									if(BackAIBuf[Line][2][Index] > 64){
-										//岲報徾
+										//好印象
 										#if debug_mode_BackAI
-											cout << "岲報徾" << endl;
+											cout << "好印象" << endl;
 										#endif
-										//帪娫嵎偺張棟
+										//時間差の処理
 										if((BYTE)BackAIBuf[Line][3][Index]    < 2+ *(Address3 + 1)
-										&& (BYTE)BackAIBuf[Line][3][Index] +2 >    *(Address3 + 1)){	//帪娫嵎偑彮側偄
-											//帪娫惛搙忋偘
+										&& (BYTE)BackAIBuf[Line][3][Index] +2 >    *(Address3 + 1)){	//時間差が少ない
+											//時間精度上げ
 											FloatH(Address3 + 2, 1);
 											
-											//昡壙忋偘	//+3
+											//評価上げ	//+3
 											FloatL(Address3 + 3, 3);
 										}else{
-											//帪娫廋惓
+											//時間修正
 											if(GetH(Address3 + 2) < 0xA){
 												if((BYTE)BackAIBuf[Line][3][Index] > *(Address3 + 1)){
 													if(*(Address3 + 1) < 0xFF){
@@ -222,7 +222,7 @@ void boosterDatClass::CallBackAI(){
 											}
 										}
 										
-										//挿墴偟帪娫
+										//長押し時間
 										if((BYTE)myGameInfo[ _input ][9][2] > GetL(Address3 + 2)){
 											if((BYTE)myGameInfo[ _input ][9][2] > 4+ GetL(Address3 + 2)){
 												FloatL(Address3 + 2, 2);
@@ -238,7 +238,7 @@ void boosterDatClass::CallBackAI(){
 											}
 										}
 										
-										//崅偝曗惓
+										//高さ補正
 										if((BYTE)BackAIBuf[Line][5][Index] > GetH(Address3 + 3)){
 											FloatH(Address3 + 3, 1);
 										}
@@ -255,16 +255,16 @@ void boosterDatClass::CallBackAI(){
 											}
 										}
 									}else{
-										//岲報徾偱側偄
+										//好印象でない
 										#if debug_mode_BackAI
-											cout << "岲報徾偱偼側偄" << endl;
+											cout << "好印象ではない" << endl;
 										#endif
 										if((BYTE)BackAIBuf[Line][3][Index]    < 3+ *(Address3 + 1)
-										&& (BYTE)BackAIBuf[Line][3][Index] +3 >    *(Address3 + 1)){	//帪娫嵎偑彮側偄
-											//帪娫惛搙壓偘
+										&& (BYTE)BackAIBuf[Line][3][Index] +3 >    *(Address3 + 1)){	//時間差が少ない
+											//時間精度下げ
 											FloatH(Address3 + 2, -1);
 											
-											//昡壙壓偘
+											//評価下げ
 											FloatL(Address3 + 3, -1);
 										}
 										if(Counter2 != 36){
@@ -276,8 +276,8 @@ void boosterDatClass::CallBackAI(){
 													*(DWORD*)(Address3 + 4) = Temp;
 												}
 											}else{
-												//師偑側偄
-												//尰忬偱偼忣曬傪巆偡
+												//次がない
+												//現状では情報を残す
 												/*
 												if(*(Address3 + 3) < 10){
 													*(DWORD*)(Address3) = 0;
@@ -292,14 +292,14 @@ void boosterDatClass::CallBackAI(){
 										Counter2 = 40;
 										if(BackAIBuf[Line][2][Index] > 64){
 											#if debug_mode_BackAI
-												cout << "怴婯" << endl;
+												cout << "新規" << endl;
 											#endif
-											*(Address3) = (BYTE)BackAIBuf[Line][4][Index];		//擖椡ID
-											*(Address3 + 1) = (BYTE)BackAIBuf[Line][3][Index];	//帪娫嵎
-											SetH(Address3 + 2, 8);	//帪娫惛搙弶婜抣
-											SetL(Address3 + 2, (BYTE)myGameInfo[ _input ][9][2]);	//挿墴偟帪娫
+											*(Address3) = (BYTE)BackAIBuf[Line][4][Index];		//入力ID
+											*(Address3 + 1) = (BYTE)BackAIBuf[Line][3][Index];	//時間差
+											SetH(Address3 + 2, 8);	//時間精度初期値
+											SetL(Address3 + 2, (BYTE)myGameInfo[ _input ][9][2]);	//長押し時間
 											SetH(Address3 + 3, (BYTE)BackAIBuf[Line][5][Index]);
-											SetL(Address3 + 3, 0);	//昡壙弶婜抣
+											SetL(Address3 + 3, 0);	//評価初期値
 										}
 									}
 								}
@@ -311,29 +311,29 @@ void boosterDatClass::CallBackAI(){
 			}
 		}
 		
-		BackAIBuf[0][3][0] = myGameInfo[ _status ][6][1];	//帪娫
-		BackAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//擖椡ID
+		BackAIBuf[0][3][0] = myGameInfo[ _status ][6][1];	//時間
+		BackAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//入力ID
 		BackAIBuf[0][5][0] = myGameInfo[ _para ][3][2];
 		
 		
-		//屌桳傾僪儗僗峏怴
+		//固有アドレス更新
 		if(myGameInfo[ _para ][1][1] > 3){
 			eigenValueBack[1][2] = 3;
 		}else{
-			eigenValueBack[1][2] = myGameInfo[ _para ][1][1];	//嫍棧	//帺桼搙5
+			eigenValueBack[1][2] = myGameInfo[ _para ][1][1];	//距離	//自由度5
 		}
 		if(myGameInfo[ _info ][1][0] == 2 && eigenValueBack[1][2] < 2){
 			eigenValueBack[1][2] = 4;
 		}
-		eigenValueBack[2][2] = myGameInfo[ _para ][2][1];	//帺暘崅偝	//帺桼搙3
-		eigenValueBack[3][2] = *enGameInfo[ _para ][2][2];	//憡庤崅偝	//帺桼搙4
+		eigenValueBack[2][2] = myGameInfo[ _para ][2][1];	//自分高さ	//自由度3
+		eigenValueBack[3][2] = *enGameInfo[ _para ][2][2];	//相手高さ	//自由度4
 		
 		
 		for(Counter=9; Counter>0; Counter--){
 			if(eigenValueBack[Counter][0]){
-				if(eigenValueBack[Counter][2] >= eigenValueBack[Counter][0]){		//抣傪僠僃僢僋
+				if(eigenValueBack[Counter][2] >= eigenValueBack[Counter][0]){		//値をチェック
 					eigenValueBack[Counter][2] = eigenValueBack[Counter][0] -1;
-				}											//屌桳傾僪儗僗寁嶼
+				}											//固有アドレス計算
 				eigenValueBack[Counter - 1][3] = eigenValueBack[Counter][1] * eigenValueBack[Counter][2] + eigenValueBack[Counter][3];
 			}
 		}

@@ -3,8 +3,8 @@
 using namespace N_Booster;
 
 
-//OpenDat(char* ŠJ‚­ƒtƒ@ƒCƒ‹‚Ì–¼‘O, char* “WŠJ‚·‚éêŠ, DWORD “WŠJ‚·‚éêŠ‚ÌƒTƒCƒY)
-//CloseDat(char* ‘‚«o‚·ƒtƒ@ƒCƒ‹‚Ì–¼‘O, char* ˆ³k‚ğŠJn‚·‚éêŠ, DWORD ˆ³k‚·‚éƒTƒCƒY)
+//OpenDat(char* é_¤¯¥Õ¥¡¥¤¥ë¤ÎÃûÇ°, char* Õ¹é_¤¹¤ëˆöËù, DWORD Õ¹é_¤¹¤ëˆöËù¤Î¥µ¥¤¥º)
+//CloseDat(char* •ø¤­³ö¤¹¥Õ¥¡¥¤¥ë¤ÎÃûÇ°, char* ˆR¿s¤òé_Ê¼¤¹¤ëˆöËù, DWORD ˆR¿s¤¹¤ë¥µ¥¤¥º)
 
 #define dat_ok 0
 #define dat_error_open 1
@@ -19,15 +19,15 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 	
 	ifstream datopen(datName, ios::binary);
 	if( datopen.fail() ){
-		return dat_error_open;	//ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“ƒGƒ‰[
+		return dat_error_open;	//¥Õ¥¡¥¤¥ë¥ª©`¥×¥ó¥¨¥é©`
 	}
 	
 	if(AIsize == 0){
-		//ŠJ‚©‚È‚­‚Ä‚à“¯‚¶
+		//é_¤«¤Ê¤¯¤Æ¤âÍ¬¤¸
 		return dat_ok;
 	}
 	
-	//‚±‚±‚©‚çzlib‚Å“WŠJ
+	//¤³¤³¤«¤ézlib¤ÇÕ¹é_
 	z_stream z;
 	char inBuf[inBuf_size];
 	int status, flush;
@@ -38,7 +38,7 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 	z.next_in = Z_NULL;
 	z.avail_in = 0;
 	if (inflateInit(&z) != Z_OK) {
-		return dat_error_init;	//‰Šú‰»ƒGƒ‰[
+		return dat_error_init;	//³õÆÚ»¯¥¨¥é©`
 	}
 	
 	z.next_out = (Bytef*)AIaddress;
@@ -62,10 +62,10 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 		
 		if (status != Z_OK) {
 			inflateEnd(&z);
-			return dat_error_inflate;	//“WŠJƒGƒ‰[	//ƒoƒbƒtƒ@‚É‘Î‚µ‚ÄƒTƒCƒY‚ª‘å‚«‚¢‚à‚Ì‚Å‚ÍZ_BUF_ERROR‚ªo‚é
+			return dat_error_inflate;	//Õ¹é_¥¨¥é©`	//¥Ğ¥Ã¥Õ¥¡¤ËŒ¤·¤Æ¥µ¥¤¥º¤¬´ó¤­¤¤¤â¤Î¤Ç¤ÏZ_BUF_ERROR¤¬³ö¤ë
 		}
 		if (z.avail_out == 0) {
-			//ƒI[ƒo[ƒtƒ[‚Ö‚Ì‘Îˆ
+			//¥ª©`¥Ğ©`¥Õ¥í©`¤Ø¤ÎŒ„I
 			z.next_out = (Bytef*)AIaddress;
 			z.avail_out = AIsize;
 			while (status != Z_STREAM_END){
@@ -81,7 +81,7 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 				
 				if (z.avail_out != AIsize){
 					inflateEnd(&z);
-					return dat_error_overflow;	//ƒI[ƒo[ƒtƒ[
+					return dat_error_overflow;	//¥ª©`¥Ğ©`¥Õ¥í©`
 				}
 				if (status == Z_STREAM_END) {
 					z.avail_out = 0;
@@ -89,7 +89,7 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 				}
 				if (status != Z_OK) {
 					inflateEnd(&z);
-					return dat_error_inflate;	//“WŠJƒGƒ‰[
+					return dat_error_inflate;	//Õ¹é_¥¨¥é©`
 				}
 			}
 		}
@@ -98,10 +98,10 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 	
 	if(z.avail_out != 0){
 		inflateEnd(&z);
-		return dat_error_size;	//AIƒTƒCƒYƒGƒ‰[
+		return dat_error_size;	//AI¥µ¥¤¥º¥¨¥é©`
 	}
 	if (inflateEnd(&z) != Z_OK) {
-		return dat_error_end;	//ŠJ•úƒGƒ‰[
+		return dat_error_end;	//é_·Å¥¨¥é©`
 	}
 	
 	return 0;
@@ -111,9 +111,9 @@ int OpenDat(char* datName, char* AIaddress, DWORD AIsize){
 int CloseDat(char* datName, char* AIaddress, DWORD AIsize){
 	
 	ofstream datclose(datName, ios::binary);
-	if ( datclose.fail() ) return dat_error_open;	//ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“ƒGƒ‰[
+	if ( datclose.fail() ) return dat_error_open;	//¥Õ¥¡¥¤¥ë¥ª©`¥×¥ó¥¨¥é©`
 	
-	//‚±‚±‚©‚çzlib‚Åˆ³k
+	//¤³¤³¤«¤ézlib¤ÇˆR¿s
 	z_stream z;
 	char inBuf[inBuf_size];
 	char outBuf[outBuf_size];
@@ -122,7 +122,7 @@ int CloseDat(char* datName, char* AIaddress, DWORD AIsize){
 	z.zalloc = Z_NULL;
 	z.zfree = Z_NULL;
 	z.opaque = Z_NULL;
-	if (deflateInit(&z, Z_DEFAULT_COMPRESSION) != Z_OK) return dat_error_init;	//‰Šú‰»ƒGƒ‰[
+	if (deflateInit(&z, Z_DEFAULT_COMPRESSION) != Z_OK) return dat_error_init;	//³õÆÚ»¯¥¨¥é©`
 	
 	z.avail_in = 0;
 	z.next_out = (Bytef*)outBuf;
@@ -164,7 +164,7 @@ int CloseDat(char* datName, char* AIaddress, DWORD AIsize){
 	}
 	datclose.close();
 	
-	if (deflateEnd(&z) != Z_OK) return dat_error_end;	//ŠJ•úƒGƒ‰[
+	if (deflateEnd(&z) != Z_OK) return dat_error_end;	//é_·Å¥¨¥é©`
 	return 0;
 }
 
@@ -209,7 +209,7 @@ int boosterDatClass::CloseBackAI(){
 	}
 	
 	
-	Flg = remove(datName);				//AIDat.dat‚ğ’u‚«Š·‚¦‚éB	//‚»‚à‚»‚àƒtƒ@ƒCƒ‹‚ª–³‚©‚Á‚½‚Æ‚«ƒGƒ‰[
+	Flg = remove(datName);				//AIDat.dat¤òÖÃ¤­“Q¤¨¤ë¡£	//¤½¤â¤½¤â¥Õ¥¡¥¤¥ë¤¬Ÿo¤«¤Ã¤¿¤È¤­¥¨¥é©`
 	Flg = rename(datNameTemp,datName);
 	if(Flg){
 		#if debug_mode_file
@@ -318,7 +318,7 @@ int boosterDatClass::CloseLocalAI(){
 	}
 	
 	
-	Flg = remove(datName);				//AIDat.dat‚ğ’u‚«Š·‚¦‚éB	//‚»‚à‚»‚àƒtƒ@ƒCƒ‹‚ª–³‚©‚Á‚½‚Æ‚«ƒGƒ‰[
+	Flg = remove(datName);				//AIDat.dat¤òÖÃ¤­“Q¤¨¤ë¡£	//¤½¤â¤½¤â¥Õ¥¡¥¤¥ë¤¬Ÿo¤«¤Ã¤¿¤È¤­¥¨¥é©`
 	Flg = rename(datNameTemp,datName);
 	if(Flg){
 		#if debug_mode_file
@@ -431,7 +431,7 @@ int boosterDatClass::CloseIndividualAI(){
 		return 1;
 	}
 	
-	Flg = remove(datName);				//AIDat.dat‚ğ’u‚«Š·‚¦‚éB	//‚»‚à‚»‚àƒtƒ@ƒCƒ‹‚ª–³‚©‚Á‚½‚Æ‚«ƒGƒ‰[
+	Flg = remove(datName);				//AIDat.dat¤òÖÃ¤­“Q¤¨¤ë¡£	//¤½¤â¤½¤â¥Õ¥¡¥¤¥ë¤¬Ÿo¤«¤Ã¤¿¤È¤­¥¨¥é©`
 	Flg = rename(datNameTemp,datName);
 	if(Flg){
 		#if debug_mode_file
@@ -541,7 +541,7 @@ int boosterDatClass::CloseSpellAI(){
 		return 1;
 	}
 	
-	Flg = remove(datName);				//AIDat.dat‚ğ’u‚«Š·‚¦‚éB	//‚»‚à‚»‚àƒtƒ@ƒCƒ‹‚ª–³‚©‚Á‚½‚Æ‚«ƒGƒ‰[
+	Flg = remove(datName);				//AIDat.dat¤òÖÃ¤­“Q¤¨¤ë¡£	//¤½¤â¤½¤â¥Õ¥¡¥¤¥ë¤¬Ÿo¤«¤Ã¤¿¤È¤­¥¨¥é©`
 	Flg = rename(datNameTemp,datName);
 	if(Flg){
 		#if debug_mode_file
@@ -553,7 +553,7 @@ int boosterDatClass::CloseSpellAI(){
 }
 
 
-int boosterDatClass::OpenSpellAI(char AIName[16]){		//AIŠJ‚­
+int boosterDatClass::OpenSpellAI(char AIName[16]){		//AIé_¤¯
 	#if debug_mode
 		cout << "debug : " << hex << playerSide << ".OpenSpellAI() " << endl;
 	#endif
@@ -615,7 +615,7 @@ int boosterDatClass::OpenSpellAI(char AIName[16]){		//AIŠJ‚­
 
 
 
-int boosterDatClass::CloseAI(){		//AI•Û‘¶@‚Ü‚¸ƒeƒ“ƒvƒtƒ@ƒCƒ‹‚É•Û‘¶‚µ‚ÄAŒ³‚Ì‚ğÁ‚µ‚Ä‚©‚çƒŠƒl[ƒ€B
+int boosterDatClass::CloseAI(){		//AI±£´æ¡¡¤Ş¤º¥Æ¥ó¥×¥Õ¥¡¥¤¥ë¤Ë±£´æ¤·¤Æ¡¢Ôª¤Î¤òÏû¤·¤Æ¤«¤é¥ê¥Í©`¥à¡£
 	#if debug_mode
 		cout << "debug : " << hex << playerSide << ".CloseAI() " << endl;
 	#endif
@@ -654,7 +654,7 @@ int boosterDatClass::CloseAI(){		//AI•Û‘¶@‚Ü‚¸ƒeƒ“ƒvƒtƒ@ƒCƒ‹‚É•Û‘¶‚µ‚ÄAŒ³‚Ì‚ğ
 		return 1;
 	}
 	
-	Flg = remove(datName);				//AIDat.dat‚ğ’u‚«Š·‚¦‚éB	//‚»‚à‚»‚àƒtƒ@ƒCƒ‹‚ª–³‚©‚Á‚½‚Æ‚«ƒGƒ‰[
+	Flg = remove(datName);				//AIDat.dat¤òÖÃ¤­“Q¤¨¤ë¡£	//¤½¤â¤½¤â¥Õ¥¡¥¤¥ë¤¬Ÿo¤«¤Ã¤¿¤È¤­¥¨¥é©`
 	Flg = rename(datNameTemp, datName);
 	if(Flg){
 		#if debug_mode_file
@@ -666,7 +666,7 @@ int boosterDatClass::CloseAI(){		//AI•Û‘¶@‚Ü‚¸ƒeƒ“ƒvƒtƒ@ƒCƒ‹‚É•Û‘¶‚µ‚ÄAŒ³‚Ì‚ğ
 }
 
 
-int boosterDatClass::OpenAI(char AIName[16]){		//AIŠJ‚­
+int boosterDatClass::OpenAI(char AIName[16]){		//AIé_¤¯
 	#if debug_mode
 		cout << "debug : " << hex << playerSide << ".OpenAI() " << endl;
 	#endif

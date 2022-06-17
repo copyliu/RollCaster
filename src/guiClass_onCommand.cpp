@@ -204,7 +204,7 @@ void processKeyCode(WPARAM wp){
 		gui->doBackSpace();
 		break;
 	case VK_ESCAPE:
-		//忋埵偱僉儍僢僠偟偰偄傞偺偱偙偙偵偼傕偆棃側偄
+		//上位でキャッチしているのでここにはもう来ない
 		break;
 	default:
 		keyDown = wp;
@@ -217,7 +217,7 @@ void processKeyCode(WPARAM wp){
 		charConvClass keyConv(keyDownArray);
 		
 		if(keyConv.wide[0] >= 0x10 && keyConv.wide[0] <= 0x19){
-			//慡妏悢帤偩偲曄側抣偑憲傜傟偰偔傞
+			//全角数字だと変な値が送られてくる
 			keyConv.wide[0] += 0x20;
 		}
 		gui->addEditChar(keyConv.wide[0]);
@@ -514,7 +514,7 @@ void guiClass::onSettingsSave(){
 	hDialogHook = ::SetWindowsHookEx( WH_CALLWNDPROCRET, dialogHookProc, hInst, ::GetCurrentThreadId() );
 	if(::MessageBox(hWnd, L"Save and Restart", L"Settings", MB_YESNO) == IDYES){
 		//Save
-		//Linux偩偲GetWindowTextW屻偺曄姺偱幐攕偡傞偙偲偑偁偭偨偨傔丄A偱幚巤
+		//LinuxだとGetWindowTextW後の変換で失敗することがあったため、Aで実施
 		int size = ::GetWindowTextLengthA(hSettings);
 		if(size){
 			char* str = new char[size + 2];
@@ -528,7 +528,7 @@ void guiClass::onSettingsSave(){
 */
 			char* iniStr = str;
 			
-			//Linux偩偲曄姺幐攕偡傞丅僂傿儞僪僂偐傜庢摼偡傞暥帤偑堎側偭偰偄傞? 
+			//Linuxだと変換失敗する。ウィンドウから取得する文字が異なっている? 
 			if(::strlen(iniStr)==0){
 				::MessageBox(hWnd, L"failed to get window strings.", L"Settings", MB_OK);
 				return;
@@ -657,7 +657,7 @@ void guiClass::onTabSelectChange(int n){
 #endif
 		::SetFocus(gui->hWnd);
 		
-		//梫専摙
+		//要検討
 		if(!lobby->isRunning()){
 			ShowLobbyConnectDialog();
 		}

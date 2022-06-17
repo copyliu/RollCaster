@@ -3,8 +3,8 @@ using namespace std;
 using namespace N_Caster;
 
 int mainDatClass::Communicate(){
-	//アクセス相手がどんな状況か、など
-	//myInfo.terminalMode = mode_root など
+	//･｢･ｯ･ｻ･ｹﾏ猝ﾖ､ｬ､ﾉ､ﾊﾗｴ孑､ｫ｡｢､ﾊ､ﾉ
+	//myInfo.terminalMode = mode_root ､ﾊ､ﾉ
 
 	accessFlg = status_default;
 
@@ -32,7 +32,7 @@ int mainDatClass::Communicate(){
 		SendCmd( dest_access, cmd_access, (void *)access_packet, access_packet_len );
 		Sleep(200);
 		if( accessFlg == status_ok ){
-			//アクセスOK
+			//･｢･ｯ･ｻ･ｹOK
 			myInfo.terminalMode = mode_root;
 			lastTime.Away = nowTime;
 			WaitForSingleObject( hMutex, INFINITE );
@@ -42,7 +42,7 @@ int mainDatClass::Communicate(){
 			break;
 
 		}else  if( accessFlg == status_bad ){
-			//アクセスBAD
+			//･｢･ｯ･ｻ･ｹBAD
 //			cout << "STATUS : BAD ( Communicate() )" << endl;
 			myInfo.terminalMode = mode_branch;
 			lastTime.Root = nowTime;

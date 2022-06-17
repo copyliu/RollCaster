@@ -2,8 +2,8 @@
 using namespace std;
 using namespace N_Caster;
 
-//梫専摙
-//擮偺偨傔inputData.init()傪梋寁偵峴偭偰偄傞
+//要検討
+//念のためinputData.init()を余計に行っている
 
 typedef struct{
 	WORD mode;
@@ -321,7 +321,7 @@ int mainDatClass::Entrance(){
 	lastCharacterB = 0;
 	nPlayers = 0;
 
-	//SOCADDR_IN偺弶婜壔
+	//SOCADDR_INの初期化
 	WaitForSingleObject( hMutex, INFINITE );
 	memset( &Away , 0, sizeof(SOCKADDR_IN) );
 	memset( &Root , 0, sizeof(SOCKADDR_IN) );
@@ -427,7 +427,7 @@ int mainDatClass::Entrance(){
 				Res = menu( &menuData );
 				if( Res == 0xF ){
 					if( endTimeFlg ){
-						//壱摦帪娫傪昞帵
+						//稼動時間を表示
 						cout	<< endl
 							<< "<End>" << endl
 							<< "Time : ";
@@ -446,7 +446,7 @@ int mainDatClass::Entrance(){
 		}
 		break;
 	case main_file :
-		//摦嶌儌乕僪偲憡庤偺IP偲億乕僩偺忣曬傪撉傓
+		//動作モードと相手のIPとポートの情報を読む
 		{
 			WCHAR path[200];
 			if( GetCurrentDirectoryW( 180, path ) < 180 ){
@@ -461,8 +461,8 @@ int mainDatClass::Entrance(){
 					case 0 :
 					case 3:
 					case 4:
-						//捠忢
-						//偦傟梡偺儌乕僪傪捛壛
+						//通常
+						//それ用のモードを追加
 						if (mode == 4) {
 							menuData.mode = 23;
 						} else if (mode == 3) {
@@ -471,7 +471,7 @@ int mainDatClass::Entrance(){
 							menuData.mode = 20;
 						}
 
-						//忣曬撉傒崬傒
+						//情報読み込み
 						iniReadStringNonUnicode( L"TARGET", L"ip", L"\0", menuData.targetIP, 79, path );
 						menuData.targetIP[79] = '\0';
 						menuData.targetPort = GetPrivateProfileIntW( L"TARGET", L"port", 0, path );
@@ -483,7 +483,7 @@ int mainDatClass::Entrance(){
 						}
 						break;
 					case 1 :
-						//摿掕憡庤懸偪
+						//特定相手待ち
 						menuData.mode = 21;
 						iniReadStringNonUnicode( L"TARGET", L"ip", L"\0", menuData.targetIP, 79, path );
 						menuData.targetIP[79] = '\0';
@@ -497,7 +497,7 @@ int mainDatClass::Entrance(){
 							<< "<Menu>" << endl;
 						break;
 					case 2 :
-						//懸偪
+						//待ち
 						menuData.mode = 1;
 						cout	<<endl
 							<< "<Menu>" << endl;
@@ -516,8 +516,8 @@ int mainDatClass::Entrance(){
 		mainFlg = main_end;
 		break;
 	case main_arg :
-		//堷悢巜掕
-		//file儌乕僪偺傪棳梡
+		//引数指定
+		//fileモードのを流用
 		switch( argData.argMode ){
 		case 0 :
 		case 3 :
@@ -549,7 +549,7 @@ int mainDatClass::Entrance(){
 
 			break;
 		case 1 :
-			//摿掕憡庤懸偪
+			//特定相手待ち
 			menuData.mode = 21;
 			strcpy( menuData.targetIP, argData.targetIP );
 			menuData.targetIP[79] = '\0';
@@ -563,7 +563,7 @@ int mainDatClass::Entrance(){
 				<< "<Menu>" << endl;
 			break;
 		case 2 :
-			//懸偪
+			//待ち
 			menuData.mode = 1;
 			cout	<<endl
 				<< "<Menu>" << endl;
@@ -575,7 +575,7 @@ int mainDatClass::Entrance(){
 		mainFlg = main_end;
 		break;
 	case main_end :
-		//廔椆傪懸偮
+		//終了を待つ
 		for(;;){
 			if( GetEsc() ) break;
 			if( !FindWindow( NULL , windowName ) ) break;
@@ -746,7 +746,7 @@ int mainDatClass::Entrance(){
 	case 2 :
 		//Try access
 
-		//擮偺偨傔乮梫専摙乯丂
+		//念のため（要検討）　
 		lastTime.Access = nowTime;
 
 		if (menuData.mode != 3 && menuData.mode != 11) {
@@ -792,7 +792,7 @@ int mainDatClass::Entrance(){
 		break;
 	case 5 :
 		//Get Information
-		//擮偺偨傔乮梫専摙乯丂
+		//念のため（要検討）　
 		lastTime.Access = nowTime;
 
 		Access.sin_family = AF_INET;
@@ -990,7 +990,7 @@ int mainDatClass::Entrance(){
 		ReleaseMutex( hMutex );
 		portSeekFlg = 1;
 
-		//揮憲屻
+		//転送後
 		cout << "Now Waiting for response." << endl;
 		echoFlg.Access = 0;
 		for(;;){
@@ -1011,7 +1011,7 @@ int mainDatClass::Entrance(){
 
 		Sound();
 
-		//echoes傪懸偮
+		//echoesを待つ
 		Sleep(200);
 
 		cout << "Connected to " << inet_ntoa(Access.sin_addr) << ":" << dec << ntohs(Access.sin_port) << "\n";
@@ -1308,9 +1308,9 @@ int mainDatClass::Entrance(){
 		//Try access
 
 		/*
-		//梫専摙
-		//憡庤偺弨旛傪懸偮帪娫乮recvfrom偱偺僄儔乕側偳乯
-		//屻偱
+		//要検討
+		//相手の準備を待つ時間（recvfromでのエラーなど）
+		//後で
 		if( argData.argMode ){
 			//none
 		}else{
@@ -1318,7 +1318,7 @@ int mainDatClass::Entrance(){
 		}
 		*/
 
-		//擮偺偨傔乮梫専摙乯丂
+		//念のため（要検討）　
 		lastTime.Access = nowTime;
 
 		Access.sin_family = AF_INET;
@@ -1435,8 +1435,8 @@ int mainDatClass::Entrance(){
 		dataInfo.sessionID = myInfo.sessionID;
 		dataInfo.sessionIDNext = myInfo.sessionIDNext;
 	}else if( myInfo.terminalMode == mode_branch || myInfo.terminalMode == mode_subbranch ){
-		//懳愴僉儍儔僋僞乕丄gameTIme昞帵側偳
-		//娤愴偡傞偐偳偆偐
+		//対戦キャラクター、gameTIme表示など
+		//観戦するかどうか
 
 		// in case we're in spectate mode, reget the info
 		dataInfo.sessionID = 0;
@@ -1628,7 +1628,7 @@ int mainDatClass::Entrance(){
 			case 0 :
 				return 1;
 			case 1 :
-				//懕峴
+				//続行
 				break;
 			default :
 				return 1;
@@ -1672,7 +1672,7 @@ int mainDatClass::Entrance(){
 			return 1;
 		}
 	}else if( myInfo.terminalMode == mode_broadcast ){
-		//僙僢僔儑儞ID摫擖
+		//セッションID導入
 		myInfo.sessionNo = 1;
 		myInfo.sessionID = 1 + rand()%255;
 		myInfo.sessionIDNext = myInfo.sessionID;
@@ -1714,8 +1714,8 @@ int mainDatClass::Entrance(){
 			delayTimeB = delayTimeTemp * 2;
 		}
 	}else if( myInfo.terminalMode == mode_root ){
-		//僨乕僞傪傑偲傔偰偍偄偨傎偆偑妝
-		//屻傎偳
+		//データをまとめておいたほうが楽
+		//後ほど
 		myInitFlg = 1;
 		for(;;){
 			if( enInitFlg ) break;
@@ -1725,7 +1725,7 @@ int mainDatClass::Entrance(){
 			Sleep(100);
 		}
 
-		//捠怣偟偰AB傪寛傔傞
+		//通信してABを決める
 		if( GetPlayerSide() ) return 1;
 
 		cout << "Connecting player : ";
@@ -1869,7 +1869,7 @@ int mainDatClass::Entrance(){
 		}
 
 		if( myInfo.playerSide == 0xA ){
-			//僙僢僔儑儞ID乮儔儞僟儉乯傪摫擖
+			//セッションID（ランダム）を導入
 			myInfo.sessionNo = 1;
 			myInfo.sessionID = 1 + rand()%255;
 			myInfo.sessionIDNext = myInfo.sessionID;
@@ -1918,7 +1918,7 @@ int mainDatClass::Entrance(){
 		cout << "warning : desync fix disabled" << endl;
 	}
 
-	//擮偺偨傔
+	//念のため
 	if( inputData.init() ) return 0xF;
 
 	if( hTh075Th ){
@@ -1931,7 +1931,7 @@ int mainDatClass::Entrance(){
 				PostMessage(hWnd, WM_CLOSE, 0, 0);
 				Sleep(3000);
 			}
-			//渎柌憐偺僗儗僢僪傪奐巒偡傞
+			//萃夢想のスレッドを開始する
 			hCheckEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 			hProcess = NULL;
 			hTh075Th = (HANDLE)_beginthreadex(NULL, 0, th075Thread, this, 0, NULL);
@@ -1953,7 +1953,7 @@ int mainDatClass::Entrance(){
 
 			HWND hWnd = FindWindow( NULL , windowName );
 			if( !hWnd ){
-				//廔傢傝偐偗
+				//終わりかけ
 				if( WaitForSingleObject(hTh075Th, 3000) ){
 					CloseHandle( pi.hThread );
 					CloseHandle( pi.hProcess );
@@ -1990,7 +1990,7 @@ int mainDatClass::Entrance(){
 			WaitForSingleObject( hProcessTemp, 3000 );
 			CloseHandle( hProcessTemp );
 		}
-		//渎柌憐偺僗儗僢僪傪奐巒偡傞
+		//萃夢想のスレッドを開始する
 		hCheckEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 		hProcess = NULL;
 		hTh075Th = (HANDLE)_beginthreadex(NULL, 0, th075Thread, this, 0, NULL);
@@ -2011,7 +2011,7 @@ int mainDatClass::Entrance(){
 	return 0;
 }
 
-//僶僢僋僌儔僂儞僪
+//バックグラウンド
 int mainDatClass::backGroundRoop(){
 	#if debug_mode
 		WaitForSingleObject( hPrintMutex, INFINITE );
@@ -2026,7 +2026,7 @@ int mainDatClass::backGroundRoop(){
 	}
 
 
-	//渎柌憐偺僂傿儞僪僂傪懸偮
+	//萃夢想のウィンドウを待つ
 	for(;;){
 		if( GetEsc() ){
 			return 1;

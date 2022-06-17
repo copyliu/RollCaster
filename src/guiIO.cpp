@@ -42,7 +42,7 @@ void ginClass::disableBlock(){
 ginClass& ginClass::operator>>(WORD& n){
 	guiClass* gui = g_gui;
 	
-	//—vŒŸ“¢
+	//Òª—ÊÓ‘
 	gui->clearInputStr();
 	
 	for(;;){
@@ -64,7 +64,7 @@ ginClass& ginClass::operator>>(char* str){
 	guiClass* gui = g_gui;
 	charConvClass conv;
 	
-	//—vŒŸ“¢
+	//Òª—ÊÓ‘
 	gui->clearInputStr();
 	
 	for(;;){
@@ -87,7 +87,7 @@ ginClass& ginClass::getline(char* str, int n){
 	guiClass* gui = g_gui;
 	charConvClass conv;
 	
-	//—vŒŸ“¢
+	//Òª—ÊÓ‘
 	gui->clearInputStr();
 	
 	for(;;){

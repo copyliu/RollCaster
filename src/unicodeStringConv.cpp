@@ -134,7 +134,7 @@ int myString::set( WCHAR* baseString, short baseStringSize ){
 	}
 	
 	if( !baseStringSize ){
-		//サイズ0指定は終端保証文字列として扱う
+		//･ｵ･､･ｺ0ﾖｸｶｨ､ﾏｽKｶﾋｱ｣ﾔ^ﾎﾄﾗﾖﾁﾐ､ﾈ､ｷ､ﾆ嘆､ｦ
 		baseStringSize = wcslen( baseString );
 	}
 	

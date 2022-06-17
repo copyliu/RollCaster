@@ -2,10 +2,10 @@
 #include "boosterDatClass.h"
 using namespace N_Booster;
 
-//OpenProcess偱偒傞偐丄base偼偁傞偐,柤慜偼庢摼偱偒偨偐丄
-//AI僆乕僾儞偱偒偨偐丄僉儍儔宲懕偐丄曄峏偟偰偨偲偒偺張棟 姰椆偟偨傜0傪曉偡
-//boosterDatInitFlg偼RefleshDat()偱1偵偡傞
-//playerSide傪曄偊偨傜bodyIniFlg傪1偵偡傞偙偲
+//OpenProcessできるか、baseはあるか,名前は取得できたか、
+//AIオープンできたか、キャラ継続か、変更してたときの処理 完了したら0を返す
+//boosterDatInitFlgはRefleshDat()で1にする
+//playerSideを変えたらbodyIniFlgを1にすること
 int boosterDatClass::boosterDatInit(){
 	#if debug_mode
 		cout << "debug : " << hex << playerSide << ".boosterDatInit() " << endl;
@@ -14,13 +14,13 @@ int boosterDatClass::boosterDatInit(){
 	hWnd = FindWindow( NULL , casterDat->windowName );
 	if(hWnd == 0) return 0xF;
 
-	//儊儌儕傪妋曐偱偒側偐偭偨偲偒
+	//メモリを確保できなかったとき
 	if(AI == 0) return 0xF;
 
-	//儃僞儞擖椡弶婜壔
+	//ボタン入力初期化
 	if(bodyIniFlg==0){
 		for(Counter=1;Counter<9;Counter++){
-			if(gameInfoIni[Counter][5]){	//墴偝傟偰偄傞
+			if(gameInfoIni[Counter][5]){	//押されている
 				Input.type = INPUT_KEYBOARD;
 				Input.ki.wVk = gameInfoIni[Counter][2];
 				Input.ki.wScan = MapVirtualKey(gameInfoIni[Counter][2], 0);
@@ -61,13 +61,13 @@ int boosterDatClass::boosterDatInit(){
 	CloseHandle( hProcess );
 
 	if(gameMode ==5){
-		gameTimeAddress = baseAddress + 0x498;		//gameTimeAddress	//儕僾儗僀儌乕僪偺偲偒偺帪娫
+		gameTimeAddress = baseAddress + 0x498;		//gameTimeAddress	//リプレイモードのときの時間
 	}else{
 		gameTimeAddress = baseAddress + 0x49C;		//gameTimeAddress
 	}
 
 	AIMode = 0;
-	if(gameMode==0) AIMode = 0;					//story	//stop			//AIMode偺愝掕
+	if(gameMode==0) AIMode = 0;					//story	//stop			//AIModeの設定
 	if(gameMode==1) AIMode = 0;					//arcade	//stop
 	if(gameMode==2){
 		if( listeningMode ) {
@@ -141,7 +141,7 @@ int boosterDatClass::boosterDatInit(){
 
 	if(boosterDatInitFlg){
 		if(strcmp(NameTemp, Name) !=0){
-			if( strcmp(NameTemp, "init") && strcmp(NameTemp, "error") && strcmp(NameTemp, "second")){	//init,error,second偺偲偒曐懚偟側偄
+			if( strcmp(NameTemp, "init") && strcmp(NameTemp, "error") && strcmp(NameTemp, "second")){	//init,error,secondのとき保存しない
 				if( CloseAI()|| CloseSpellAI() || CloseIndividualAI() || CloseBackAI() ) return 1;
 
 				if( eigenValueLocal[0][0] ){
@@ -155,17 +155,17 @@ int boosterDatClass::boosterDatInit(){
 		boosterDatInitFlg = 0;
 		return 1;
 	}
-	if( enDat->boosterDatInitFlg == 1 ) return 1;		//憡庤偑廔椆偟偰偄側偄偲恑傑側偄
+	if( enDat->boosterDatInitFlg == 1 ) return 1;		//相手が終了していないと進まない
 	strcpy( enName, enDat->Name );
 
-	//摨偠僉儍儔摨巑側偲偒偼AI[]傪嫟桳偡傞丅仺帺暘偺AI[]傪帩偨側偄:secondaryMode
-	if(myID == enDat->myID){				//僉儍儔ID傪嶲徠	//摨偠僉儍儔摨巑偺懳愴
+	//同じキャラ同士なときはAI[]を共有する。→自分のAI[]を持たない:secondaryMode
+	if(myID == enDat->myID){				//キャラIDを参照	//同じキャラ同士の対戦
 		if( strcmp(NameTemp,"second") == 0 ){
-			secondaryModeFlg = 1;			//慜夞secondaryMode偩偭偨傜宲懕
+			secondaryModeFlg = 1;			//前回secondaryModeだったら継続
 		}else{
-			if( enDat->secondaryModeFlg == 0 ){			//僥僉偑secodaryMode偱偼側偐偭偨偲偒
+			if( enDat->secondaryModeFlg == 0 ){			//テキがsecodaryModeではなかったとき
 				if( strcmp(Name,NameTemp) == 0 ){
-					secondaryModeFlg = 0;	//帺暘懁偑僉儍儔宲懕偟偰偄傞偲偒偼憡庤懁偑secondaryMode偵側傞偙偲傪梫媮
+					secondaryModeFlg = 0;	//自分側がキャラ継続しているときは相手側がsecondaryModeになることを要求
 				}else{
 					secondaryModeFlg = 1;
 				}
@@ -177,7 +177,7 @@ int boosterDatClass::boosterDatInit(){
 			return 1;
 		}
 	}else{
-		secondaryModeFlg = 0;				//摨偠僉儍儔摨巑偺懳愴偱偼側偄
+		secondaryModeFlg = 0;				//同じキャラ同士の対戦ではない
 	}
 
 	#if debug_mode
@@ -185,12 +185,12 @@ int boosterDatClass::boosterDatInit(){
 	#endif
 
 
-	//僼傽僀儖傪奐偔
+	//ファイルを開く
 	if(secondaryModeFlg){
 		strcpy(Name,"second\0");
 	}else{
 		if( !( !strcmp(NameTemp, "init") || !strcmp(NameTemp, "error") || !strcmp(NameTemp, "second") ) && !strcmp(NameTemp, Name) ){
-			//慜夞偲摨偠僉儍儔
+			//前回と同じキャラ
 			if(strcmp(enNameTemp, enName) !=0){
 				if( CloseIndividualAI() ) return 1;
 
@@ -200,7 +200,7 @@ int boosterDatClass::boosterDatInit(){
 
 			}
 		}else{
-			//慜夞偑init,error,second偺偲偒 or 慜夞偲堘偆僉儍儔
+			//前回がinit,error,secondのとき or 前回と違うキャラ
 			Flg = OpenAI(Name);
 			if( Flg == 0xF ) return 0xF;
 			if( Flg ) memset(AI, 0, AIsizeArray[0]);
@@ -232,11 +232,11 @@ int boosterDatClass::boosterDatInit(){
 	strcpy(NameTemp,Name);
 	strcpy(enNameTemp,enName);
 
-	//僋儔僗偺嵼傝曽傪愝掕偡傞傕偺偼偙偙傑偱
-	//弶婜壔丒寁嶼偼偙偙偐傜
+	//クラスの在り方を設定するものはここまで
+	//初期化計算はここから
 
 	CalcAddress();
-	Flg = ConvertIni();	//昁偢CalcAddress()偺屻偱峴偆偙偲
+	Flg = ConvertIni();	//必ずCalcAddress()の後で行うこと
 	if(Flg) return 1;
 	statusInit();
 

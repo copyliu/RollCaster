@@ -152,21 +152,21 @@ int inputDataClass::GetInputDataB( WORD sessionNo, DWORD Time, BYTE* Input){
 int inputDataClass::Start( gameInfoStruct* gameInfo ){
 	if( !gameInfo ) return 1;
 	
-	//Index偺僠僃僢僋
+	//Indexのチェック
 	if( !(prev == 0 || prev == 1 || prev == 2)
 	 || !(now  == 0 || now  == 1 || now  == 2)
 	 || !(next == 0 || next == 1 || next == 2) ){
 		if( init() ) return 1;
 	}
 	
-	//師偺僨乕僞偑巊偊傞偐
+	//次のデータが使えるか
 	if( inputDataSub[ next ].dataInfo.sessionNo != 0 && inputDataSub[ next ].dataInfo.sessionNo != gameInfo->sessionNo ){
 		if( init() ) return 1;
 	}
 	
 	
 	if( inputDataSub[ next ].dataInfo.sessionNo == 0 ){
-		//弶夞
+		//初回
 		inputDataSub[ now ].dataInfo = *gameInfo;
 		if( inputDataSub[ now ].dataInfo.sessionNo == 0xFF ){
 			inputDataSub[ next ].dataInfo.sessionNo = 1;
@@ -175,7 +175,7 @@ int inputDataClass::Start( gameInfoStruct* gameInfo ){
 		}
 //		inputDataSub[ next ].dataInfo.sessionID = gameInfo->sessionIDNext;
 	}else{
-		//擇夞栚埲崀
+		//二回目以降
 		inputDataSub[ prev ].init();
 		
 		

@@ -113,7 +113,7 @@ void guiClass::addBaseStr(WCHAR* str){
 	}
 	if(::wcslen(baseStr) + ::wcslen(str) < BASE_STR_SIZE){
 		//TODO
-		//str偵暋悢夵峴偑娷傑傟傞応崌
+		//strに複数改行が含まれる場合
 		::wcscat(baseStr, str);
 	}
 }
@@ -182,7 +182,7 @@ void guiClass::doReturn(){
 		for(int Counter=INPUT_HISTORY_NUM-1; Counter>1; Counter--){
 			::wcsncpy(inputHistory[Counter], inputHistory[Counter-1], INPUT_HISTORY_BUF_SIZE);
 		}
-		//0偼嬻棑梡
+		//0は空欄用
 		::memset(inputHistory[1], 0, INPUT_HISTORY_BUF_SIZE);
 		::wcsncpy(inputHistory[1], editStr, INPUT_HISTORY_BUF_SIZE);
 		inputHistory[1][INPUT_HISTORY_BUF_SIZE - 1] = 0;
@@ -211,7 +211,7 @@ void guiClass::reflesh(bool hasEdit){
 	if(height < MIN_LINE_NUM * LINE_HEIGHT) height = MIN_LINE_NUM * LINE_HEIGHT;
 	if(height != editAreaHeight){
 		if(height < 0 || windowRect.top < 0){
-			//昞帵偡傞昁梫偑側偄
+			//表示する必要がない
 			return;
 		}
 		

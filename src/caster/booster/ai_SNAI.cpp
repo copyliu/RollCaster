@@ -3,8 +3,8 @@
 #include "HL.h"
 using namespace N_Booster;
 
-//挿墴偟
-//帪娫廋惓
+//長押し
+//時間修正
 
 void boosterDatClass::ReadSNAI(){
 	if(eigenValueSN[0][0]){
@@ -13,7 +13,7 @@ void boosterDatClass::ReadSNAI(){
 		Flg = 0;
 		
 		#if debug_height
-			if(myGameInfo[ _para ][2][0] && *enGameInfo[ _para ][2][0]){	//幚尡拞
+			if(myGameInfo[ _para ][2][0] && *enGameInfo[ _para ][2][0]){	//実験中
 //			if(*enGameInfo[ _para ][2][0]){
 				Temp = 2;
 			}
@@ -32,7 +32,7 @@ void boosterDatClass::ReadSNAI(){
 			if(*Address2 == 0){
 				Counter = 2400;
 			}else{
-				if(*Address2 == (BYTE)myGameInfo[ _status ][6][0]){	//帺暘慜峴摦
+				if(*Address2 == (BYTE)myGameInfo[ _status ][6][0]){	//自分前行動
 					Counter = 2400;
 					for(Counter2=8; Counter2<80; Counter2+=8){
 						Address3 = Address2 + Counter2;
@@ -40,7 +40,7 @@ void boosterDatClass::ReadSNAI(){
 							Counter2 = 80;
 						}else{
 							if(!(*Address3==0x24 && myGameInfo[ _info ][4][0]==0)){
-								//楈椡僠僃僢僋
+								//霊力チェック
 //								if( GetL(Address3 + 7) > 9 ){
 									if(!(myGameInfo[ _info ][2][0]
 									&& (statusArray[ *Address3 ][0] == 4 || statusArray[ *Address3 ][0] == 5 || statusArray[ *Address3 ][0] == 6))){
@@ -48,7 +48,7 @@ void boosterDatClass::ReadSNAI(){
 										Time = (DWORD)((gameTime - myGameInfo[ _status ][6][1]) / 4);
 										if(!(Flg && statusArray[ *Address3 ][0] == 3
 										&& !(GetH(Address3 + 3) >= (BYTE)myGameInfo[ _para ][3][2]
-										  && GetH(Address3 + 3) <= debug_height_value + (BYTE)myGameInfo[ _para ][3][2]))){	//崅偝曗惓	//幚尡拞
+										  && GetH(Address3 + 3) <= debug_height_value + (BYTE)myGameInfo[ _para ][3][2]))){	//高さ補正	//実験中
 											if(((BYTE)(Time + Temp) >= *(Address3 + 1) && (BYTE)Time < 3+ *(Address3 + 1)) || myGameInfo[ _status ][6][0]==0xFF){
 												commandInput[0] = statusArray[ *Address3 ][2];
 												decodeTime = 0;
@@ -71,14 +71,14 @@ void boosterDatClass::ReadSNAI(){
 
 void boosterDatClass::CallSNAI(){
 	if(eigenValueSN[0][0]){
-//		Line==0偼慡懱偵懳偡傞僶僢僼傽偲偟偰巊梡
+//		Line==0は全体に対するバッファとして使用
 //		SNAIBuf[0][0][0] = ;
 //		SNAIBuf[0][1][0] = ;
 //		SNAIBuf[0][2][0] = ;
-//		SNAIBuf[0][3][0] = myGameInfo[ _status ][5][1];	//帪娫	[0][3][1] = 帪娫嵎(Read梡)
-//		SNAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//擖椡ID
-//		SNAIBuf[0][5][0] = myGameInfo[ _para ][3][2];	//崅偝曗惓忣曬
-//		楢嵔峌寕偼丄偔傜偄or嬻拞僟僂儞忬懺偱偼Index傪恑傔傞偲偄偆曽岦丠
+//		SNAIBuf[0][3][0] = myGameInfo[ _status ][5][1];	//時間	[0][3][1] = 時間差(Read用)
+//		SNAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//入力ID
+//		SNAIBuf[0][5][0] = myGameInfo[ _para ][3][2];	//高さ補正情報
+//		連鎖攻撃は、くらいor空中ダウン状態ではIndexを進めるという方向？
 		
 		if(SNAIBuf[0][4][0]==0){
 			SNAIBuf[0][4][0] = 0xFF;
@@ -86,7 +86,7 @@ void boosterDatClass::CallSNAI(){
 		
 		Flg = 0;
 		if(myGameInfo[ _status ][2][2]){
-			if(!(myGameInfo[ _info ][1][0] == 2 && myGameInfo[ _para ][1][0] < 3)){	//揋偑暻嵺偱側偄
+			if(!(myGameInfo[ _info ][1][0] == 2 && myGameInfo[ _para ][1][0] < 3)){	//敵が壁際でない
 				if(myGameInfo[ _status ][2][2] != __5 && myGameInfo[ _status ][2][2] != __4 && myGameInfo[ _status ][2][2] != __1
 //				&& myGameInfo[ _status ][2][2] != __D4 && myGameInfo[ _status ][2][2] != __D7
 				&& myGameInfo[ _status ][2][2] != __22D && myGameInfo[ _status ][0][0] != 8
@@ -94,7 +94,7 @@ void boosterDatClass::CallSNAI(){
 				){
 					if(!(myGameInfo[ _para ][1][0] > 4 && (myGameInfo[ _status ][2][2] == __D4 || myGameInfo[ _status ][2][2] == __D7))){
 						if(myGameInfo[ _info ][0][1]==0){
-							//屻傠岦偒偱側偄
+							//後ろ向きでない
 							Flg = 1;
 							if(myGameInfo[ _status ][2][2] == __D4 || myGameInfo[ _status ][2][2] == __D7){
 								if(statusArray[ (BYTE)SNAIBuf[0][4][0] ][2] == __D4 || statusArray[ (BYTE)SNAIBuf[0][4][0] ][2] == __D7){
@@ -110,35 +110,35 @@ void boosterDatClass::CallSNAI(){
 		if(Flg){
 			for(Line=1; Line<20; Line++){
 				if(SNAIBuf[Line][0][0]==0){
-					//儔僀儞怴愝
+					//ライン新設
 					#if debug_mode_SNAI
-						cout << "儔僀儞怴愝" << endl;
+						cout << "ライン新設" << endl;
 					#endif
 					SNAIBuf[Line][0][0] = 0xFF;
-					SNAIBuf[Line][1][0] = 0xFF;	//挿偄憡娭
-					SNAIBuf[Line][2][0] = 64;	//棳傟偺報徾
-					SNAIBuf[Line][3][0] = SNAIBuf[0][3][0];	//慜擖椡帪娫
-					SNAIBuf[Line][4][0] = SNAIBuf[0][4][0];	//慜峴摦
+					SNAIBuf[Line][1][0] = 0xFF;	//長い相関
+					SNAIBuf[Line][2][0] = 64;	//流れの印象
+					SNAIBuf[Line][3][0] = SNAIBuf[0][3][0];	//前入力時間
+					SNAIBuf[Line][4][0] = SNAIBuf[0][4][0];	//前行動
 					SNAIBuf[Line][5][0] = 0;
 					
-					//報徾弶婜抣愝掕
+					//印象初期値設定
 					if(AIMode==2){
 						SNAIBuf[Line][2][1] = 64;
 					}else{
 						SNAIBuf[Line][2][1] = 65;
 					}
-					//憡娭弶婜抣愝掕
+					//相関初期値設定
 					SNAIBuf[Line][1][1] = 0xFF;
 					
 					if(myGameInfo[ _status ][2][2]==__22C){
-						//楈寕
-						SNAIBuf[Line][1][1] = 0x90;	//抁偄憡娭
-						SNAIBuf[Line][2][1] = 64;	//報徾
+						//霊撃
+						SNAIBuf[Line][1][1] = 0x90;	//短い相関
+						SNAIBuf[Line][2][1] = 64;	//印象
 					}
 					if(myGameInfo[ _status ][2][2] == __D4 || myGameInfo[ _status ][2][2] == __D7){
-						//屻僟僢僔儏
-						SNAIBuf[Line][1][1] = 0xFF;	//抁偄憡娭
-						SNAIBuf[Line][2][1] = 64;	//報徾
+						//後ダッシュ
+						SNAIBuf[Line][1][1] = 0xFF;	//短い相関
+						SNAIBuf[Line][2][1] = 64;	//印象
 					}
 					Line = 20;
 				}
@@ -158,7 +158,7 @@ void boosterDatClass::CallSNAI(){
 					Address = SNAIbase + eigenValueSN[0][3];
 					for(Counter=0; Counter<2400; Counter+=80){
 						Address2 = Address + Counter;
-						if(*Address2 == (BYTE)SNAIBuf[Line][4][Index -1]){	//帺暘慜峴摦
+						if(*Address2 == (BYTE)SNAIBuf[Line][4][Index -1]){	//自分前行動
 							Counter = 2400;
 							SNAIBuf[Line][0][Index] = (DWORD)Address2;
 						}else{
@@ -170,12 +170,12 @@ void boosterDatClass::CallSNAI(){
 						}
 					}
 					if(Index != 1){
-						SNAIBuf[Line][1][Index] = SNAIBuf[Line][1][Index - 1];	//憡娭
-						SNAIBuf[Line][2][Index] = SNAIBuf[Line][2][Index - 1];	//報徾
+						SNAIBuf[Line][1][Index] = SNAIBuf[Line][1][Index - 1];	//相関
+						SNAIBuf[Line][2][Index] = SNAIBuf[Line][2][Index - 1];	//印象
 					}
-					SNAIBuf[Line][3][Index] = (myGameInfo[ _status ][5][1] - SNAIBuf[Line][3][Index -1]) / 4;	//帪娫嵎
-					SNAIBuf[Line][4][Index] = myGameInfo[ _status ][5][0];	//擖椡乮ID乯
-					SNAIBuf[Line][5][Index] = SNAIBuf[0][5][0];			//崅偝曗惓忣曬
+					SNAIBuf[Line][3][Index] = (myGameInfo[ _status ][5][1] - SNAIBuf[Line][3][Index -1]) / 4;	//時間差
+					SNAIBuf[Line][4][Index] = myGameInfo[ _status ][5][0];	//入力（ID）
+					SNAIBuf[Line][5][Index] = SNAIBuf[0][5][0];			//高さ補正情報
 				}
 				if(SNAIBuf[Line][0][0]==0xFF){
 					Index = 1;
@@ -183,15 +183,15 @@ void boosterDatClass::CallSNAI(){
 					Index = SNAIBuf[Line][0][0];
 				}
 				
-				//挿偄憡娭
+				//長い相関
 				if(SNAIBuf[Line][1][0] > __magnification){
 					SNAIBuf[Line][1][0] = SNAIBuf[Line][1][0] - __magnification;
 				}else{
 					SNAIBuf[Line][1][0] = 0;
 				}
-				//抁偄憡娭
+				//短い相関
 				if(SNAIBuf[Line][1][Index] > __magnification){
-					SNAIBuf[Line][1][Index] = SNAIBuf[Line][1][Index] - __magnification;	//憡娭抣偼尭彮偡傞
+					SNAIBuf[Line][1][Index] = SNAIBuf[Line][1][Index] - __magnification;	//相関値は減少する
 				}else{
 					SNAIBuf[Line][1][Index] = 0;
 				}
@@ -202,30 +202,30 @@ void boosterDatClass::CallSNAI(){
 				
 				if(*enGameInfo[ _para ][5][1] || *enGameInfo[ _status ][9][1]==0x22){
 					#if debug_mode_SNAI
-						cout << "梌僟儊乕僕" << endl;
+						cout << "与ダメージ" << endl;
 					#endif
 					if(SNAIBuf[Line][2][Index] <= 245){
 						SNAIBuf[Line][2][Index] = SNAIBuf[Line][2][Index] + 10;
 					}else{
 						SNAIBuf[Line][2][Index] = 255;
 					}
-					SNAIBuf[Line][1][Index] = 0;	//憡娭傪愗傞
+					SNAIBuf[Line][1][Index] = 0;	//相関を切る
 				}
 				
 				if(myGameInfo[ _para ][5][1] && (myGameInfo[ _status ][0][0]==2 || myGameInfo[ _status ][0][0]==9 || myGameInfo[ _status ][9][1]==0x22)){
 					#if debug_mode_SNAI
-						cout << "旐僟儊乕僕" << endl;
+						cout << "被ダメージ" << endl;
 					#endif
 					if(SNAIBuf[Line][2][Index] >= 10){
 						SNAIBuf[Line][2][Index] = SNAIBuf[Line][2][Index] - 10;
 					}else{
 						SNAIBuf[Line][2][Index] = 0;
 					}
-					SNAIBuf[Line][1][Index] = 0;	//憡娭傪愗傞
+					SNAIBuf[Line][1][Index] = 0;	//相関を切る
 				}
 				
-				if(Index >= 19 || (SNAIBuf[Line][1][Index] < 5 && myGameInfo[ _input ][9][0] == 0)){	//憡娭丒梫挷惍
-					//廔椆
+				if(Index >= 19 || (SNAIBuf[Line][1][Index] < 5 && myGameInfo[ _input ][9][0] == 0)){	//相関要調整
+					//終了
 					#if debug_mode_SNAI
 						cout << hex << playerSide << ".line" << Line << " Close" << endl;
 					#endif
@@ -233,25 +233,25 @@ void boosterDatClass::CallSNAI(){
 					if(SNAIBuf[Line][0][Index]){
 						Address2 = (BYTE*)SNAIBuf[Line][0][Index];
 						SNAIBuf[Line][0][Index] = 0;
-						if(*Address2 == (BYTE)SNAIBuf[Line][4][Index -1]){	//妋擣
+						if(*Address2 == (BYTE)SNAIBuf[Line][4][Index -1]){	//確認
 							for(Counter2=8; Counter2<80; Counter2+=8){
 								Address3 = Address2 + Counter2;
 								if(*(Address3)==(BYTE)SNAIBuf[Line][4][Index]){
 									if(SNAIBuf[Line][2][Index] > 64){
-//									if((SNAIBuf[Line][2][Index] >= 64 && AIMode==1) || (SNAIBuf[Line][2][Index] > 64 && AIMode==2)){	//幚尡拞
-//									if((SNAIBuf[Line][2][Index] >= 64 && gameMode==5) || SNAIBuf[Line][2][Index] > 64){	//幚尡拞
-										//岲報徾
+//									if((SNAIBuf[Line][2][Index] >= 64 && AIMode==1) || (SNAIBuf[Line][2][Index] > 64 && AIMode==2)){	//実験中
+//									if((SNAIBuf[Line][2][Index] >= 64 && gameMode==5) || SNAIBuf[Line][2][Index] > 64){	//実験中
+										//好印象
 										#if debug_mode_SNAI
-											cout << "岲報徾" << endl;
+											cout << "好印象" << endl;
 										#endif
-										//帪娫嵎偺張棟
+										//時間差の処理
 										if((BYTE)SNAIBuf[Line][3][Index]    < 2+ *(Address3 + 1)
-										&& (BYTE)SNAIBuf[Line][3][Index] +2 >    *(Address3 + 1)){	//帪娫嵎偑彮側偄
+										&& (BYTE)SNAIBuf[Line][3][Index] +2 >    *(Address3 + 1)){	//時間差が少ない
 											FloatH(Address3 + 2, 1);
 											FloatL(Address3 + 7, 1);
 										}else{
-											//帪娫廋惓
-											//擇搙峴偆	//梫専摙
+											//時間修正
+											//二度行う	//要検討
 											if((BYTE)SNAIBuf[Line][3][Index] > *(Address3 + 1)){
 												if(*(Address3 + 1) < 0xFF){
 													*(Address3 + 1) = *(Address3 + 1) + 1;
@@ -276,17 +276,17 @@ void boosterDatClass::CallSNAI(){
 											}
 										}
 										
-										//崅偝曗惓
+										//高さ補正
 										if((BYTE)SNAIBuf[Line][5][Index]    < 1+ GetH(Address3 + 3)
 										&& (BYTE)SNAIBuf[Line][5][Index] +1 >    GetH(Address3 + 3)){
-											//崅偝偑嬤偄
+											//高さが近い
 											FloatL(Address3 + 3, 1);
 										}else{
-											//崅偝偑嬤偔側偄
-											FloatL(Address3 + 3, -1);	//惛搙壓偘
+											//高さが近くない
+											FloatL(Address3 + 3, -1);	//精度下げ
 										}
 										if(GetL(Address3 + 3) < 0xA){
-											//崅偝曗惓幚峴
+											//高さ補正実行
 											if((BYTE)SNAIBuf[Line][5][Index] > GetH(Address3 + 3)){
 												FloatH(Address3 + 3, 1);
 											}
@@ -295,7 +295,7 @@ void boosterDatClass::CallSNAI(){
 											}
 										}
 										
-										//挿墴偟巜掕
+										//長押し指定
 										if((BYTE)myGameInfo[ _input ][9][2] > GetL(Address3 + 2)){
 											if((BYTE)myGameInfo[ _input ][9][2] > 4+ GetL(Address3 + 2)){
 												FloatL(Address3 + 2, 2);
@@ -321,12 +321,12 @@ void boosterDatClass::CallSNAI(){
 										}
 									}
 									if(SNAIBuf[Line][2][Index] < 64){
-										//埆報徾
+										//悪印象
 										#if debug_mode_SNAI
-											cout << "埆報徾" << endl;
+											cout << "悪印象" << endl;
 										#endif
 										if((BYTE)SNAIBuf[Line][3][Index]    < 3+ *(Address3 + 1)
-										&& (BYTE)SNAIBuf[Line][3][Index] +3 >    *(Address3 + 1)){	//帪娫嵎偑彮側偄
+										&& (BYTE)SNAIBuf[Line][3][Index] +3 >    *(Address3 + 1)){	//時間差が少ない
 											FloatH(Address3 + 2, -1);
 											FloatL(Address3 + 7, -1);
 										}
@@ -339,7 +339,7 @@ void boosterDatClass::CallSNAI(){
 													*(ULONGLONG*)(Address3 + 8)    = Temp;
 												}
 											}else{
-												//師偑側偄
+												//次がない
 												if(GetL(Address3 + 7) < 6){
 													*(ULONGLONG*)(Address3) = 0;
 												}
@@ -351,13 +351,13 @@ void boosterDatClass::CallSNAI(){
 									if(*(Address3)==0 || Counter2 == 72){
 										Counter2 = 80;
 										if(SNAIBuf[Line][2][Index] > 64){
-//										if((SNAIBuf[Line][2][Index] >= 64 && AIMode==1) || (SNAIBuf[Line][2][Index] > 64 && AIMode==2)){	//幚尡拞
-//										if((SNAIBuf[Line][2][Index] >= 64 && gameMode==5) || SNAIBuf[Line][2][Index] > 64){	//幚尡拞
+//										if((SNAIBuf[Line][2][Index] >= 64 && AIMode==1) || (SNAIBuf[Line][2][Index] > 64 && AIMode==2)){	//実験中
+//										if((SNAIBuf[Line][2][Index] >= 64 && gameMode==5) || SNAIBuf[Line][2][Index] > 64){	//実験中
 											#if debug_mode_SNAI
-												cout << "怴婯" << endl;
+												cout << "新規" << endl;
 											#endif
-											*(Address3) = (BYTE)SNAIBuf[Line][4][Index];		//擖椡ID
-											*(Address3 + 1) = (BYTE)SNAIBuf[Line][3][Index];	//帪娫嵎
+											*(Address3) = (BYTE)SNAIBuf[Line][4][Index];		//入力ID
+											*(Address3 + 1) = (BYTE)SNAIBuf[Line][3][Index];	//時間差
 											*(Address3 + 2) = (BYTE)myGameInfo[ _input ][9][2];
 											SetH(Address3 + 3, (BYTE)SNAIBuf[Line][5][Index]);
 											SetL(Address3 + 3, 8);
@@ -373,22 +373,22 @@ void boosterDatClass::CallSNAI(){
 			}
 		}
 		
-		SNAIBuf[0][3][0] = myGameInfo[ _status ][6][1];	//帪娫
-		SNAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//擖椡ID
+		SNAIBuf[0][3][0] = myGameInfo[ _status ][6][1];	//時間
+		SNAIBuf[0][4][0] = myGameInfo[ _status ][6][0];	//入力ID
 		SNAIBuf[0][5][0] = myGameInfo[ _para ][3][2];
 		
-		//屌桳傾僪儗僗峏怴
-		eigenValueSN[1][2] = myGameInfo[ _para ][1][0];	//嫍棧
-		eigenValueSN[2][2] = myGameInfo[ _para ][2][2];	//帺暘崅偝	//幚尡拞
-		eigenValueSN[3][2] = *enGameInfo[ _para ][2][0];	//憡庤崅偝	//幚尡拞
-		eigenValueSN[4][2] = *enGameInfo[ _status ][1][0];	//僥僉忬懺丒暘椶2
+		//固有アドレス更新
+		eigenValueSN[1][2] = myGameInfo[ _para ][1][0];	//距離
+		eigenValueSN[2][2] = myGameInfo[ _para ][2][2];	//自分高さ	//実験中
+		eigenValueSN[3][2] = *enGameInfo[ _para ][2][0];	//相手高さ	//実験中
+		eigenValueSN[4][2] = *enGameInfo[ _status ][1][0];	//テキ状態分類2
 		
 		
 		for(Counter=9; Counter>0; Counter--){
 			if(eigenValueSN[Counter][0]){
-				if(eigenValueSN[Counter][2] >= eigenValueSN[Counter][0]){		//抣傪僠僃僢僋
+				if(eigenValueSN[Counter][2] >= eigenValueSN[Counter][0]){		//値をチェック
 					eigenValueSN[Counter][2] = eigenValueSN[Counter][0] -1;
-				}											//屌桳傾僪儗僗寁嶼
+				}											//固有アドレス計算
 				eigenValueSN[Counter - 1][3] = eigenValueSN[Counter][1] * eigenValueSN[Counter][2] + eigenValueSN[Counter][3];
 			}
 		}

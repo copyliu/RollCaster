@@ -46,7 +46,7 @@ unsigned __stdcall N_Gui::lobbyThread(void* Address){
 	if( !recvBuf ) return 1;
 	BYTE* cmd = &recvBuf[ 4 ];
 	
-	//擮偺偨傔
+	//念のため
 	if( lobby->sLobby != INVALID_SOCKET ){
 		closesocket( lobby->sLobby );
 	}
@@ -97,10 +97,10 @@ unsigned __stdcall N_Gui::lobbyThread(void* Address){
 	for(;;){
 		if( !lobby->continueFlg ) break;
 		
-		//暘妱僨乕僞懳墳
+		//分割データ対応
 		for(;;){
 			if( nowDataSize > 4 && nowDataSize >= (DWORD)revInt( *(int*)recvBuf ) + 5 ){
-				//擮偺偨傔
+				//念のため
 				if( revInt( *(int*)recvBuf ) < 0 ){
 					message->write(L"ERROR : subDataSize check");
 					lobby->status = LOBBY_CLIENT_STATUS_ERROR;
@@ -369,7 +369,7 @@ unsigned __stdcall N_Gui::lobbyThread(void* Address){
 						}
 						PostMessage(gui->hWnd, WM_COMMAND, ID_SET_FOCUS_TO_CONSOLE, 0);
 						
-						//扤偑棃偨偺偐昞帵
+						//誰が来たのか表示
 						lobbyUserSubClass fromInfo;
 						if(lobby->user.getUserInfo(fromUID.local, &fromInfo) == 0){
 							
@@ -430,10 +430,10 @@ unsigned __stdcall N_Gui::lobbyThread(void* Address){
 		}
 		
 		
-		//楢寢僨乕僞懳墳
+		//連結データ対応
 		{
-			//梫専摙
-			//暋悢楢寢僨乕僞昿搙偵傛偭偰偼夵椙梫
+			//要検討
+			//複数連結データ頻度によっては改良要
 			DWORD subDataSize = (DWORD)revInt( *(int*)recvBuf ) + 5;
 			if( nowDataSize == subDataSize ){
 				nowDataSize = 0;

@@ -69,8 +69,8 @@ namespace N_Gui{
 #define STATE_HOST_GATHERING_WAIT	64
 
 //TODO
-//クライアント内部状態
-//プレイヤーステータスと分離したほうがよい
+//･ｯ･鬣､･｢･ﾈﾄﾚｲｿﾗｴ腺
+//･ﾗ･�･､･茫`･ｹ･ﾆｩ`･ｿ･ｹ､ﾈｷﾖ�x､ｷ､ｿ､ﾛ､ｦ､ｬ､隍､
 enum{
 	LOBBY_CLIENT_STATUS_DEFAULT = 0,
 	LOBBY_CLIENT_STATUS_IDLE,

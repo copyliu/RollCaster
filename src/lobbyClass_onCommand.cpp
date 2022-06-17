@@ -81,13 +81,13 @@ int lobbyClass::onBttnPressConnect(WCHAR* UID){
 //		}
 		changeStatus(LOBBY_CLIENT_STATUS_IDLE);
 		
-		//儂僗僩懸偪偺摿庩忬懺
+		//ホスト待ちの特殊状態
 		if(target.state == STATE_HOST_GATHERING){
 			changeStatus(LOBBY_CLIENT_STATUS_CLIENT_WAIT);
 //			this->status = LOBBY_CLIENT_STATUS_CLIENT_WAIT;
 		}
 		
-		//懳愴怽崬傒
+		//対戦申込み
 		int bufSize = 2 + targetUID.remoteSize + 1;
 		BYTE* ccc = new BYTE[ bufSize ];
 		outputBufferClass dos(ccc, bufSize);
@@ -99,7 +99,7 @@ int lobbyClass::onBttnPressConnect(WCHAR* UID){
 		delete[] ccc;
 	}else if(target.state == STATE_FIGHTING || target.state == STATE_WATCHING){
 		//return onBttnPressSpectate(UID);
-		//壒偑柭偭偰堘榓姶偁傞偨傔捠忢僼儘乕偱愙懕 
+		//音が鳴って違和感あるため通常フローで接続 
 		WCHAR destIP[30];
 		memset(destIP, 0, sizeof(destIP));
 		convIP(target.IP, destIP);
@@ -204,15 +204,15 @@ int lobbyClass::onNoticeCasterGotoDelayWait(){
 
 int lobbyClass::onNoticeCasterGotoBattle(){
 	switch(status){
-	case LOBBY_CLIENT_STATUS_IDLE:	//儘價乕奜懳愴傕懳愴拞偵偡傞
+	case LOBBY_CLIENT_STATUS_IDLE:	//ロビー外対戦も対戦中にする
 	case LOBBY_CLIENT_STATUS_WAIT:
-	case LOBBY_CLIENT_STATUS_HOST_WAIT:	//擮偺偨傔
+	case LOBBY_CLIENT_STATUS_HOST_WAIT:	//念のため
 	case LOBBY_CLIENT_STATUS_CLIENT_WAIT:
 	case LOBBY_CLIENT_STATUS_SETTING:
 		changeStatus(LOBBY_CLIENT_STATUS_FIGHT);
 		break;
 	case LOBBY_CLIENT_STATUS_AFK:
-		//梫専摙
+		//要検討
 //		changeStatus(LOBBY_CLIENT_STATUS_FIGHT);
 		break;
 	}
@@ -221,12 +221,12 @@ int lobbyClass::onNoticeCasterGotoBattle(){
 
 int lobbyClass::onNoticeCasterGotoSpectate(){
 	switch(status){
-	case LOBBY_CLIENT_STATUS_IDLE:	//儘價乕奜偱偺娤愴傕娤愴拞偵偡傞
+	case LOBBY_CLIENT_STATUS_IDLE:	//ロビー外での観戦も観戦中にする
 	case LOBBY_CLIENT_STATUS_SETTING:
 		changeStatus(LOBBY_CLIENT_STATUS_SPECTATE);
 		break;
 	case LOBBY_CLIENT_STATUS_AFK:
-		//梫専摙
+		//要検討
 //		changeStatus(LOBBY_CLIENT_STATUS_SPECTATE);
 		break;
 	}
@@ -269,14 +269,14 @@ int lobbyClass::changeStatus( WORD statusTemp ){
 	}
 	
 	//TODO
-	//Notice偱捠抦偡傞傎偆偑傛偝偦偆
+	//Noticeで通知するほうがよさそう
 	guiClass* gui = g_gui;
 	
-	//status傪曄偊傞
+	//statusを変える
 	BYTE state;
 	switch( statusTemp ){
 	case LOBBY_CLIENT_STATUS_IDLE :
-		//傑偓傜傢偟偄 
+		//まぎらわしい 
 		state = STATE_WAITING;
 		if(gui){
 			SetWindowText(gui->hStatusWnd, getStatusLabel(state));

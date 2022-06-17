@@ -11,7 +11,7 @@ using namespace N_Caster;
 
 int main( int argc, char *argv[] ){
 
-	//ƒvƒƒZƒX‚Ì—Dæ“x‚ğİ’è
+	//¥×¥í¥»¥¹¤ÎƒÏÈ¶È¤òÔO¶¨
 //	SetPriorityClass( GetCurrentProcess(), REALTIME_PRIORITY_CLASS );
 	SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS );
 
