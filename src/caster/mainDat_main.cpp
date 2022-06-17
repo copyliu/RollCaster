@@ -208,7 +208,7 @@ int menu( menuDataStruct* menuData ){
 		break;
 	}
 	cout << "10: 练习模式" << endl;
-	cout << "11: Instant Lobby" << endl;
+	cout << "11: 观战服务器" << endl;
 	cout	<< "请输入 [" << menuData->mode << "] >";
 	ReleaseMutex( menuData->hPrintMutex );
 
@@ -676,8 +676,8 @@ int mainDatClass::Entrance(){
 				Sleep(100);
 			}
 			
-			cout << "Go to Spectate. Please wait..." << endl;
-			cout << "Spectating will be start when players get into the charactor select screen." << endl;
+			cout << "准备观战, 请稍候..." << endl;
+			cout << "待双方准备好后即将开始." << endl;
 			
 			//Wait
 			counter = 0;

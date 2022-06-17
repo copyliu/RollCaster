@@ -7,7 +7,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	cout << "東方萃夢想 RollCaster 版本 " << cowcaster_version_string << endl;
 	//cout << ", protocol version " << (int)cowcaster_protocol_version << endl;
 	//cout << "Command version : " << cmd_version << endl;
-	cout << "汉化版本 20211215-3" << endl;
+	cout << "汉化版本 20220617-1" << endl;
 	startTime = time( NULL );
 
 	//nowDir
@@ -237,7 +237,7 @@ int mainDatClass::mainDatInit(int argc, char** argv){
 	memset( &Standby[1] , 0, sizeof(SOCKADDR_IN) );
 
 	memset( windowName, 0, sizeof(windowName) );
-	strcpy( windowName, "東方萃夢想 ～ Immaterial and Missing Power. ver1.11" );
+	strcpy( windowName, "搶曽渎柌憐 乣 Immaterial and Missing Power. ver1.11" );
 
 	memset( myPlayerName, 0, sizeof(myPlayerName) );
 	memset( myShortName, 0, sizeof(myShortName) );
